@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('node/{id?}', function ($id = 0) {
+    return 'Node '.$id;
+})->where('id', '[0-9]+');
