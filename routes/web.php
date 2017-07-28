@@ -11,10 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/node', function () {
+//    return view('welcome');
+//});
 
-Route::get('node/{id?}', function ($id = 0) {
-    return 'Node '.$id;
-})->where('id', '[0-9]+');
+Route::get('/node', 'NodeController@index');
+
+Route::get('/node/{id?}', 'NodeController@show')->where('id', '[0-9]+');
