@@ -12,4 +12,24 @@ class Node extends Model
      * @var string
      */
     protected $table = 'nodes';
+
+    /**
+     * Get parent node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function parent()
+    {
+        return $this->belongsTo('App\Node')->withDefault();
+    }
+
+    /**
+     * Get child nodes
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function childs()
+    {
+        return $this->hasMany('App\Node');
+    }
 }
