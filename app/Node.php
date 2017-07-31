@@ -20,7 +20,7 @@ class Node extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('App\Node')->withDefault();
+        return $this->belongsTo('App\Node', 'parent_id');
     }
 
     /**
@@ -30,6 +30,6 @@ class Node extends Model
      */
     public function childs()
     {
-        return $this->hasMany('App\Node');
+        return $this->hasMany('App\Node', 'parent_id');
     }
 }

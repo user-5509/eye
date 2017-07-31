@@ -19,4 +19,14 @@ class NodeController extends Controller
     {
         return compact('id');
     }
+
+    public function subnodes($id)
+    {
+        return Node::find($id)->childs;
+    }
+
+    public function topnode($id)
+    {
+        return Node::find($id)->parent;
+    }
 }
