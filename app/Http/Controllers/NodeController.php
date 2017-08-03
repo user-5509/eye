@@ -8,24 +8,18 @@ use App\Node;
 
 class NodeController extends Controller
 {
-    public function index()
-    {
-        $nodes = Node::all();
-
-        return $nodes;
-    }
-
-    public function show(Node $id)
+    public function detail(Node $id)
     {
         return compact('id');
     }
 
-    public function subnodes($id)
+    public function subnodes($id = -1)
     {
-        return Node::find($id)->childs;
+        $nodes = Node::all()->where('parent_id', '=', $id);
+        return view('node.list', ['nodes' => $nodes]);
     }
 
-    public function topnode($id)
+    public function parent($id)
     {
         return Node::find($id)->parent;
     }

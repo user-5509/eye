@@ -14,11 +14,12 @@
 //Route::get('/node', function () {
 //    return view('welcome');
 //});
+Route::get('', 'NodeController@subnodes');
 
 Route::get('/node', 'NodeController@index');
 
-Route::get('/node/{id?}', 'NodeController@show')->where('id', '[0-9]+');
+Route::get('/node/{id?}', 'NodeController@subnodes')->where('id', '[0-9]+');
 
-Route::get('/node/{id?}/subnodes', 'NodeController@subnodes')->where('id', '[0-9]+');
+Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 
-Route::get('/node/{id?}/topnode', 'NodeController@topnode')->where('id', '[0-9]+');
+Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');
