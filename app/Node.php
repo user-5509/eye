@@ -14,6 +14,16 @@ class Node extends Model
     protected $table = 'nodes';
 
     /**
+     * Get node type
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo('App\NodeType', 'type_id');
+    }
+
+    /**
      * Get parent node
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo

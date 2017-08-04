@@ -68,8 +68,16 @@
         <div class="flex-center position-ref full-height">
             <div class="content">
                 <div class="links">
+                    @if($curNodeId <> -1)
+                        Add:
+                        @foreach ($availableTypes as $type)
+                            <a href="/node/{{$curNodeId}}/create/{{$type->id}}">{{ $type->name }}</a>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="links">
                     @foreach ($nodes as $node)
-                        <p><a href="/node/{{$node->id}}">This is node {{ $node->name }}</a></p>
+                        <p><a href="/node/{{$node->id}}">{{ $node->name }} [{{ $node->type->name }}]</a></p>
                     @endforeach
                 </div>
             </div>

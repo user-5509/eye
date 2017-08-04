@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
 use App\NodeType;
 
 class NodeTypesSeeder extends Seeder
@@ -13,27 +12,12 @@ class NodeTypesSeeder extends Seeder
      */
     public function run()
     {
-        /*
-        $type1 = new NodeType;
-        $type1->name = 'Мир';
-        $type1->parent_id = -1;
-        */
 
-        DB::table('nodetypes')->insert([
-            'name' => 'Мир',
-            'parent_id' => -1,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-        $type1 = NodeType::where('name', 'Мир')->first();
-
-        $type2 = new NodeType;
-        $type2->name = 'Здание';
-        $type2->parent()->associate($type1);
-
-        $type3 = new NodeType;
-        $type3->name = 'Помещение';
-        $type3->parent()->associate($type2);
-
+        $type1 = NodeType::create(array('name' => 'Мир',        'parent_id' => '-1'));
+        $type2 = NodeType::create(array('name' => 'Здание',     'parent_id' => $type1->id));
+        $type3 = NodeType::create(array('name' => 'Помещение',  'parent_id' => $type2->id));
+        $type4 = NodeType::create(array('name' => 'ПСП',  'parent_id' => $type3->id));
+        $type5 = NodeType::create(array('name' => 'СПМ',  'parent_id' => $type3->id));
+        $type6 = NodeType::create(array('name' => 'Плата',  'parent_id' => $type5->id));
     }
 }

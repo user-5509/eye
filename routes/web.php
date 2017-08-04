@@ -23,3 +23,5 @@ Route::get('/node/{id?}', 'NodeController@subnodes')->where('id', '[0-9]+');
 Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 
 Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');
+
+Route::get('/node/{id?}/create/{id1?}', 'NodeController@create')->where(array('id' => '[0-9]+', 'id1' => '[0-9]+'));

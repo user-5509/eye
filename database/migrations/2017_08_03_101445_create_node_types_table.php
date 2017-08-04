@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Nodetypes extends Migration
+class CreateNodeTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class Nodetypes extends Migration
      */
     public function up()
     {
-        Schema::create('nodetypes', function (Blueprint $table) {
+        Schema::create('node_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('parent_id');
@@ -28,6 +28,6 @@ class Nodetypes extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nodetypes');
+        Schema::dropIfExists('node_types');
     }
 }
