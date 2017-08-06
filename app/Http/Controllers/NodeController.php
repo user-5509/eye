@@ -14,6 +14,11 @@ class NodeController extends Controller
         return compact('id');
     }
 
+    public function ajax()
+    {
+        return "12345!!!";
+    }
+
     public function subnodes($id = -1)
     {
         $nodes = Node::all()->where('parent_id', '=', $id);
@@ -33,9 +38,10 @@ class NodeController extends Controller
         return Node::find($id)->parent;
     }
 
-    public function create($parentNodeId, $typeId)
+    public function create($parentNodeId, $nodeTypeId)
     {
+        $nodeType = NodeType::find($nodeTypeId);
         return view('node.create', ['parentNodeId' => $parentNodeId,
-            'typeId' => $typeId]);
+            'nodeType' => $nodeType]);
     }
 }

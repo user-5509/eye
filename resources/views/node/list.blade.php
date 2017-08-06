@@ -1,86 +1,99 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>Laravel</title>
+    <!-- Bootstrap -->
+    <link href="http://localhost/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
 
-            .full-height {
-                height: 100vh;
-            }
+    <title>Создать</title>
+</head>
+<body>
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+    <form>
+        @if($availableTypes <> null)
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle"
+                    type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Создать...
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                @foreach ($availableTypes as $type)
+                <a class="dropdown-item" data-id="{{$type->id}}" data-toggle="modal" data-target="#exampleModal3" href="/node/{{$curNodeId}}/create/{{$type->id}}">{{ $type->name }}</a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+    </form>
 
-            .position-ref {
-                position: relative;
-            }
+    <ul class="list-group">
+        @foreach ($nodes as $node)
+        <li class="list-group-item"><a href="/node/{{$node->id}}">{{ $node->name }} [{{ $node->type->name }}]</a></li>
+        @endforeach
+    </ul>
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+    <a class="dropdown-item" data-id="{{$type->id}}" data-toggle="modal-ajax" href="#">test</a>
+    <div class="test">
+        ???
+    </div>
 
-            .content {
-                text-align: center;
-            }
 
-            .title {
-                font-size: 84px;
-            }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            <div class="content">
-                <div class="links">
-                    @if($curNodeId <> -1)
-                        Add:
-                        @foreach ($availableTypes as $type)
-                            <a href="/node/{{$curNodeId}}/create/{{$type->id}}">{{ $type->name }}</a>
-                        @endforeach
-                    @endif
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal3Label">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="links">
-                    @foreach ($nodes as $node)
-                        <p><a href="/node/{{$node->id}}">{{ $node->name }} [{{ $node->type->name }}]</a></p>
-                    @endforeach
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="http://localhost/js/jquery-3.1.1.slim.min.js"></script>
+    <script src="http://localhost/js/tether.min.js"></script>
+    <script src="http://localhost/js/bootstrap.min.js"></script>
+
+    <script>
+        $("a[data-toggle='modal']").on("click",function () {
+            var id = $(this).attr('data-id');
+            alert( "ajax start" );
+            $.ajax( "http://localhost/ajax" )
+                .done(function() {
+                    $('.modal-body').text("1234567");
+                })
+                .fail(function() {
+                    $('.modal-body').text("1234567");
+                })
+                .always(function() {
+                    $('.modal-body').text("1234567");
+                });
+        });
+
+        $("a[data-toggle='modal-ajax']").on("click",function () {
+
+            $.get( "http://localhost/ajax", {userId: 1234}, function( data ) {
+                $( ".test" ).html( data );
+                alert( "Load was performed." );
+            });
+        });
+    </script>
+
+</body>
 </html>

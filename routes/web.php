@@ -16,6 +16,8 @@
 //});
 Route::get('', 'NodeController@subnodes');
 
+Route::get('/ajax', 'NodeController@ajax');
+
 Route::get('/node', 'NodeController@index');
 
 Route::get('/node/{id?}', 'NodeController@subnodes')->where('id', '[0-9]+');
