@@ -14,16 +14,21 @@
 //Route::get('/node', function () {
 //    return view('welcome');
 //});
-Route::get('', 'NodeController@subnodes');
 
-Route::get('/ajax', 'NodeController@ajax');
+Route::get('node', 'NodeController@index');
 
-Route::get('/node', 'NodeController@index');
+Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
 
-Route::get('/node/{id?}', 'NodeController@subnodes')->where('id', '[0-9]+');
+Route::get('/getFormContent', 'NodeController@getFormContent');
+
+Route::post('/accept', 'NodeController@accept');
+
+Route::get('/accept', 'NodeController@accept');
 
 Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 
 Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');
 
 Route::get('/node/{id?}/create/{id1?}', 'NodeController@create')->where(array('id' => '[0-9]+', 'id1' => '[0-9]+'));
+
+Route::delete('node/{id?}', 'NodeController@delete')->where('id', '[0-9]+');

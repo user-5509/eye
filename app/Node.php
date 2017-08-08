@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Node extends Model
 {
@@ -12,6 +13,8 @@ class Node extends Model
      * @var string
      */
     protected $table = 'nodes';
+
+
 
     /**
      * Get node type
