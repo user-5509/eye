@@ -47,6 +47,10 @@
     </div>
     -->
 
+    <form id="q"></form>
+
+    <div id="qq"></div>
+
     <!-- Modal -->
     <div class="modal fade" id="createNodeModal" tabindex="-1" role="dialog" aria-labelledby="createNodeModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -58,9 +62,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="createNodeForm">
-                        <div id="createNodeFormContent">
-                        </div>
+                    <form id="createNodeForm" class="node-form">
+                        <div id="createNodeFormContent"></div>
                         <input type="hidden" name = "parentNodeId" value="{{$currentNode->id}}">
                         {{ csrf_field() }}
                     </form>
@@ -83,9 +86,16 @@
             var nodeTypeId = $(this).attr('data-nodeTypeId');
             var label = "Создать " + $(this).text();
             $('#createNodeModalLabel').text(label);
-            $.get( "http://localhost/getFormContent", {nodeTypeId: nodeTypeId}, function( data ) {
-                $('#createNodeFormContent').html( data );
+            $('#createNodeFormContent').load("http://localhost/getFormContent", { nodeTypeId: nodeTypeId, _token: "{{ csrf_token() }}" }, function( response, status, xhr ) {
+                if ( status == "error" ) {
+                    var msg = "Sorry but there was an error: ";
+                    alert( msg + xhr.status + " " + xhr.statusText );
+                }
             });
+
+//            $.get( "http://localhost/getFormContent", {nodeTypeId: nodeTypeId}, function( data ) {
+//                $('#createNodeFormContent').html( data );
+//            });
         });
 
         $("button[id='accept']").on("click",function () {

@@ -19,7 +19,7 @@ Route::get('node', 'NodeController@index');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
 
-Route::get('/getFormContent', 'NodeController@getFormContent');
+Route::post('/getFormContent', 'NodeController@getFormContent');
 
 Route::post('/accept', 'NodeController@accept');
 

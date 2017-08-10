@@ -57,11 +57,11 @@ class NodeController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, $nodeId = -1)
+    public function index(Request $request, $nodeId = 1)
     {
         $request->session()->put('currentNodeId', $nodeId);
-        $nodes = Node::all()->where('parent_id', '=', $nodeId);
         $currentNode = Node::find($nodeId);
+        $nodes = Node::all()->where('parent_id', '=', $nodeId);
         $availableNodeTypes = NodeType::all()->where('parent_id', '=', $currentNode->type_id);
 
         return view('node.index', ['currentNode' => $currentNode,
