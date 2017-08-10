@@ -21,9 +21,7 @@ Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
 
 Route::post('/getFormContent', 'NodeController@getFormContent');
 
-Route::post('/accept', 'NodeController@accept');
-
-Route::get('/accept', 'NodeController@accept');
+Route::post('/createNodeExecute', 'NodeController@accept');
 
 Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 

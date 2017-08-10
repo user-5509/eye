@@ -16,7 +16,7 @@ class CreateNodeTypesTable extends Migration
         Schema::create('node_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('parent_id');
+            $table->integer('parent_id')->unsigned()->nullable();;
             $table->timestamps();
         });
     }

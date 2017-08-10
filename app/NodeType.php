@@ -14,12 +14,12 @@ class NodeType extends Model
     protected $table = 'node_types';
 
     /**
-     * Get parent node
+     * Get parent nodes
      *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function parent()
+    public function parents()
     {
-        return $this->belongsTo('App\NodeType', 'parent_id');
+        return $this->belongsToMany('App\NodeType', 'type2type', 'parent_id', 'child_id');
     }
 }
