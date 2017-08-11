@@ -6,31 +6,38 @@ use App\NodeType;
 class NodeTypesSeeder extends Seeder
 {
     /**
+     * Add procedure wrapper.
+     *
+     * @return NodeType
+     */
+    private function add($name, $parentName = '')
+    {
+        $tmpTypeNode = new NodeType(array('name' => $name));
+        $tmpTypeNode->save();
+        if($parentName <> ''){
+            $parent  = NodeType::where('name', $parentName)->first();
+            $tmpTypeNode->parents()->save($parent);
+        }
+        return $tmpTypeNode;
+    }
+
+    /**
      * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-
-        $type1 = new NodeType(array('name' => 'Мир'));
-        //$type2 = NodeType::create(array('name' => 'Здание',     'parent_id' => $type1->id));
-        $type2 = NodeType::create(array('name' => 'Здание'));
-        $type2->parents()->save($type1);
-        $type3 = NodeType::create(array('name' => 'Помещение'));
-        $type3->parents()->save($type2);
-        $type4 = NodeType::create(array('name' => 'ПСП'));
-        $type4->parents()->save($type3);
-        $type7 = NodeType::create(array('name' => 'Гребёнка'));
-        $type7->parents()->save($type4);
-        $type8 = NodeType::create(array('name' => 'Бокс'));
-        $type8->parents()->save($type4);
-        $type9 = NodeType::create(array('name' => 'Пара'));
-        $type9->parents()->save($type7);
-        $type9->parents()->save($type8);
-        $type5 = NodeType::create(array('name' => 'СПМ'));
-        $type5->parents()->save($type3);
-        $type6 = NodeType::create(array('name' => 'Плата'));
-        $type6->parents()->save($type5);
+        $this->add('Мир', '');
+        $this->add('Здание', 'Мир');
+        $this->add('Помещение', 'Здание');
+        $this->add('ПСП', 'Помещение');
+        $this->add('Гребенка (60 пар)', 'ПСП');
+        $this->add('Пара', 'Гребенка');
+        $this->add('Бокс (100 пар)', 'ПСП');
+        $this->add('Пара', 'Бокс');
+        $this->add('СПМ', 'Помещение');
+        $this->add('Плата', 'СПМ');
+        $this->add('Гнездо', 'Плата');
     }
 }

@@ -33,27 +33,6 @@ class NodeController extends Controller
 
     /**
      * @param Request $request
-     * @return Response
-     */
-    public function accept(Request $request)
-    {
-        if ($request->ajax()) {
-            $node = new Node;
-            $node->name = $request->input('nodeName');
-            $node->type_id = $request->input('nodeTypeId');
-            $node->parent_id = $request->input('parentNodeId');
-            $node->save();
-            //$nodeName = $request->input('nodeName');
-            //$nodeName = $request->all();
-            //return $nodeName;
-            return 1;
-        }
-        else
-            return "1212121221";
-    }
-
-    /**
-     * @param Request $request
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -62,11 +41,9 @@ class NodeController extends Controller
         $request->session()->put('currentNodeId', $nodeId);
         $currentNode = Node::find($nodeId);
         $nodes = Node::all()->where('parent_id', '=', $nodeId);
-        //$availableNodeTypes = NodeType::all()->where('parent_id', '=', $currentNode->type_id);
-        //$availableNodeTypes = NodeType::all()->->where('parent_id', '=', $currentNode->type_id);
         $parentIdList = [$currentNode->type_id];
-        $availableNodeTypes = NodeType::whereHas('parents', function($q) use($parentIdList) {
-            $q->whereIn('id', $parentIdList);
+        $availableNodeTypes = NodeType::whereHas('parents', function($query) use($parentIdList) {
+            $query->whereIn('id', $parentIdList);
         })->get();
 
         return view('node.index', ['currentNode' => $currentNode,
@@ -91,4 +68,40 @@ class NodeController extends Controller
         return view('node.create', ['parentNodeId' => $parentNodeId,
             'nodeType' => $nodeType]);
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function accept(Request $request)
+    {
+        if ($request->ajax()) {
+            $node = new Node;
+            $node->name = $request->input('nodeName');
+            $node->type_id = $request->input('nodeTypeId');
+            $node->parent_id = $request->input('parentNodeId');
+            $node->save();
+
+            if($node->name == "Гребенка (60 пар)") {
+                $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
+                foreach ($pairNamePrefixes as $pairNamePrefix) {
+                    for($i = 1; $i <= 20; $i++) {
+                        $pairName = $pairNamePrefix + $i;
+                        $tmpNode = new Node;
+                        $tmpNode->name = $pairName;
+                        $tmpNode->type_id = NodeType::getIdByName("Пара");
+                        $tmpNode->parent_id = $request->input('parentNodeId');
+                        $tmpNode->save();
+
+                    }
+                }
+            }
+
+
+            return 1;
+        }
+        else
+            return "1212121221";
+    }
+
 }

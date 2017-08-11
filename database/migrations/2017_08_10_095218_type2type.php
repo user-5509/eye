@@ -17,11 +17,11 @@ class Type2type extends Migration
         {
             $table->integer('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')->references('id')
-                ->on('node_types')->onDelete('cascade');
+                ->on('node_types');
 
             $table->integer('child_id')->unsigned()->nullable();
             $table->foreign('child_id')->references('id')
-                ->on('node_types')->onDelete('cascade');
+                ->on('node_types');
 
             $table->timestamps();
         });
