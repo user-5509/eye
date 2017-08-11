@@ -62,7 +62,12 @@ class NodeController extends Controller
         $request->session()->put('currentNodeId', $nodeId);
         $currentNode = Node::find($nodeId);
         $nodes = Node::all()->where('parent_id', '=', $nodeId);
-        $availableNodeTypes = NodeType::all()->where('parent_id', '=', $currentNode->type_id);
+        //$availableNodeTypes = NodeType::all()->where('parent_id', '=', $currentNode->type_id);
+        //$availableNodeTypes = NodeType::all()->->where('parent_id', '=', $currentNode->type_id);
+        $parentIdList = [$currentNode->type_id];
+        $availableNodeTypes = NodeType::whereHas('parents', function($q) use($parentIdList) {
+            $q->whereIn('id', $parentIdList);
+        })->get();
 
         return view('node.index', ['currentNode' => $currentNode,
                                         'nodes' => $nodes,

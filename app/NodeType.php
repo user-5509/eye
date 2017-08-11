@@ -20,6 +20,6 @@ class NodeType extends Model
      */
     public function parents()
     {
-        return $this->belongsToMany('App\NodeType', 'type2type', 'parent_id', 'child_id');
+        return $this->belongsToMany('App\NodeType', 'type2type', 'child_id', 'parent_id');
     }
 }
