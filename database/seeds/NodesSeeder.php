@@ -14,7 +14,7 @@ class NodesSeeder extends Seeder
      */
     private function add($name, $typeName, $parentName = '')
     {
-        $tmpNode = Node::create(array('name' => $name, 'type_id' => '-1', 'parent_id' => '-1'));
+        $tmpNode = new Node(array('name' => $name));
         $type  = NodeType::where('name', $typeName)->first();
         $tmpNode->type()->associate($type);
         if($parentName <> ''){

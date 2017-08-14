@@ -8,6 +8,7 @@ use App\NodeType;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Response;
+use Symfony\Component\CssSelector\XPath\Extension\NodeExtension;
 
 
 class NodeController extends Controller
@@ -82,21 +83,46 @@ class NodeController extends Controller
             $node->parent_id = $request->input('parentNodeId');
             $node->save();
 
-            if($node->name == "Гребенка (60 пар)") {
+            $type = new NodeType();
+
+            if($node->type_id == $type->getByName("Гребенка (60 пар)")->id) {
                 $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
                 foreach ($pairNamePrefixes as $pairNamePrefix) {
                     for($i = 1; $i <= 20; $i++) {
-                        $pairName = $pairNamePrefix + $i;
-                        $tmpNode = new Node;
-                        $tmpNode->name = $pairName;
-                        $tmpNode->type_id = NodeType::getIdByName("Пара");
-                        $tmpNode->parent_id = $request->input('parentNodeId');
-                        $tmpNode->save();
-
+                        $subName = $pairNamePrefix . $i;
+                        $subNode = new Node;
+                        $subNode->name = $subName;
+                        $subType = new NodeType();
+                        $subNode->type_id = $subType->getByName("Пара")->id;
+                        $subNode->parent_id = $node->id;
+                        $subNode->save();
                     }
                 }
             }
 
+            if($node->type_id == $type->getByName("Бокс (100 пар)")->id) {
+                for($i = 1; $i <= 100; $i++) {
+                    $subName = $i;
+                    $subNode = new Node;
+                    $subNode->name = $subName;
+                    $subType = new NodeType();
+                    $subNode->type_id = $subType->getByName("Пара")->id;
+                    $subNode->parent_id = $node->id;
+                    $subNode->save();
+                }
+            }
+
+            if($node->type_id == $type->getByName("Плата")->id) {
+                for($i = 1; $i <= 30; $i++) {
+                    $subName = $i;
+                    $subNode = new Node;
+                    $subNode->name = $subName;
+                    $subType = new NodeType();
+                    $subNode->type_id = $subType->getByName("Гнездо")->id;
+                    $subNode->parent_id = $node->id;
+                    $subNode->save();
+                }
+            }
 
             return 1;
         }

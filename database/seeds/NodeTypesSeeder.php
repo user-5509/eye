@@ -21,6 +21,14 @@ class NodeTypesSeeder extends Seeder
         return $tmpTypeNode;
     }
 
+    private function addParent($name, $parentName)
+    {
+        $node = NodeType::where('name', $name)->first();
+        $parent = NodeType::where('name', $parentName)->first();
+        $node->parents()->save($parent);
+        return $node;
+    }
+
     /**
      * Run the database seeds.
      *
@@ -33,9 +41,9 @@ class NodeTypesSeeder extends Seeder
         $this->add('Помещение', 'Здание');
         $this->add('ПСП', 'Помещение');
         $this->add('Гребенка (60 пар)', 'ПСП');
-        $this->add('Пара', 'Гребенка');
+        $this->add('Пара', 'Гребенка (60 пар)');
         $this->add('Бокс (100 пар)', 'ПСП');
-        $this->add('Пара', 'Бокс');
+        $this->addParent('Пара', 'Бокс (100 пар)');
         $this->add('СПМ', 'Помещение');
         $this->add('Плата', 'СПМ');
         $this->add('Гнездо', 'Плата');

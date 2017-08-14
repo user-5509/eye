@@ -23,8 +23,12 @@ class NodeType extends Model
         return $this->belongsToMany('App\NodeType', 'type2type', 'child_id', 'parent_id');
     }
 
-    private function getIdByName($name)
+    /**
+     * @param $name
+     * @return Model|null|static
+     */
+    public function getByName($name)
     {
-        return NodeType::where('name', $name)->first();
+        return $this->where('name', $name)->first();
     }
 }
