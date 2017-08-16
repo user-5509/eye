@@ -34,6 +34,8 @@ class CreateType2typeTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('type2type');
+        Schema::enableForeignKeyConstraints();
     }
 }
