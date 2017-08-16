@@ -16,7 +16,7 @@
     <h1>{{$currentNode->name}}</h1>
 
     <!-- Create node list -->
-    @if($availableNodeTypes)
+    @if(count($availableNodeTypes) > 0)
     <form>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle"

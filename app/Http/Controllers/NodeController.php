@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Node;
+use App\NodeProperties;
 use App\NodeType;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
@@ -13,11 +14,6 @@ use Symfony\Component\CssSelector\XPath\Extension\NodeExtension;
 
 class NodeController extends Controller
 {
-    public function detail(Node $id)
-    {
-        return compact('id');
-    }
-
     /**
      * @param Request $request
      * @return Response
@@ -96,6 +92,12 @@ class NodeController extends Controller
                         $subNode->type_id = $subType->getByName("Пара")->id;
                         $subNode->parent_id = $node->id;
                         $subNode->save();
+
+                        $properties = array(
+                            new NodeProperties(array('name' => "hardLink", 'value' => null)),
+                            new NodeProperties(array('name' => "softLink", 'value' => null))
+                        );
+                        $subNode->properties()->saveMany($properties);
                     }
                 }
             }
@@ -109,6 +111,12 @@ class NodeController extends Controller
                     $subNode->type_id = $subType->getByName("Пара")->id;
                     $subNode->parent_id = $node->id;
                     $subNode->save();
+
+                    $properties = array(
+                        new NodeProperties(array('name' => 'hardLink', 'value' => null)),
+                        new NodeProperties(array('name' => 'softLink', 'value' => null))
+                    );
+                    $subNode->properties()->saveMany($properties);
                 }
             }
 
@@ -117,10 +125,34 @@ class NodeController extends Controller
                     $subName = $i;
                     $subNode = new Node;
                     $subNode->name = $subName;
-                    $subType = new NodeType();
+                    $subType = new NodeType;
                     $subNode->type_id = $subType->getByName("Гнездо")->id;
                     $subNode->parent_id = $node->id;
                     $subNode->save();
+
+                    $pair = new Node;
+                    $pair->name = "Передача";
+                    $pair->type_id = $subType->getByName("Пара")->id;
+                    $pair->parent_id = $subNode->id;
+                    $pair->save();
+
+                    $properties = array(
+                        new NodeProperties(array('name' => 'channelLink', 'value' => null)),
+                        new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    );
+                    $subNode->properties()->saveMany($properties);
+
+                    $pair = new Node;
+                    $pair->name = "Прием";
+                    $pair->type_id = $subType->getByName("Пара")->id;
+                    $pair->parent_id = $subNode->id;
+                    $pair->save();
+
+                    $properties = array(
+                        new NodeProperties(array('name' => 'channelLink')),
+                        new NodeProperties(array('name' => 'stationLink'))
+                    );
+                    $subNode->properties()->saveMany($properties);
                 }
             }
 
