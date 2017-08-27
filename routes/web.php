@@ -15,18 +15,25 @@
 //    return view('welcome');
 //});
 
+Route::get('getTreeData', 'NodeController@getTreeData');
+
 Route::get('node', 'NodeController@index');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
 
-Route::post('/getFormContent', 'NodeController@getFormContent');
+Route::get('/content/node/create/available-types-dropdown', 'NodeController@createNodeAvailableTypesDropdown');
 
-Route::post('/createNodeExecute', 'NodeController@accept');
+Route::get('/content/node/create/modal', 'NodeController@createNodeModal');
+
+Route::post('/node/create/execute', 'NodeController@createNodeExecute');
+
+Route::get('/content/node/delete/modal', 'NodeController@deleteNodeModal');
+
+Route::delete('node/{id?}/delete', 'NodeController@deleteNodeExecute')->where('id', '[0-9]+');
+
+Route::get('/content/node/cross/modal', 'NodeController@nodeCrossModal');
 
 Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 
 Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');
 
-Route::get('/node/{id?}/create/{id1?}', 'NodeController@create')->where(array('id' => '[0-9]+', 'id1' => '[0-9]+'));
-
-Route::delete('node/{id?}', 'NodeController@delete')->where('id', '[0-9]+');
