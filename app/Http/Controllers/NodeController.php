@@ -22,9 +22,9 @@ class NodeController extends Controller
     public function createNodeAvailableTypesDropdown(Request $request)
     {
         $nodeId = Input::get('nodeId');
-        $typeId = Node::find($nodeId)->type->id;
+        $typeId = (new Node)->find($nodeId)->type->id;
         $parentIdList = [$typeId];
-        $subTypes = NodeType::whereHas('parents', function($query) use($parentIdList) {
+        $subTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
         return view('content.node.available-types-dropdown', ['nodeId' => $nodeId, 'subTypes' => $subTypes]);
@@ -38,7 +38,7 @@ class NodeController extends Controller
     {
         if ($request->ajax()) {
             $nodeTypeId = Input::get('nodeTypeId');
-            $nodeTypeName = NodeType::find($nodeTypeId)->name;
+            $nodeTypeName = (new NodeType)->find($nodeTypeId)->name;
             $parentNodeId = Input::get('parentNodeId');
 
             return view('content.node.create-modal', ['nodeTypeId' => $nodeTypeId, 'nodeTypeName' => $nodeTypeName, 'parentNodeId' => $parentNodeId]);
@@ -60,9 +60,7 @@ class NodeController extends Controller
             $node->parent_id = $request->input('parentNodeId');
             $node->save();
 
-            $type = new NodeType();
-
-            if($node->type_id == $type->getByName("Гребенка (60 пар)")->id) {
+            if($node->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
                 $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
                 foreach ($pairNamePrefixes as $pairNamePrefix) {
                     for($i = 1; $i <= 20; $i++) {
@@ -75,15 +73,15 @@ class NodeController extends Controller
                         $subNode->save();
 
                         $properties = array(
-                            new NodeProperties(array('name' => "hardLink", 'value' => null)),
-                            new NodeProperties(array('name' => "softLink", 'value' => null))
+                            new NodeProperties(array('name' => "interface", 'value' => 0)),
+                            new NodeProperties(array('name' => "interface", 'value' => 0))
                         );
                         $subNode->properties()->saveMany($properties);
                     }
                 }
             }
 
-            if($node->type_id == $type->getByName("Бокс (100 пар)")->id) {
+            if($node->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
                 for($i = 1; $i <= 100; $i++) {
                     $subName = $i;
                     $subNode = new Node;
@@ -101,7 +99,7 @@ class NodeController extends Controller
                 }
             }
 
-            if($node->type_id == $type->getByName("Плата")->id) {
+            if($node->type_id == (new NodeType)->getByName("Плата")->id) {
                 for($i = 1; $i <= 30; $i++) {
                     $subName = $i;
                     $subNode = new Node;
@@ -151,7 +149,7 @@ class NodeController extends Controller
     {
         if ($request->ajax()) {
             $nodeId = Input::get('nodeId');
-            $nodeName = Node::find($nodeId)->name;
+            $nodeName = (new Node)->find($nodeId)->name;
 
             return view('content.node.delete-modal', ['nodeId' => $nodeId, 'nodeName' => $nodeName]);
         }
@@ -165,7 +163,7 @@ class NodeController extends Controller
      */
     public function deleteNodeExecute(Request $request, $nodeId)
     {
-        $node = Node::find($nodeId);
+        $node = (new Node)->find($nodeId);
         $node->delete();
     }
 
@@ -190,10 +188,10 @@ class NodeController extends Controller
     public function index(Request $request, $nodeId = 1)
     {
         $request->session()->put('currentNodeId', $nodeId);
-        $currentNode = Node::find($nodeId);
+        $currentNode = (new Node)->find($nodeId);
         $nodes = Node::all()->where('parent_id', '=', $nodeId);
         $parentIdList = [$currentNode->type_id];
-        $availableNodeTypes = NodeType::whereHas('parents', function($query) use($parentIdList) {
+        $availableNodeTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
 
@@ -214,7 +212,7 @@ class NodeController extends Controller
         $arr = array();
         foreach ($nodes as $node) {
             $tmpArr = array("title" => $node->name, "key" => $node->id);
-            $subNodesCount = Node::where('parent_id', '=', $node->id)->count();
+            $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
             if($subNodesCount > 0) {
                 $tmpArr["folder"] = "true";
                 $tmpArr["lazy"] = "true";
@@ -228,12 +226,12 @@ class NodeController extends Controller
 
     public function parent($id)
     {
-        return Node::find($id)->parent;
+        return (new Node)->find($id)->parent;
     }
 
     public function create($parentNodeId, $nodeTypeId)
     {
-        $nodeType = NodeType::find($nodeTypeId);
+        $nodeType = (new NodeType)->find($nodeTypeId);
         return view('node.create', ['parentNodeId' => $parentNodeId,
             'nodeType' => $nodeType]);
     }
