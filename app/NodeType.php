@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class NodeType extends Model
 {
+    const BOX_60P = 0;
+    const BOX_100P = 1;
+    const SPM_BOARD = 2;
+
     /**
      * The table associated with the model.
      *

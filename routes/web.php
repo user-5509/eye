@@ -33,6 +33,8 @@ Route::delete('node/{id?}/delete', 'NodeController@deleteNodeExecute')->where('i
 
 Route::get('/content/node/cross/modal', 'NodeController@nodeCrossModal');
 
+Route::post('/node/cross/execute', 'NodeController@crossNodeExecute');
+
 Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+');
 
 Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');

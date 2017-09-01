@@ -37,7 +37,18 @@
         });
     });
     $("#crossNodeExecute").on("click",function () {
-        alert("node1="+$("#tree").fancytree("getActiveNode").key+", node2="+$("#tree1").fancytree("getActiveNode").key);
-
+        //alert("node1="+$("#tree").fancytree("getActiveNode").key+", node2="+$("#tree1").fancytree("getActiveNode").key);
+        $.post( "http://localhost/node/cross/execute", {
+                _token: "{{ csrf_token() }}",
+                nodeId1: $("#tree").fancytree("getActiveNode").key,
+                nodeId2: $("#tree1").fancytree("getActiveNode").key
+            },
+            function( data ) {
+                $('#nodeActionModal').modal('hide');
+                $("#tree").fancytree("getActiveNode").folder = true;
+                $("#tree").fancytree("getActiveNode").lazy = true;
+                $("#tree").fancytree("getActiveNode").load(true);
+            }
+        );
     });
 </script>

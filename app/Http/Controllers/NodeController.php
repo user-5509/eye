@@ -54,86 +54,10 @@ class NodeController extends Controller
     public function createNodeExecute(Request $request)
     {
         if ($request->ajax()) {
-            $node = new Node;
-            $node->name = $request->input('nodeName');
-            $node->type_id = $request->input('nodeTypeId');
-            $node->parent_id = $request->input('parentNodeId');
-            $node->save();
-
-            if($node->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
-                $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
-                foreach ($pairNamePrefixes as $pairNamePrefix) {
-                    for($i = 1; $i <= 20; $i++) {
-                        $subName = $pairNamePrefix . $i;
-                        $subNode = new Node;
-                        $subNode->name = $subName;
-                        $subType = new NodeType();
-                        $subNode->type_id = $subType->getByName("Пара")->id;
-                        $subNode->parent_id = $node->id;
-                        $subNode->save();
-
-                        $properties = array(
-                            new NodeProperties(array('name' => "interface", 'value' => 0)),
-                            new NodeProperties(array('name' => "interface", 'value' => 0))
-                        );
-                        $subNode->properties()->saveMany($properties);
-                    }
-                }
-            }
-
-            if($node->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
-                for($i = 1; $i <= 100; $i++) {
-                    $subName = $i;
-                    $subNode = new Node;
-                    $subNode->name = $subName;
-                    $subType = new NodeType();
-                    $subNode->type_id = $subType->getByName("Пара")->id;
-                    $subNode->parent_id = $node->id;
-                    $subNode->save();
-
-                    $properties = array(
-                        new NodeProperties(array('name' => 'hardLink', 'value' => null)),
-                        new NodeProperties(array('name' => 'softLink', 'value' => null))
-                    );
-                    $subNode->properties()->saveMany($properties);
-                }
-            }
-
-            if($node->type_id == (new NodeType)->getByName("Плата")->id) {
-                for($i = 1; $i <= 30; $i++) {
-                    $subName = $i;
-                    $subNode = new Node;
-                    $subNode->name = $subName;
-                    $subType = new NodeType;
-                    $subNode->type_id = $subType->getByName("Гнездо")->id;
-                    $subNode->parent_id = $node->id;
-                    $subNode->save();
-
-                    $pair = new Node;
-                    $pair->name = "Передача";
-                    $pair->type_id = $subType->getByName("Пара")->id;
-                    $pair->parent_id = $subNode->id;
-                    $pair->save();
-
-                    $properties = array(
-                        new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                        new NodeProperties(array('name' => 'stationLink', 'value' => null))
-                    );
-                    $subNode->properties()->saveMany($properties);
-
-                    $pair = new Node;
-                    $pair->name = "Прием";
-                    $pair->type_id = $subType->getByName("Пара")->id;
-                    $pair->parent_id = $subNode->id;
-                    $pair->save();
-
-                    $properties = array(
-                        new NodeProperties(array('name' => 'channelLink')),
-                        new NodeProperties(array('name' => 'stationLink'))
-                    );
-                    $subNode->properties()->saveMany($properties);
-                }
-            }
+            $node = new Node();
+            $node->init($request->input('nodeName'),
+                        $request->input('nodeTypeId'),
+                        $request->input('parentNodeId'));
 
             return 1;
         }
@@ -182,6 +106,28 @@ class NodeController extends Controller
 
     /**
      * @param Request $request
+     * @return Response
+     */
+    public function crossNodeExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId1 = $request->input('nodeId1');
+            $nodeId2 = $request->input('nodeId2');
+            $property = (new Node)->find($nodeId1)->properties()->where('name', 'stationLink' )->first();
+            $property->value = $nodeId2;
+            $property->save();
+            $property = (new Node)->find($nodeId2)->properties()->where('name', 'channelLink' )->first();
+            $property->value = $nodeId1;
+            $property->save();
+
+            return 1;
+        }
+        else
+            return "1212121221";
+    }
+
+    /**
+     * @param Request $request
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -211,7 +157,7 @@ class NodeController extends Controller
         $nodes = Node::all()->where('parent_id', '=', $parentNodeId);
         $arr = array();
         foreach ($nodes as $node) {
-            $tmpArr = array("title" => $node->name, "key" => $node->id);
+            $tmpArr = array("title" => $node->fullName(), "key" => $node->id);
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
             if($subNodesCount > 0) {
                 $tmpArr["folder"] = "true";

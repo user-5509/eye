@@ -11,7 +11,8 @@
 
     <style type="text/css">
         .fancytree-container {
-            height: 250px;
+            height: 500px;
+            width: 500px;
             overflow: auto;
         }
     </style>
@@ -93,7 +94,7 @@
 
         $("#crossNodeButton").on("click",function () {
             $('#nodeActionModal').find('.modal-content')
-                .load(              "http://localhost/content/node/cross/modal",
+                .load("http://localhost/content/node/cross/modal",
                     { _method: "get", _token: "{{ csrf_token() }}" },
                     function( response, status, xhr ) {
                         if ( status == "error" ) {
