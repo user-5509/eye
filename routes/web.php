@@ -15,11 +15,15 @@
 //    return view('welcome');
 //});
 
+Route::get('', function () {
+    return view('main');
+});
+
 Route::get('getTreeData', 'NodeController@getTreeData');
 
-Route::get('node', 'NodeController@index');
-
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
+
+Route::get('/content/node/index', 'NodeController@index');
 
 Route::get('/content/node/create/available-types-dropdown', 'NodeController@createNodeAvailableTypesDropdown');
 

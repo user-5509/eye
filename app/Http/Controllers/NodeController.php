@@ -151,17 +151,16 @@ class NodeController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, $nodeId = 1)
+    public function index(Request $request)
     {
-        $request->session()->put('currentNodeId', $nodeId);
-        $currentNode = (new Node)->find($nodeId);
-        $nodes = Node::all()->where('parent_id', '=', $nodeId);
+        $currentNode = (new Node)->find(1);
+        $nodes = Node::all()->where('parent_id', '=', 1);
         $parentIdList = [$currentNode->type_id];
         $availableNodeTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
 
-        return view('node.index', ['currentNode' => $currentNode,
+        return view('content.node.index', ['currentNode' => $currentNode,
                                         'nodes' => $nodes,
                                         'availableNodeTypes' => $availableNodeTypes]);
     }
