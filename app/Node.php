@@ -227,6 +227,16 @@ class Node extends Model
     }
 
     /**
+     * Get node line
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function line()
+    {
+        return $this->belongsTo('App\Line', 'line_id');
+    }
+
+    /**
      * Get parent node
      *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
@@ -253,8 +263,11 @@ class Node extends Model
     {
         //$a = $this->type;
         if($this->type->name == 'Пара') {
-            $fullName = $this->name . " (ch=" . $this->properties()->where('name', 'channelLink' )->first()->value . ")";
-            $fullName .= " (st=" . $this->properties()->where('name', 'stationLink' )->first()->value . ")";
+            $fullName = $this->name . " К:" . $this->properties()->where('name', 'channelLink' )->first()->value;
+            $fullName .= ", С:" . $this->properties()->where('name', 'stationLink' )->first()->value;
+            if($this->line <> null) {
+                $fullName .= ", Линия:" . $this->line->name;
+            }
             return $fullName;
             //return $this->name . " (ch=" . $this->properties()->first()->name;
         } else {

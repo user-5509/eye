@@ -12,7 +12,7 @@
     <style type="text/css">
         .fancytree-container {
             height: 500px;
-            width: 500px;
+            width: 450px;
             overflow: auto;
         }
     </style>
@@ -42,6 +42,8 @@
     <button type="button" id="deleteNodeButton" class="btn btn-secondary btn-sm" data-toggle="modal"
             data-target="#nodeActionModal">Удалить</button>
 
+    <button type="button" id="testButton" class="btn btn-secondary btn-sm">Test expand</button>
+
     <!-- Modal: node action -->
     <div class="modal fade" id="nodeActionModal" tabindex="-1" role="dialog" aria-labelledby="nodeActionModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -50,9 +52,21 @@
         </div>
     </div>
 
-    <!-- Tree: nodes -->
-    <div id="tree"></div>
-    <input type="hidden" id="activeNodeId" value="1">
+    <div id="activeNodeId">1</div>
+
+    <table>
+        <colgroup>
+            <col width="300px" valign="top">
+            <col width="90%">
+        </colgroup>
+        <tr>
+            <td valign="top">
+                <!-- Tree: nodes -->
+                <div id="tree"></div>
+            </td>
+            <td valign="top">
+                <div id="nodeAbout">sss</div>
+            </td>
 
 
 
@@ -93,9 +107,10 @@
         });
 
         $("#crossNodeButton").on("click",function () {
+            var nodeId = $("#tree").fancytree("getActiveNode").key;
             $('#nodeActionModal').find('.modal-content')
                 .load("http://localhost/content/node/cross/modal",
-                    { _method: "get", _token: "{{ csrf_token() }}" },
+                    { _method: "get", _token: "{{ csrf_token() }}", nodeId: nodeId },
                     function( response, status, xhr ) {
                         if ( status == "error" ) {
                             var msg = "Sorry but there was an error: ";
@@ -105,12 +120,35 @@
                 );
         });
 
+        $("#testButton").on("click",function () {
+            var tree = $("#tree").fancytree("getTree");
+            tree.loadKeyPath("/2/3/4/6", function(node, status){
+                if(status === "loaded") {
+                    console.log("loaded intermiediate node " + node);
+                }else if(status === "ok") {
+                    console.log("Node to activate: " + node);
+                    $("#tree").fancytree("getTree").activateKey(node.key);
+                }
+            });
+        });
+
         // Tree init
         $(function(){
             // Create the tree inside the <div id="tree"> element.
             $("#tree").fancytree({
                 activate: function(event, data) {
-                    $("#activeNodeId").value(data.node.key);
+                    $("#activeNodeId").text(data.node.key);
+                    if(data.node.data.about) {
+                        $("#nodeAbout").load(  "http://localhost/content/node/about",
+                            { _method: "get", _token: "{{ csrf_token() }}", nodeId: data.node.key },
+                            function( response, status, xhr ) {
+                                if ( status == "error" ) {
+                                    var msg = "[availableTypesDropdown] Sorry but there was an error: ";
+                                    alert( msg + xhr.status + " " + xhr.statusText );
+                                }
+                            }
+                        );
+                    }
                 },
                 source: {
                     url: "/getTreeData",

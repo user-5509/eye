@@ -18,6 +18,8 @@ class CreateNodesTable extends Migration
             $table->string('name');
             $table->integer('type_id');
             $table->foreign('type_id')->references('id')->on('node_types');
+            $table->integer('line_id')->nullable();
+            $table->foreign('line_id')->references('id')->on('lines');
             $table->integer('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')->references('id')->on('nodes')->onDelete('cascade');
             $table->timestamps();

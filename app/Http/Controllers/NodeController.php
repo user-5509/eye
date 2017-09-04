@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 
-use App\Node;
-use App\NodeProperties;
+use App\Node;;
 use App\NodeType;
+use App\Line;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Response;
@@ -98,7 +98,16 @@ class NodeController extends Controller
     public function nodeCrossModal(Request $request)
     {
         if ($request->ajax()) {
-            return view('content.node.cross-modal');
+            $nodeId = Input::get('nodeId');
+            $node = (new Node)->find($nodeId);
+            if($node->line <> null){
+                $lineId = $node->line->id;
+                $lineName = $node->line->name;
+            } else {
+                $lineId = null;
+                $lineName = "";
+            }
+            return view('content.node.cross-modal', ['lineId' => $lineId, 'lineName' => $lineName]);
         }
         else
             return null;
@@ -112,14 +121,25 @@ class NodeController extends Controller
     {
         if ($request->ajax()) {
             $nodeId1 = $request->input('nodeId1');
+            $node1 = (new Node)->find($nodeId1);
             $nodeId2 = $request->input('nodeId2');
-            $property = (new Node)->find($nodeId1)->properties()->where('name', 'stationLink' )->first();
-            $property->value = $nodeId2;
-            $property->save();
-            $property = (new Node)->find($nodeId2)->properties()->where('name', 'channelLink' )->first();
-            $property->value = $nodeId1;
-            $property->save();
+            $node2 = (new Node)->find($nodeId2);
+            $node1Property = $node1->properties()->where('name', 'stationLink' )->first();
+            $node1Property->value = $nodeId2;
+            $node1Property->save();
+            $node2Property = $node2->properties()->where('name', 'channelLink' )->first();
+            $node2Property->value = $nodeId1;
+            $node2Property->save();
 
+            if($node1->line == null) {
+                $line = new Line;
+                $line->name = $request->input('lineName');
+                $line->save();
+                $node1->line()->associate($line);
+                $node1->save();
+                $node2->line()->associate($line);
+                $node2->save();
+            }
             return 1;
         }
         else
@@ -154,7 +174,7 @@ class NodeController extends Controller
     public function getTreeData(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
-        $nodes = Node::all()->where('parent_id', '=', $parentNodeId);
+        $nodes = Node::all()->sortBy('id')->where('parent_id', '=', $parentNodeId);
         $arr = array();
         foreach ($nodes as $node) {
             $tmpArr = array("title" => $node->fullName(), "key" => $node->id);
@@ -163,25 +183,37 @@ class NodeController extends Controller
                 $tmpArr["folder"] = "true";
                 $tmpArr["lazy"] = "true";
             }
+            if($node->type->id == 6) {
+                $tmpArr["about"] = "true";
+            }
             $arr[] = $tmpArr;
         }
         return json_encode($arr);
     }
-
-
 
     public function parent($id)
     {
         return (new Node)->find($id)->parent;
     }
 
-    public function create($parentNodeId, $nodeTypeId)
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function nodeAbout(Request $request)
     {
-        $nodeType = (new NodeType)->find($nodeTypeId);
-        return view('node.create', ['parentNodeId' => $parentNodeId,
-            'nodeType' => $nodeType]);
+        if ($request->ajax()) {
+            $nodeId = Input::get('nodeId');
+            $node = (new Node)->find($nodeId);
+            if($node->line <> null){
+                $line = $node->line;
+            } else {
+                $line = null;
+            }
+            return view('content.node.about', ['node' => $node, 'line' => $line]);
+        }
+        else
+            return null;
     }
-
-
 
 }
