@@ -28,10 +28,10 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Структура<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#" id="menuNodes">Структура</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Каналы</a>
+                <a class="nav-link" href="#" id="menuLines">Тракты</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Пусто</a>
@@ -53,19 +53,46 @@
     <script src="http://localhost/fancytree/jquery.fancytree-all-deps.min.js"></script>
 
     <script type="text/javascript">
-    $(function(){
-        //alert(123);
-        $('#content')
-            .load(  "http://localhost/content/node/index",
+        function loadNodes(contentContainer) {
+            contentContainer.load(  "http://localhost/content/node/index",
                 { _method: "get", _token: "{{ csrf_token() }}" },
                 function( response, status, xhr ) {
                     if ( status == "error" ) {
-                        var msg = "[content] Sorry but there was an error: ";
+                        var msg = "[loadNodes] Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
                     }
                 }
             );
-    });
+        }
+
+        function loadLines(contentContainer) {
+            contentContainer.load(  "http://localhost/content/line/index",
+                { _method: "get", _token: "{{ csrf_token() }}" },
+                function( response, status, xhr ) {
+                    if ( status == "error" ) {
+                        var msg = "[loadLines] Sorry but there was an error: ";
+                        alert( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
+        }
+
+        // default...
+        $(function(){
+            loadNodes($('#content'));
+        });
+
+        $("#menuNodes").on("click",function () {
+            loadNodes($('#content'));
+            $( "ul.navbar-nav" ).find( "li.active" ).removeClass("active");
+            $('#menuNodes').addClass("active");
+        });
+
+        $("#menuLines").on("click",function () {
+            loadLines($('#content'));
+            $( "ul.navbar-nav" ).find( "li.active" ).removeClass("active");
+            $('#menuLines').addClass("active");
+        });
     </script>
 </body>
 </html>

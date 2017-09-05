@@ -117,16 +117,18 @@ class NodeController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function crossNodeExecute(Request $request)
+    public function crossExecute(Request $request)
     {
         if ($request->ajax()) {
             $nodeId1 = $request->input('nodeId1');
-            $node1 = (new Node)->find($nodeId1);
             $nodeId2 = $request->input('nodeId2');
-            $node2 = (new Node)->find($nodeId2);
+
+            $node1 = (new Node)->find($nodeId1);
             $node1Property = $node1->properties()->where('name', 'stationLink' )->first();
             $node1Property->value = $nodeId2;
             $node1Property->save();
+
+            $node2 = (new Node)->find($nodeId2);
             $node2Property = $node2->properties()->where('name', 'channelLink' )->first();
             $node2Property->value = $nodeId1;
             $node2Property->save();
@@ -135,8 +137,10 @@ class NodeController extends Controller
                 $line = new Line;
                 $line->name = $request->input('lineName');
                 $line->save();
+
                 $node1->line()->associate($line);
                 $node1->save();
+
                 $node2->line()->associate($line);
                 $node2->save();
             }

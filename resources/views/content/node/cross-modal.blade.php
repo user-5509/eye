@@ -70,8 +70,8 @@
             }
         });
     });
+
     $("#crossNodeExecute").on("click",function () {
-        //alert($("#lineName").val());
         $.post( "http://localhost/node/cross/execute", {
             _token: "{{ csrf_token() }}",
             nodeId1: $("#tree").fancytree("getActiveNode").key,

@@ -11,10 +11,6 @@
 |
 */
 
-//Route::get('/node', function () {
-//    return view('welcome');
-//});
-
 Route::get('', function () {
     return view('main');
 });
@@ -22,6 +18,8 @@ Route::get('', function () {
 Route::get('getTreeData', 'NodeController@getTreeData');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
+
+Route::get('/nodes', 'NodeController@index');
 
 Route::get('/content/node/index', 'NodeController@index');
 
@@ -37,7 +35,7 @@ Route::delete('node/{id?}/delete', 'NodeController@deleteNodeExecute')->where('i
 
 Route::get('/content/node/cross/modal', 'NodeController@nodeCrossModal');
 
-Route::post('/node/cross/execute', 'NodeController@crossNodeExecute');
+Route::post('/node/cross/execute', 'NodeController@crossExecute');
 
 Route::get('/content/node/about', 'NodeController@nodeAbout');
 
