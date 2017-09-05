@@ -77,6 +77,18 @@
             );
         }
 
+        function loadContent() {
+            contentContainer.load(  "http://localhost/content/line/index",
+                { _method: "get", _token: "{{ csrf_token() }}" },
+                function( response, status, xhr ) {
+                    if ( status == "error" ) {
+                        var msg = "[loadLines] Sorry but there was an error: ";
+                        alert( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
+        }
+
         // default...
         $(function(){
             loadNodes($('#content'));
@@ -84,13 +96,13 @@
 
         $("#menuNodes").on("click",function () {
             loadNodes($('#content'));
-            $( "ul.navbar-nav" ).find( "li.active" ).removeClass("active");
+            $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuNodes').addClass("active");
         });
 
         $("#menuLines").on("click",function () {
             loadLines($('#content'));
-            $( "ul.navbar-nav" ).find( "li.active" ).removeClass("active");
+            $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuLines').addClass("active");
         });
     </script>

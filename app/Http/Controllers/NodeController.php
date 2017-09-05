@@ -194,6 +194,17 @@ class NodeController extends Controller
         return json_encode($arr);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getByLine($lineId)
+    {
+        $nodes = Node::all()->sortBy('id')->where('line_id', '=', $lineId);
+            return $nodes;
+    }
+
     public function parent($id)
     {
         return (new Node)->find($id)->parent;

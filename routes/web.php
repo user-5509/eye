@@ -43,3 +43,5 @@ Route::get('/node/{id?}/detail', 'NodeController@detail')->where('id', '[0-9]+')
 
 Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+');
 
+Route::get('/content/line/index', 'LineController@index');
+
