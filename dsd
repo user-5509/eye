@@ -1,0 +1,182 @@
+[33mcommit 916cf80981a05850e2ae25f67bf956f2965ec4bc[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Wed Sep 6 05:55:29 2017 +0700
+
+    Line view
+
+[33mcommit 60039905ec4ea74c777fde0e6dc73dffbb31d22b[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Tue Sep 5 18:08:12 2017 +0700
+
+    Main page issue
+
+[33mcommit d3b9cf704efcbce5b08763390ab954e0fcc460c1[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Sep 4 16:24:04 2017 +0700
+
+    add main template and menu bar
+
+[33mcommit 2603215daa966542f885d2a5f989357ce35ff87a[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Sep 4 07:46:51 2017 +0700
+
+    progress line
+
+[33mcommit 7fb91fe56e8b7490e6adeaec0263893685609aea[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Sep 1 16:59:06 2017 +0700
+
+    First link implementation
+
+[33mcommit 111d94e336f4cc05434fceba659b49d12a0a62a0[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 28 17:54:25 2017 +0700
+
+    small changes in node controller
+    + doc
+
+[33mcommit 51cf6c655ee95ef555d9b9f70bcefc0c65cd5a26[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 28 07:09:01 2017 +0700
+
+    some refactoring
+                                add tree
+                                prepare for link integration
+
+[33mcommit 172c59113bf2c0f1df91ae1f4b33dff019484c8f[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 28 06:57:31 2017 +0700
+
+    some refactoring
+    add tree
+    prepare for link integration
+
+[33mcommit df8a304bb69a84b9f486578fab18272ff40775e0[m
+Merge: 23fbb18 2f1c802
+Author: user-5509 <registerous@gmail.com>
+Date:   Wed Aug 16 21:58:33 2017 +0700
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 23fbb1826226c267ec02029a8c866cadf3f67bdd[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Wed Aug 16 21:57:42 2017 +0700
+
+    node links progress
+
+[33mcommit 2f1c8029047a8954b02fea4a2a5de50d51feaa9c[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 14 17:59:52 2017 +0700
+
+    Start to work with link prototypes
+
+[33mcommit f1983d87291d24e2f91faea6fceb65c2f610f17b[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 14 07:35:32 2017 +0700
+
+    type templates progress
+
+[33mcommit 1d06a4d10aa30fa34ce744215b1488824ef6f869[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Aug 11 16:43:09 2017 +0700
+
+    generate box content
+
+[33mcommit 07a477ef78920b6501cdc44d700e4dd884e6bc0d[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Aug 11 07:48:25 2017 +0700
+
+    some progress
+
+[33mcommit 7f5c99608288ecd308c1e78bd74b7be653a112fa[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Thu Aug 10 17:59:40 2017 +0700
+
+    many to many relations
+
+[33mcommit 35ffaf6d6000ea9ecca17571066ad961b90cddb3[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Thu Aug 10 08:07:54 2017 +0700
+
+    form, ajax, stupid chrome
+
+[33mcommit 1df038508f963dad2e6100d2611dc15c37ac810e[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Tue Aug 8 18:01:13 2017 +0700
+
+    Now working on CRUD
+
+[33mcommit 5c68317eef90ebe49f71e5cccdf61a92382b0dfb[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Aug 7 06:24:47 2017 +0700
+
+    ajax troubles
+
+[33mcommit 6faf9bf3a3b2a481a97042e5656ca6457eb9e1f0[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Aug 4 16:55:26 2017 +0700
+
+    Add node template
+    forms
+    bootstrap
+
+[33mcommit ee74cf4e359b66b77bbb523c6f7ec5fc0f2efa31[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Thu Aug 3 18:33:22 2017 +0700
+
+    Add NodeTypes
+
+[33mcommit ce509c243417e72d63a5eb0fee117eadfffd5238[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Jul 31 18:25:17 2017 +0700
+
+    Progress on DB relations!
+
+[33mcommit a1c9feee8f5ce59a0af3d0acf5a76f21d8158b01[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Mon Jul 31 18:24:32 2017 +0700
+
+    Progress on DB relations!
+
+[33mcommit d4dc680b95af8951770574c3fbb89a35e6036796[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Sun Jul 30 23:10:22 2017 +0700
+
+    relations in migrations
+
+[33mcommit cc3da76127c7a9d7194d55ee9e1956dfe2203bca[m
+Merge: d96066e 1a6e8e8
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Jul 28 16:53:55 2017 +0700
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d96066eb70772ae1a2c932022293f08d6643238b[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Jul 28 16:52:59 2017 +0700
+
+    First tunes. DB migrations. next
+
+[33mcommit 4fa9ad25341c6757d5b8283d61027fafafb3a02c[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Fri Jul 28 16:49:23 2017 +0700
+
+    First tunes. DB migrations. next
+
+[33mcommit 1a6e8e83f665daf8ec5039ab611e6b896ca6a8ce[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Wed Jul 26 05:52:04 2017 +0700
+
+    at home, nothing to do
+
+[33mcommit cc61ecb57e8505c8eeedb2442982f669ef5ce5a2[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Tue Jul 25 18:17:34 2017 +0700
+
+    First tunes. DB migrations.
+
+[33mcommit 96eaa726fb33d94853ffb3511e16c9cd1c08baf8[m
+Author: user-5509 <registerous@gmail.com>
+Date:   Tue Jul 25 00:07:36 2017 +0700
+
+    Initial commit

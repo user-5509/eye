@@ -261,7 +261,6 @@ class Node extends Model
      */
     public function fullName()
     {
-        //$a = $this->type;
         if($this->type->name == 'Пара') {
             $fullName = $this->name . " К:" . $this->properties()->where('name', 'channelLink' )->first()->value;
             $fullName .= ", С:" . $this->properties()->where('name', 'stationLink' )->first()->value;
@@ -269,11 +268,29 @@ class Node extends Model
                 $fullName .= ", Линия:" . $this->line->name;
             }
             return $fullName;
-            //return $this->name . " (ch=" . $this->properties()->first()->name;
         } else {
             return $this->name;
         }
-
     }
 
+    public function nameWithParent()
+    {
+        if($this->type->name == 'Пара') {
+            $name = $this->parent->name . "-" . $this->name;
+        } else {
+            $name =  $this->name;
+        }
+        return $name;
+    }
+
+    public function getPath()
+    {
+        $path = "";
+        $curNode = $this->parent;
+        while($curNode->parent <> null) {
+            $path = $curNode->parent->name . "\\" . $path;
+            $curNode = $curNode->parent;
+        }
+        return $path;
+    }
 }

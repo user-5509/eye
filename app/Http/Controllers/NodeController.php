@@ -19,6 +19,27 @@ class NodeController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    public function index(Request $request)
+    {
+        $currentNode = (new Node)->find(1);
+        $nodes = Node::all()->where('parent_id', '=', 1);
+        $parentIdList = [$currentNode->type_id];
+        $availableNodeTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
+            $query->whereIn('id', $parentIdList);
+        })->get();
+
+        return view('content.node.index', [
+            'title' => 'Структура',
+            'currentNode' => $currentNode,
+            'nodes' => $nodes,
+            'availableNodeTypes' => $availableNodeTypes]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function createNodeAvailableTypesDropdown(Request $request)
     {
         $nodeId = Input::get('nodeId');
@@ -155,25 +176,6 @@ class NodeController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
-    {
-        $currentNode = (new Node)->find(1);
-        $nodes = Node::all()->where('parent_id', '=', 1);
-        $parentIdList = [$currentNode->type_id];
-        $availableNodeTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
-            $query->whereIn('id', $parentIdList);
-        })->get();
-
-        return view('content.node.index', ['currentNode' => $currentNode,
-                                        'nodes' => $nodes,
-                                        'availableNodeTypes' => $availableNodeTypes]);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function getTreeData(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
@@ -230,4 +232,15 @@ class NodeController extends Controller
             return null;
     }
 
+    public function removeLineBinding($lineId)
+    {
+        $nodes = Node::all()->where('line_id', '=', $lineId);
+        foreach ($nodes as $node) {
+            if($node->line_id == $lineId) {
+                $node->line_id = null;
+                $node->save();
+            }
+        }
+        return $nodes;
+    }
 }

@@ -45,3 +45,14 @@ Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+')
 
 Route::get('/content/line/index', 'LineController@index');
 
+Route::get('/content/line/list', 'LineController@getList');
+
+Route::get('/content/line/about', 'LineController@about');
+
+Route::get('/content/line/create/modal', 'LineController@createLineModal');
+
+Route::post('/line/create/execute', 'LineController@createLineExecute');
+
+Route::get('/content/line/delete/modal', 'LineController@deleteLineModal');
+
+Route::delete('line/{id?}/delete', 'LineController@deleteLineExecute')->where('id', '[0-9]+');

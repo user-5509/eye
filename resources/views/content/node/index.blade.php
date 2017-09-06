@@ -44,6 +44,8 @@
             <td valign="top">
                 <div id="nodeAbout">sss</div>
             </td>
+        </tr>
+    </table>
 
     <script type="text/javascript">
         $("#createNodeButton").on("click",function () {
@@ -101,9 +103,8 @@
             });
         });
 
-        // Tree init
         $(function(){
-            // Create the tree inside the <div id="tree"> element.
+            // Tree init
             $("#tree").fancytree({
                 activate: function(event, data) {
                     $("#activeNodeId").text(data.node.key);
@@ -134,4 +135,6 @@
                 }
             });
         });
+
+        $("title").text("Кросс - структура");
     </script>
