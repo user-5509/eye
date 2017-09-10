@@ -19,13 +19,12 @@ class Node extends Model
         $this->name = $name;
         $this->type_id = $typeId;
         $this->parent_id = $parentId;
-
         $this->save();
 
-        if($this->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
+        if ($this->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
             $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
             foreach ($pairNamePrefixes as $pairNamePrefix) {
-                for($i = 1; $i <= 20; $i++) {
+                for ($i = 1; $i <= 20; $i++) {
                     $subName = $pairNamePrefix . $i;
                     $subNode = new Node;
                     $subNode->name = $subName;
@@ -35,16 +34,16 @@ class Node extends Model
                     $subNode->save();
 
                     $properties = array(
-                        new NodeProperties(array('name' => "channelLink", 'value' => null)),
-                        new NodeProperties(array('name' => "stationLink", 'value' => null))
+                        new NodeProperties(array('name' => "Канал", 'value' => null)),
+                        new NodeProperties(array('name' => "Станция", 'value' => null))
                     );
                     $subNode->properties()->saveMany($properties);
                 }
             }
         }
 
-        if($this->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
-            for($i = 1; $i <= 100; $i++) {
+        if ($this->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
+            for ($i = 1; $i <= 100; $i++) {
                 $subName = $i;
                 $subNode = new Node;
                 $subNode->name = $subName;
@@ -54,166 +53,97 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                    new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
         }
 
-        if($this->type_id == (new NodeType)->getByName("Плата (КС)")->id) {
-            for($i = 1; $i <= 36; $i++) {
-
+        if ($this->type_id == (new NodeType)->getByName("Плата (КС)")->id) {
+            for ($i = 1; $i <= 36; $i++) {
                 // Передача
-                $subName = 'Гнездо №'.$i.' (пер)';
                 $subNode = new Node;
-                $subNode->name = $subName;
+                $subNode->name = 'Гнездо №' . $i . ' (пер)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Гнездо")->id;
+                $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
-                $pair = new Node;
-                $pair->name = "Канал";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
                 $properties = array(
-                    new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                    new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция', 'value' => null))
                 );
-                $pair->properties()->saveMany($properties);
-
-                $pair = new Node;
-                $pair->name = "Станция";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
-                $properties = array(
-                    new NodeProperties(array('name' => 'channelLink')),
-                    new NodeProperties(array('name' => 'stationLink'))
-                );
-                $pair->properties()->saveMany($properties);
+                $subNode->properties()->saveMany($properties);
 
                 // Прием
-                $subName = 'Гнездо №'.$i.' (пр)';
                 $subNode = new Node;
-                $subNode->name = $subName;
+                $subNode->name = 'Гнездо №' . $i . ' (пр)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Гнездо")->id;
+                $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
-                $pair = new Node;
-                $pair->name = "Канал";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
                 $properties = array(
-                    new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                    new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция', 'value' => null))
                 );
-                $pair->properties()->saveMany($properties);
-
-                $pair = new Node;
-                $pair->name = "Станция";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
-                $properties = array(
-                    new NodeProperties(array('name' => 'channelLink')),
-                    new NodeProperties(array('name' => 'stationLink'))
-                );
-                $pair->properties()->saveMany($properties);
+                $subNode->properties()->saveMany($properties);
             }
         }
 
-        if($this->type_id == (new NodeType)->getByName("Плата (СКС)")->id) {
-            for($i = 1; $i <= 36; $i++) {
-
+        if ($this->type_id == (new NodeType)->getByName("Плата (СКС)")->id) {
+            for ($i = 1; $i <= 36; $i++) {
                 // Передача
-                $subName = 'Гнездо №'.$i.' (пер)';
                 $subNode = new Node;
-                $subNode->name = $subName;
+                $subNode->name = 'Гнездо №' . $i . ' (пер)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Гнездо")->id;
+                $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
-                $pair = new Node;
-                $pair->name = "Канал";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
                 $properties = array(
-                    new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                    new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция 1', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция 2', 'value' => null))
                 );
-                $pair->properties()->saveMany($properties);
-
-                $pair = new Node;
-                $pair->name = "Станция 1";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
-                $properties = array(
-                    new NodeProperties(array('name' => 'channelLink')),
-                    new NodeProperties(array('name' => 'stationLink'))
-                );
-                $pair->properties()->saveMany($properties);
-
-                $pair = new Node;
-                $pair->name = "Станция 2";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
-                $properties = array(
-                    new NodeProperties(array('name' => 'channelLink')),
-                    new NodeProperties(array('name' => 'stationLink'))
-                );
-                $pair->properties()->saveMany($properties);
+                $subNode->properties()->saveMany($properties);
 
                 // Прием
-                $subName = 'Гнездо №'.$i.' (пр)';
                 $subNode = new Node;
-                $subNode->name = $subName;
+                $subNode->name = 'Гнездо №' . $i . ' (пр)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Гнездо")->id;
+                $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
-                $pair = new Node;
-                $pair->name = "Канал";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
                 $properties = array(
-                    new NodeProperties(array('name' => 'channelLink', 'value' => null)),
-                    new NodeProperties(array('name' => 'stationLink', 'value' => null))
+                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция 1', 'value' => null)),
+                    new NodeProperties(array('name' => 'Станция 2', 'value' => null))
                 );
-                $pair->properties()->saveMany($properties);
-
-                $pair = new Node;
-                $pair->name = "Станция";
-                $pair->type_id = $subType->getByName("Пара")->id;
-                $pair->parent_id = $subNode->id;
-                $pair->save();
-
-                $properties = array(
-                    new NodeProperties(array('name' => 'channelLink')),
-                    new NodeProperties(array('name' => 'stationLink'))
-                );
-                $pair->properties()->saveMany($properties);
+                $subNode->properties()->saveMany($properties);
             }
         }
+
+        if ($this->type_id == (new NodeType)->getByName("Бокс (кросс)")->id) {
+            for ($i = 1; $i <= 24; $i++) {
+                $subName =  $i;
+                $subNode = new Node;
+                $subNode->name = $subName;
+                $subType = new NodeType();
+                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->parent_id = $this->id;
+                $subNode->save();
+
+                $properties = array(
+                    new NodeProperties(array('name' => "Канал", 'value' => null)),
+                    new NodeProperties(array('name' => "Станция", 'value' => null))
+                );
+                $subNode->properties()->saveMany($properties);
+            }
+        }
+
     }
 
     /**
@@ -262,10 +192,13 @@ class Node extends Model
     public function fullName()
     {
         if($this->type->name == 'Пара') {
-            $fullName = $this->name . " К:" . $this->properties()->where('name', 'channelLink' )->first()->value;
-            $fullName .= ", С:" . $this->properties()->where('name', 'stationLink' )->first()->value;
+            $fullName = $this->name . " ";
+            //$properties = $this->properties();
+            foreach ($this->properties as $property) {
+                $fullName .= ", " . $property->name . ": " . $property->value;
+            }
             if($this->line <> null) {
-                $fullName .= ", Линия:" . $this->line->name;
+                $fullName .= ", тракт: " . $this->line->name;
             }
             return $fullName;
         } else {

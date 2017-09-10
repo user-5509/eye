@@ -24,15 +24,17 @@ class NodeController extends Controller
         $currentNode = (new Node)->find(1);
         $nodes = Node::all()->where('parent_id', '=', 1);
         $parentIdList = [$currentNode->type_id];
-        $availableNodeTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
+        $availableNodeTypes = (new NodeType)->whereHas('parents', function ($query) use ($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
+        $nodePath = session("nodePath", "");
 
         return view('content.node.index', [
             'title' => 'Структура',
             'currentNode' => $currentNode,
             'nodes' => $nodes,
-            'availableNodeTypes' => $availableNodeTypes]);
+            'availableNodeTypes' => $availableNodeTypes,
+            'nodePath' => $nodePath]);
     }
 
     /**
@@ -45,7 +47,7 @@ class NodeController extends Controller
         $nodeId = Input::get('nodeId');
         $typeId = (new Node)->find($nodeId)->type->id;
         $parentIdList = [$typeId];
-        $subTypes = (new NodeType)->whereHas('parents', function($query) use($parentIdList) {
+        $subTypes = (new NodeType)->whereHas('parents', function ($query) use ($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
         return view('content.node.available-types-dropdown', ['nodeId' => $nodeId, 'subTypes' => $subTypes]);
@@ -63,8 +65,7 @@ class NodeController extends Controller
             $parentNodeId = Input::get('parentNodeId');
 
             return view('content.node.create-modal', ['nodeTypeId' => $nodeTypeId, 'nodeTypeName' => $nodeTypeName, 'parentNodeId' => $parentNodeId]);
-        }
-        else
+        } else
             return null;
     }
 
@@ -77,12 +78,11 @@ class NodeController extends Controller
         if ($request->ajax()) {
             $node = new Node();
             $node->init($request->input('nodeName'),
-                        $request->input('nodeTypeId'),
-                        $request->input('parentNodeId'));
+                $request->input('nodeTypeId'),
+                $request->input('parentNodeId'));
 
             return 1;
-        }
-        else
+        } else
             return "1212121221";
     }
 
@@ -97,8 +97,7 @@ class NodeController extends Controller
             $nodeName = (new Node)->find($nodeId)->name;
 
             return view('content.node.delete-modal', ['nodeId' => $nodeId, 'nodeName' => $nodeName]);
-        }
-        else
+        } else
             return null;
     }
 
@@ -112,25 +111,40 @@ class NodeController extends Controller
         $node->delete();
     }
 
+    public function crossNodeAvailableInterfacesDropdown(Request $request)
+    {
+        $nodeId = Input::get('nodeId');
+        $interfaces = (new Node)->find($nodeId)->properties;
+
+        return view('content.node.available-interfaces-dropdown', ['interfaces' => $interfaces]);
+    }
+
+    public function crossNodeAvailableInterfacesSelect(Request $request)
+    {
+        $nodeId = Input::get('nodeId');
+        $interfaces = (new Node)->find($nodeId)->properties;
+
+        return view('content.node.available-interfaces-select', ['interfaces' => $interfaces]);
+    }
+
     /**
      * @param Request $request
      * @return Response
      */
-    public function nodeCrossModal(Request $request)
+    public function crossModal(Request $request)
     {
         if ($request->ajax()) {
             $nodeId = Input::get('nodeId');
             $node = (new Node)->find($nodeId);
-            if($node->line <> null){
-                $lineId = $node->line->id;
-                $lineName = $node->line->name;
-            } else {
-                $lineId = null;
-                $lineName = "";
-            }
-            return view('content.node.cross-modal', ['lineId' => $lineId, 'lineName' => $lineName]);
-        }
-        else
+
+            $interfaceId = Input::get('interfaceId');
+            $interface = $node->properties()->find($interfaceId);
+
+
+            $lines = (new LineController)->getLines();
+
+            return view('content.node.cross-modal', ['lines' => $lines, 'node' => $node, 'interface' => $interface]);
+        } else
             return null;
     }
 
@@ -144,30 +158,32 @@ class NodeController extends Controller
             $nodeId1 = $request->input('nodeId1');
             $nodeId2 = $request->input('nodeId2');
 
+            $interfaceId1 = $request->input('interfaceId1');
+            $interfaceId2 = $request->input('interfaceId2');
+
+
             $node1 = (new Node)->find($nodeId1);
-            $node1Property = $node1->properties()->where('name', 'stationLink' )->first();
+            $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
             $node1Property->value = $nodeId2;
             $node1Property->save();
 
             $node2 = (new Node)->find($nodeId2);
-            $node2Property = $node2->properties()->where('name', 'channelLink' )->first();
+            $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
             $node2Property->value = $nodeId1;
             $node2Property->save();
 
-            if($node1->line == null) {
-                $line = new Line;
-                $line->name = $request->input('lineName');
-                $line->save();
+            $lineId = $request->input('lineId');
 
-                $node1->line()->associate($line);
+            if ($node1->line_id == null) {
+                $node1->line_id = $lineId;
                 $node1->save();
-
-                $node2->line()->associate($line);
+            }
+            if ($node2->line_id == null) {
+                $node2->line_id = $lineId;
                 $node2->save();
             }
             return 1;
-        }
-        else
+        } else
             return "1212121221";
     }
 
@@ -184,11 +200,11 @@ class NodeController extends Controller
         foreach ($nodes as $node) {
             $tmpArr = array("title" => $node->fullName(), "key" => $node->id);
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
-            if($subNodesCount > 0) {
+            if ($subNodesCount > 0) {
                 $tmpArr["folder"] = "true";
                 $tmpArr["lazy"] = "true";
             }
-            if($node->type->id == 6) {
+            if ($node->type->id == 6) {
                 $tmpArr["about"] = "true";
             }
             $arr[] = $tmpArr;
@@ -204,7 +220,7 @@ class NodeController extends Controller
     public function getByLine($lineId)
     {
         $nodes = Node::all()->sortBy('id')->where('line_id', '=', $lineId);
-            return $nodes;
+        return $nodes;
     }
 
     public function parent($id)
@@ -221,14 +237,13 @@ class NodeController extends Controller
         if ($request->ajax()) {
             $nodeId = Input::get('nodeId');
             $node = (new Node)->find($nodeId);
-            if($node->line <> null){
+            if ($node->line <> null) {
                 $line = $node->line;
             } else {
                 $line = null;
             }
             return view('content.node.about', ['node' => $node, 'line' => $line]);
-        }
-        else
+        } else
             return null;
     }
 
@@ -236,11 +251,46 @@ class NodeController extends Controller
     {
         $nodes = Node::all()->where('line_id', '=', $lineId);
         foreach ($nodes as $node) {
-            if($node->line_id == $lineId) {
+            if ($node->line_id == $lineId) {
                 $node->line_id = null;
                 $node->save();
+
+                $nodeProperty = $node->properties()->where('name', 'stationLink')->first();
+                $nodeProperty->value = null;
+                $nodeProperty->save();
+
+                $nodeProperty = $node->properties()->where('name', 'channelLink')->first();
+                $nodeProperty->value = null;
+                $nodeProperty->save();
             }
         }
         return $nodes;
+    }
+
+    public function savePath(Request $request)
+    {
+        $nodePath = $request->input('nodePath');
+        session(["nodePath" => $nodePath]);
+    }
+
+
+    public function menu(Request $request)
+    {
+        $nodeId = Input::get('nodeId');
+        $callback = Input::get('callback');
+
+        $typeId = (new Node)->find($nodeId)->type->id;
+        $parentIdList = [$typeId];
+        $subTypes = (new NodeType)->whereHas('parents', function ($query) use ($parentIdList) {
+            $query->whereIn('id', $parentIdList);
+        })->get();
+
+        $arr = array();
+        foreach ($subTypes as $type) {
+            $type_id = $type->id;
+            $arr['type'.$type->id] = array('name' => $type->name, 'icon' => 'add', 'callback' => $callback.'('.$type_id.')');
+        }
+
+        return json_encode($arr);
     }
 }

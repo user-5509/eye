@@ -15,7 +15,7 @@
         </tr>
 </table>
 
-<!-- Modal: node action -->
+<!-- Modal: line action -->
 <div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -24,6 +24,7 @@
 </div>
 
 <script type="text/javascript">
+
     $("#createLineButton").on("click",function () {
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/create/modal",
@@ -50,22 +51,9 @@
         );
     }
 
-    $(".list-group-item").on("click",function () {
-        //console.log(this);
-        var lineId = $(this).data("id");
-        $("#lineAbout").load(  "http://localhost/content/line/about",
-            { _method: "get", _token: "{{ csrf_token() }}", lineId: lineId },
-            function( response, status, xhr ) {
-                if ( status == "error" ) {
-                    var msg = "[lineAbout] Sorry but there was an error: ";
-                    alert( msg + xhr.status + " " + xhr.statusText );
-                }
-            }
-        );
-    });
-
     $(function(){
         $("title").text("Кросс - тракты");
         linesListReload();}
     );
+
 </script>

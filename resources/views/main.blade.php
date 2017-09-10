@@ -8,6 +8,7 @@
     <!-- Bootstrap -->
     <link href="http://localhost/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://localhost/fancytree/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+    <link href="http://localhost/css/jquery.contextMenu.min.css" rel="stylesheet">
 
     <style type="text/css">
         .fancytree-container {
@@ -43,6 +44,8 @@
     </div>
 </nav>
 
+<span class="context-menu-one btn btn-neutral">right click me</span>
+
 <div id="content"></div>
 
 
@@ -51,6 +54,9 @@
     <script src="http://localhost/js/tether.min.js"></script>
     <script src="http://localhost/js/bootstrap.min.js"></script>
     <script src="http://localhost/fancytree/jquery.fancytree-all-deps.min.js"></script>
+    <script src="http://localhost/js/jquery.contextMenu.min.js"></script>
+    <!-- <script src="http://localhost/js/jquery.ui.position.js"></script> -->
+    <script src="js/jquery.fancytree.contextMenu.js"></script>
 
     <script type="text/javascript">
         function loadNodes(contentContainer) {
@@ -104,6 +110,31 @@
             loadLines($('#content'));
             $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuLines').addClass("active");
+        });
+
+        $(function() {
+            $.contextMenu({
+                selector: '.context-menu-one',
+                callback: function(key, options) {
+                    var m = "clicked: " + key;
+                    window.console && console.log(m) || alert(m);
+                },
+                items: {
+                    "edit": {name: "Edit", icon: "edit"},
+                    "cut": {name: "Cut", icon: "cut"},
+                    copy: {name: "Copy", icon: "copy"},
+                    "paste": {name: "Paste", icon: "paste"},
+                    "delete": {name: "Delete", icon: "delete"},
+                    "sep1": "---------",
+                    "quit": {name: "Quit", icon: function(){
+                        return 'context-menu-icon context-menu-icon-quit';
+                    }}
+                }
+            });
+
+            $('.context-menu-one').on('click', function(e){
+                console.log('clicked', this);
+            })
         });
     </script>
 </body>

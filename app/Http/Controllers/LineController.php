@@ -22,6 +22,11 @@ class LineController extends Controller
             'lines' => $lines]);
     }
 
+    public function getLines()
+    {
+        return Line::all();
+    }
+
     public function about(Request $request)
     {
         if ($request->ajax()) {
@@ -69,7 +74,7 @@ class LineController extends Controller
 
     public function deleteLineExecute(Request $request, $lineId)
     {
-        (new NodeController())->RemoveLineBinding($lineId);
+        (new NodeController)->RemoveLineBinding($lineId);
 
         $line = (new Line)->find($lineId);
         $line->delete();

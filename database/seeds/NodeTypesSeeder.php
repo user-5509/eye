@@ -46,9 +46,11 @@ class NodeTypesSeeder extends Seeder
         $this->addParent('Пара', 'Бокс (100 пар)');
         $this->add('СПМ', 'Помещение');
         $this->add('Плата (КС)', 'СПМ');
-        $this->add('Гнездо', 'Плата (КС)');
-        $this->addParent('Пара', 'Гнездо');
+        $this->addParent('Пара', 'Плата (КС)');
         $this->add('Плата (СКС)', 'СПМ');
-        $this->addParent('Гнездо', 'Плата (СКС)');
+        $this->addParent('Пара', 'Плата (СКС)');
+        $this->add('Шкаф (кросс)', 'Помещение');
+        $this->add('Бокс (кросс)', 'Шкаф (кросс)');
+        $this->addParent('Пара', 'Бокс (кросс)');
     }
 }
