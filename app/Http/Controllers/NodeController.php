@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Node;;
 use App\NodeType;
+use App\NodeProperty;
 use App\Line;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
@@ -90,6 +91,30 @@ class NodeController extends Controller
      * @param Request $request
      * @return Response
      */
+    public function editNodeModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId = Input::get('nodeId');
+            $node = (new Node)->find($nodeId);
+            return view('content.node.edit-modal', ['node' => $node]);
+        } else
+            return null;
+    }
+
+    public function editNodeExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId = $request->input('nodeId');
+            $node = (new Node)->find($nodeId);
+            $node->name = $request->input('nodeName');
+            $node->save();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function deleteNodeModal(Request $request)
     {
         if ($request->ajax()) {
@@ -164,12 +189,12 @@ class NodeController extends Controller
 
             $node1 = (new Node)->find($nodeId1);
             $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
-            $node1Property->value = $nodeId2;
+            $node1Property->value = $interfaceId2;
             $node1Property->save();
 
             $node2 = (new Node)->find($nodeId2);
             $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
-            $node2Property->value = $nodeId1;
+            $node2Property->value = $interfaceId1;
             $node2Property->save();
 
             $lineId = $request->input('lineId');
@@ -185,6 +210,49 @@ class NodeController extends Controller
             return 1;
         } else
             return "1212121221";
+    }
+
+    public function decrossModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId1 = Input::get('nodeId');
+            $node1 = (new Node)->find($nodeId1);
+            $interfaceId1 = Input::get('interfaceId');
+            $interface1 = $node1->properties()->find($interfaceId1);
+
+            $interface2 = (new NodeProperty)->find($interface1->value);
+            $interfaceId2 = $interface2->id;
+            $node2 = (new Node)->whereHas('properties', function ($query) use ($interfaceId2) {
+                $query->where('id', '=', $interfaceId2);
+            })->first();
+
+            return view('content.node.decross-modal', ['node1' => $node1, 'interface1' => $interface1, 'node2' => $node2, 'interface2' => $interface2]);
+        } else
+            return null;
+    }
+
+    public function decrossExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId1 = $request->input('nodeId1');
+            $nodeId2 = $request->input('nodeId2');
+
+            $interfaceId1 = $request->input('interfaceId1');
+            $interfaceId2 = $request->input('interfaceId2');
+
+
+            $node1 = (new Node)->find($nodeId1);
+            $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
+            $node1Property->value = null;
+            $node1Property->save();
+            $node1->updateLine();
+
+            $node2 = (new Node)->find($nodeId2);
+            $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
+            $node2Property->value = null;
+            $node2Property->save();
+            $node2->updateLine();
+        }
     }
 
     /**
@@ -207,6 +275,10 @@ class NodeController extends Controller
             if ($node->type->id == 6) {
                 $tmpArr["about"] = "true";
             }
+            $tmpArr["canCreate"] = $node->canCreate();
+            $tmpArr["canCross"] = $node->canCross();
+            $tmpArr["canDecross"] = $node->canDecross();
+
             $arr[] = $tmpArr;
         }
         return json_encode($arr);
@@ -274,13 +346,14 @@ class NodeController extends Controller
     }
 
 
-    public function menu(Request $request)
+    public function contextSubMenuCreate(Request $request)
     {
-        $nodeId = Input::get('nodeId');
         $callback = Input::get('callback');
 
+        $nodeId = Input::get('nodeId');
         $typeId = (new Node)->find($nodeId)->type->id;
         $parentIdList = [$typeId];
+
         $subTypes = (new NodeType)->whereHas('parents', function ($query) use ($parentIdList) {
             $query->whereIn('id', $parentIdList);
         })->get();
@@ -288,9 +361,69 @@ class NodeController extends Controller
         $arr = array();
         foreach ($subTypes as $type) {
             $type_id = $type->id;
-            $arr['type'.$type->id] = array('name' => $type->name, 'icon' => 'add', 'callback' => $callback.'('.$type_id.')');
+            $arr["type".$type_id] = array(
+                "name" => $type->name,
+                "icon" => "add",
+                "callback" => "function () { $callback($type_id); }"
+            );
         }
+        $json = json_encode($arr);
 
-        return json_encode($arr);
+        return json_encode($json);
     }
+
+    public function contextSubMenuCross(Request $request)
+    {
+        $callback = Input::get('callback');
+
+        $nodeId = Input::get('nodeId');
+        $interfaces = (new Node)->find($nodeId)->properties;
+
+        $arr = array();
+        foreach ($interfaces as $interface) {
+            $interface_id = $interface->id;
+
+            if($interface->value <> null)
+                $disabled = true;
+            else
+                $disabled = false;
+
+            $arr["interface".$interface_id] = array(
+                "name" => $interface->name,
+                "disabled" => $disabled,
+                "callback" => "function () { $callback($interface_id); }"
+            );
+        }
+        $json = json_encode($arr);
+
+        return json_encode($json);
+    }
+
+    public function contextSubMenuDecross(Request $request)
+    {
+        $callback = Input::get('callback');
+
+        $nodeId = Input::get('nodeId');
+        $interfaces = (new Node)->find($nodeId)->properties;
+
+        $arr = array();
+        foreach ($interfaces as $interface) {
+            $interface_id = $interface->id;
+
+            if($interface->value == null)
+                $disabled = true;
+            else
+                $disabled = false;
+
+            $arr["interface".$interface_id] = array(
+                "name" => $interface->name,
+                "disabled" => $disabled,
+                "callback" => "function () { $callback($interface_id); }"
+            );
+        }
+        $json = json_encode($arr);
+
+        return json_encode($json);
+    }
+
 }

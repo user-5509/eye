@@ -34,8 +34,8 @@ class Node extends Model
                     $subNode->save();
 
                     $properties = array(
-                        new NodeProperties(array('name' => "Канал", 'value' => null)),
-                        new NodeProperties(array('name' => "Станция", 'value' => null))
+                        new NodeProperty(array('name' => "Канал", 'value' => null)),
+                        new NodeProperty(array('name' => "Станция", 'value' => null))
                     );
                     $subNode->properties()->saveMany($properties);
                 }
@@ -53,8 +53,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -71,8 +71,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
 
@@ -85,8 +85,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -103,9 +103,9 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция 1', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция 2', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 1', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
 
@@ -118,9 +118,9 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция 1', 'value' => null)),
-                    new NodeProperties(array('name' => 'Станция 2', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 1', 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -137,8 +137,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperties(array('name' => "Канал", 'value' => null)),
-                    new NodeProperties(array('name' => "Станция", 'value' => null))
+                    new NodeProperty(array('name' => "Канал", 'value' => null)),
+                    new NodeProperty(array('name' => "Станция", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -183,7 +183,7 @@ class Node extends Model
      */
     public function properties()
     {
-        return $this->hasMany('App\NodeProperties');
+        return $this->hasMany('App\NodeProperty');
     }
 
     /**
@@ -193,9 +193,17 @@ class Node extends Model
     {
         if($this->type->name == 'Пара') {
             $fullName = $this->name . " ";
-            //$properties = $this->properties();
-            foreach ($this->properties as $property) {
-                $fullName .= ", " . $property->name . ": " . $property->value;
+            $properties = $this->properties->sortBy('id');
+            foreach ($properties as $property) {
+                $crossedNodeId = $property->value;
+                $crossedNode = (new Node)->whereHas('properties', function ($query) use ($crossedNodeId) {
+                    $query->where('id', '=', $crossedNodeId);
+                })->first();
+                if($crossedNode <> null)
+                    $crossedNodeName = $crossedNode->name;
+                else
+                    $crossedNodeName = "";
+                $fullName .= ", " . $property->name . ": " . $crossedNodeName;
             }
             if($this->line <> null) {
                 $fullName .= ", тракт: " . $this->line->name;
@@ -225,5 +233,67 @@ class Node extends Model
             $curNode = $curNode->parent;
         }
         return $path;
+    }
+
+    public function updateLine()
+    {
+        $hasLine = 0;
+        foreach ($this->properties as $property) {
+            $crossedNodeId = $property->value;
+            if($crossedNodeId <> null) {
+                $crossedNode = (new Node)->find($crossedNodeId);
+                if ($crossedNode->line_id <> null) {
+                    $hasLine = 1;
+                    break;
+                }
+            }
+        }
+        if($hasLine == 0) {
+            $this->line_id = null;
+            $this->save();
+        }
+    }
+
+    public function canCreate()
+    {
+        if($this->type <> null) {
+            $typeName = $this->type->name;
+            if($typeName == 'Пара' ||
+                $typeName == 'Бокс (кросс)' ||
+                $typeName == 'Плата (СКС)' ||
+                $typeName == 'Плата (КС)' ||
+                $typeName == 'Бокс (кросс)' ||
+                $typeName == 'Бокс (100 пар)' ||
+                $typeName == 'Гребенка (60 пар)')
+                return false;
+            else
+                return true;
+        }
+        return false;
+    }
+
+    public function canCross()
+    {
+        if($this->type <> null) {
+            $typeName = $this->type->name;
+            if($typeName == 'Пара') {
+                $cnt = $this->properties()->where('value', null)->count();
+                if($cnt > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+    public function canDecross()
+    {
+        if($this->type <> null) {
+            $typeName = $this->type->name;
+            if($typeName == 'Пара') {
+                $cnt = $this->properties()->where('value', '<>',null)->count();
+                if($cnt > 0)
+                    return true;
+            }
+        }
+        return false;
     }
 }

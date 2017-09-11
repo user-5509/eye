@@ -44,25 +44,24 @@
     </div>
 </nav>
 
-<span class="context-menu-one btn btn-neutral">right click me</span>
-
 <div id="content"></div>
 
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="http://localhost/js/jquery-3.2.1.js"></script>
-    <script src="http://localhost/js/tether.min.js"></script>
-    <script src="http://localhost/js/bootstrap.min.js"></script>
-    <script src="http://localhost/fancytree/jquery.fancytree-all-deps.min.js"></script>
-    <script src="http://localhost/js/jquery.contextMenu.min.js"></script>
-    <!-- <script src="http://localhost/js/jquery.ui.position.js"></script> -->
+    <script src="js/jquery-3.2.1.js"></script>
+    <script src="js/tether.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="fancytree/jquery.fancytree-all-deps.min.js"></script>
+    <script src="js/jquery.contextMenu.min.js"></script>
     <script src="js/jquery.fancytree.contextMenu.js"></script>
 
     <script type="text/javascript">
-        function loadNodes(contentContainer) {
+        function loadNodes(contentContainer)
+        {
             contentContainer.load(  "http://localhost/content/node/index",
                 { _method: "get", _token: "{{ csrf_token() }}" },
-                function( response, status, xhr ) {
+                function( response, status, xhr )
+                {
                     if ( status == "error" ) {
                         var msg = "[loadNodes] Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
@@ -71,10 +70,12 @@
             );
         }
 
-        function loadLines(contentContainer) {
+        function loadLines(contentContainer)
+        {
             contentContainer.load(  "http://localhost/content/line/index",
                 { _method: "get", _token: "{{ csrf_token() }}" },
-                function( response, status, xhr ) {
+                function( response, status, xhr )
+                {
                     if ( status == "error" ) {
                         var msg = "[loadLines] Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
@@ -83,10 +84,12 @@
             );
         }
 
-        function loadContent() {
+        function loadContent()
+        {
             contentContainer.load(  "http://localhost/content/line/index",
                 { _method: "get", _token: "{{ csrf_token() }}" },
-                function( response, status, xhr ) {
+                function( response, status, xhr )
+                {
                     if ( status == "error" ) {
                         var msg = "[loadLines] Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
@@ -96,45 +99,23 @@
         }
 
         // default...
-        $(function(){
+        $(function()
+        {
             loadNodes($('#content'));
         });
 
-        $("#menuNodes").on("click",function () {
+        $("#menuNodes").on("click",function ()
+        {
             loadNodes($('#content'));
             $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuNodes').addClass("active");
         });
 
-        $("#menuLines").on("click",function () {
+        $("#menuLines").on("click",function ()
+        {
             loadLines($('#content'));
             $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuLines').addClass("active");
-        });
-
-        $(function() {
-            $.contextMenu({
-                selector: '.context-menu-one',
-                callback: function(key, options) {
-                    var m = "clicked: " + key;
-                    window.console && console.log(m) || alert(m);
-                },
-                items: {
-                    "edit": {name: "Edit", icon: "edit"},
-                    "cut": {name: "Cut", icon: "cut"},
-                    copy: {name: "Copy", icon: "copy"},
-                    "paste": {name: "Paste", icon: "paste"},
-                    "delete": {name: "Delete", icon: "delete"},
-                    "sep1": "---------",
-                    "quit": {name: "Quit", icon: function(){
-                        return 'context-menu-icon context-menu-icon-quit';
-                    }}
-                }
-            });
-
-            $('.context-menu-one').on('click', function(e){
-                console.log('clicked', this);
-            })
         });
     </script>
 </body>

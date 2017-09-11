@@ -29,6 +29,7 @@
                 $("#tree").fancytree("getActiveNode").folder = true;
                 $("#tree").fancytree("getActiveNode").lazy = true;
                 $("#tree").fancytree("getActiveNode").load(true);
+                $("#tree").fancytree("getActiveNode").setExpanded(true);
             }
         );
     });

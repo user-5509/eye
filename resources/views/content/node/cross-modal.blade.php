@@ -47,7 +47,7 @@
 
     $(function(){
         @if($node->line_id <> "")
-            $('select option[data-id={{$thisLineId}}]').prop('selected', true);
+            $('select option[data-id={{$node->line_id}}]').prop('selected', true);
             $('select').prop('disabled', true);
         @endif
 
@@ -73,7 +73,8 @@
                 url: "/getTreeData",
                 data: {mode: "children", parentNodeId: 1}
             },
-            lazyLoad: function(event, data) {
+            lazyLoad: function(event, data)
+            {
                 var node = data.node;
                 // Load child nodes via ajax GET /getTreeData?mode=children&parent=1234
                 data.result = {
@@ -82,7 +83,8 @@
                     cache: false
                 };
             },
-            init: function(event, data) {
+            init: function(event, data)
+            {
                 // Expand tree nodes to target node
                 var tree1 = $("#tree1").fancytree("getTree");
                 var path = getKeyPath($("#tree"));
@@ -114,9 +116,9 @@
                 //node.parent.load(true);
                 var path = getKeyPath($("#tree1"));
                 var tree = $("#tree").fancytree("getTree");
-                tree.visit(function(node){
-                    node.setExpanded(false);
-                });
+                //tree.visit(function(node){
+                //    node.setExpanded(false);
+                //});
                 tree.loadKeyPath(path, function(node, status){
                     if(status === "loaded") {
                         console.log("loaded intermiediate node " + node);

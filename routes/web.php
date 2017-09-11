@@ -29,6 +29,10 @@ Route::get('/content/node/create/modal', 'NodeController@createNodeModal');
 
 Route::post('/node/create/execute', 'NodeController@createNodeExecute');
 
+Route::get('/content/node/edit/modal', 'NodeController@editNodeModal');
+
+Route::post('/node/edit/execute', 'NodeController@editNodeExecute');
+
 Route::get('/content/node/delete/modal', 'NodeController@deleteNodeModal');
 
 Route::delete('node/{id?}/delete', 'NodeController@deleteNodeExecute')->where('id', '[0-9]+');
@@ -40,6 +44,10 @@ Route::get('/content/node/cross/available-interfaces-select', 'NodeController@cr
 Route::get('/content/node/cross/modal', 'NodeController@crossModal');
 
 Route::post('/node/cross/execute', 'NodeController@crossExecute');
+
+Route::get('/content/node/decross/modal', 'NodeController@decrossModal');
+
+Route::post('/node/decross/execute', 'NodeController@decrossExecute');
 
 Route::get('/content/node/about', 'NodeController@nodeAbout');
 
@@ -64,4 +72,8 @@ Route::get('/content/line/delete/modal', 'LineController@deleteLineModal');
 
 Route::delete('line/{id?}/delete', 'LineController@deleteLineExecute')->where('id', '[0-9]+');
 
-Route::get('/node/menu', 'NodeController@menu');
+Route::get('/node/contextSubMenuCreate', 'NodeController@contextSubMenuCreate');
+
+Route::get('/node/contextSubMenuCross', 'NodeController@contextSubMenuCross');
+
+Route::get('/node/contextSubMenuDecross', 'NodeController@contextSubMenuDecross');
