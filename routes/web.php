@@ -45,6 +45,8 @@ Route::get('/content/node/cross/modal', 'NodeController@crossModal');
 
 Route::post('/node/cross/execute', 'NodeController@crossExecute');
 
+Route::get('/content/node/masslink/modal', 'NodeController@massLinkModal');
+
 Route::get('/content/node/decross/modal', 'NodeController@decrossModal');
 
 Route::post('/node/decross/execute', 'NodeController@decrossExecute');
@@ -77,3 +79,5 @@ Route::get('/node/contextSubMenuCreate', 'NodeController@contextSubMenuCreate');
 Route::get('/node/contextSubMenuCross', 'NodeController@contextSubMenuCross');
 
 Route::get('/node/contextSubMenuDecross', 'NodeController@contextSubMenuDecross');
+
+Route::get('/node/contextSubMenuMassLink', 'NodeController@contextSubMenuMassLink');

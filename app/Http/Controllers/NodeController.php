@@ -212,6 +212,21 @@ class NodeController extends Controller
             return "1212121221";
     }
 
+    public function massLinkModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId = Input::get('nodeId');
+            $node = (new Node)->find($nodeId);
+
+            $interfaceAlias = Input::get('interfaceAlias');
+            $interfaceName = (new Property)->where('alias', '=', $interfaceAlias)->first()->alias;
+
+
+            return view('content.node.masslink-modal', ['node' => $node, 'interfaceName' => $interfaceName]);
+        } else
+            return null;
+    }
+
     public function decrossModal(Request $request)
     {
         if ($request->ajax()) {
@@ -278,6 +293,9 @@ class NodeController extends Controller
             $tmpArr["canCreate"] = $node->canCreate();
             $tmpArr["canCross"] = $node->canCross();
             $tmpArr["canDecross"] = $node->canDecross();
+            $tmpArr["canDelete"] = $node->canDelete();
+            $tmpArr["canEdit"] = $node->canEdit();
+            $tmpArr["canMassLink"] = $node->canMassLink();
 
             $arr[] = $tmpArr;
         }
@@ -363,7 +381,6 @@ class NodeController extends Controller
             $type_id = $type->id;
             $arr["type".$type_id] = array(
                 "name" => $type->name,
-                "icon" => "add",
                 "callback" => "function () { $callback($type_id); }"
             );
         }
@@ -419,6 +436,27 @@ class NodeController extends Controller
                 "name" => $interface->name,
                 "disabled" => $disabled,
                 "callback" => "function () { $callback($interface_id); }"
+            );
+        }
+        $json = json_encode($arr);
+
+        return json_encode($json);
+    }
+
+    public function contextSubMenuMassLink(Request $request)
+    {
+        $callback = Input::get('callback');
+
+        $nodeId = Input::get('nodeId');
+        $availableMassLinkInterfaces = (new Node)->find($nodeId)->availableMassLinkInterfaces();
+
+        $arr = array();
+        foreach ($availableMassLinkInterfaces as $interface) {
+            $interface_alias = $interface->alias;
+
+            $arr["interface_".$interface_alias] = array(
+                "name" => $interface->name,
+                "callback" => "function () { $callback($interface_alias); }"
             );
         }
         $json = json_encode($arr);

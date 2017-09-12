@@ -158,6 +158,27 @@
             );
         }
 
+        function massLinkNodePrepare(interfaceAlias)
+        {
+            var nodeId = $("#tree").fancytree("getActiveNode").key;
+            $('#nodeActionModal').modal('show');
+            $('#nodeActionModal').find('.modal-content').load(
+                "http://localhost/content/node/massLink/modal", {
+                    _method: "get",
+                    nodeId: nodeId,
+                    interfaceAlias: interfaceAlias,
+                    _token: "{{ csrf_token() }}"
+                },
+                function( response, status, xhr )
+                {
+                    if ( status == "error" ) {
+                        var msg = "Sorry but there was an error: ";
+                        alert( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
+        }
+
         $(function()
         {
             // Tree init
@@ -222,6 +243,10 @@
                         url = 'http://localhost/node/contextSubMenuDecross';
                         break;
 
+                    case "massLink":
+                        url = 'http://localhost/node/contextSubMenuMassLink';
+                        break;
+
                     default:
                         url ='';
                 }
@@ -270,39 +295,50 @@
 
                     if(node.data.canCreate) {
                         items.create = {
-                            name: "Создать",
+                            name: "Создать...",
                             icon: "add",
                             items: contextSubMenu('create', 'createNodePrepare')
                         };
                     }
-                    items.edit = {
-                        name: "Редактировать",
-                        icon: "edit",
-                        callback: function()
-                        {
-                            editNodePrepare();
-                        }
-                    };
+                    if(node.data.canEdit) {
+                        items.edit = {
+                            name: "Редактировать",
+                            icon: "edit",
+                            callback: function () {
+                                editNodePrepare();
+                            }
+                        };
+                    }
+                    if(node.data.canMassLink) {
+                        items.edit = {
+                            name: "Связать...",
+                            icon: "loading",
+                            items: contextSubMenu('massLink', 'massLinkNodePrepare')
+                        };
+                    }
                     if(node.data.canCross) {
                         items.cross = {
-                            name: "Кроссировать",
+                            name: "Кроссировать...",
+                            icon: "loading",
                             items: contextSubMenu('cross', 'crossNodePrepare')
                         };
                     }
                     if(node.data.canDecross) {
                         items.decross = {
                             name: "Убрать кроссировку",
+                            icon: "loading",
                             items: contextSubMenu('decross', 'decrossNodePrepare')
                         };
                     }
-                    items.delete = {
-                        name: "Удалить",
-                        icon: "delete",
-                        callback: function()
-                            {
+                    if(node.data.canDelete) {
+                        items.delete = {
+                            name: "Удалить",
+                            icon: "delete",
+                            callback: function () {
                                 deleteNodePrepare();
                             }
-                    };
+                        };
+                    }
 
                     return {
                         callback: function (key, options, rootMenu, originalEvent)

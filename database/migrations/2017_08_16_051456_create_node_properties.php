@@ -16,6 +16,7 @@ class CreateNodeProperties extends Migration
         Schema::create('node_properties', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('alias')->nullable();;
             $table->string('value')->nullable();
             $table->integer('node_id')->unsigned()->nullable();
             $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');

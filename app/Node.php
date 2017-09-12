@@ -22,6 +22,10 @@ class Node extends Model
         $this->save();
 
         if ($this->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
             $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
             foreach ($pairNamePrefixes as $pairNamePrefix) {
                 for ($i = 1; $i <= 20; $i++) {
@@ -34,8 +38,8 @@ class Node extends Model
                     $subNode->save();
 
                     $properties = array(
-                        new NodeProperty(array('name' => "Канал", 'value' => null)),
-                        new NodeProperty(array('name' => "Станция", 'value' => null))
+                        new NodeProperty(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
+                        new NodeProperty(array('name' => "Станция", 'alias' => "station", 'value' => null))
                     );
                     $subNode->properties()->saveMany($properties);
                 }
@@ -43,6 +47,10 @@ class Node extends Model
         }
 
         if ($this->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
             for ($i = 1; $i <= 100; $i++) {
                 $subName = $i;
                 $subNode = new Node;
@@ -53,14 +61,18 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
         }
 
         if ($this->type_id == (new NodeType)->getByName("Плата (КС)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
             for ($i = 1; $i <= 36; $i++) {
                 // Передача
                 $subNode = new Node;
@@ -71,8 +83,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
 
@@ -93,6 +105,10 @@ class Node extends Model
         }
 
         if ($this->type_id == (new NodeType)->getByName("Плата (СКС)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
             for ($i = 1; $i <= 36; $i++) {
                 // Передача
                 $subNode = new Node;
@@ -103,9 +119,9 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station1", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station2", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
 
@@ -118,15 +134,19 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station1", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station2", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
         }
 
         if ($this->type_id == (new NodeType)->getByName("Бокс (кросс)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
             for ($i = 1; $i <= 24; $i++) {
                 $subName =  $i;
                 $subNode = new Node;
@@ -137,8 +157,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => "Канал", 'value' => null)),
-                    new NodeProperty(array('name' => "Станция", 'value' => null))
+                    new NodeProperty(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => "Станция", 'alias' => "station", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -295,5 +315,56 @@ class Node extends Model
             }
         }
         return false;
+    }
+
+    public function canDelete()
+    {
+        if($this->type <> null) {
+            $typeName = $this->type->name;
+            if($typeName <> 'Пара')
+                return true;
+        }
+        return false;
+    }
+
+    public function canEdit()
+    {
+        if($this->type <> null) {
+            $typeName = $this->type->name;
+            if($typeName <> 'Пара')
+                return true;
+        }
+        return false;
+    }
+
+    public function canMassLink()
+    {
+        if($this->type == null)
+            return false;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Плата (СКС)' &&
+            $typeName <> 'Плата (КС)' &&
+            $typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка (60 пар)')
+            return false;
+
+        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        if($massLinkedInterface == null)
+            return false;
+
+        return true;
+    }
+
+    public function availableMassLinkInterfaces()
+    {
+        if($this->canMassLink()) {
+            $subNode = (new Node)->where('parent_id', '=', $this->id)->first();
+            return $subNode->properties;
+        }
+        else
+            return null;
     }
 }
