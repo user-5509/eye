@@ -97,8 +97,8 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'value' => null))
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -351,11 +351,61 @@ class Node extends Model
             $typeName <> 'Гребенка (60 пар)')
             return false;
 
+        //$massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        //if($massLinkedInterface == null)
+        //    return false;
+
+        //if($massLinkedInterface->alias <> null)
+        //    return false;
+
+
+        return true;
+    }
+
+    public function canMassUnlink()
+    {
+        if($this->type == null)
+            return false;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Плата (СКС)' &&
+            $typeName <> 'Плата (КС)' &&
+            $typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка (60 пар)')
+            return false;
+
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
         if($massLinkedInterface == null)
             return false;
 
-        return true;
+        if($massLinkedInterface->alias <> null)
+            return true;
+
+
+        return false;
+    }
+
+    public function getMassLink()
+    {
+        if($this->type == null)
+            return null;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Плата (СКС)' &&
+            $typeName <> 'Плата (КС)' &&
+            $typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка (60 пар)')
+            return null;
+
+        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        if($massLinkedInterface == null)
+            return null;
+
+        return $massLinkedInterface->alias;
     }
 
     public function availableMassLinkInterfaces()
@@ -366,5 +416,29 @@ class Node extends Model
         }
         else
             return null;
+    }
+
+    public function setMassLink($alias)
+    {
+        if($this->type == null)
+            return 0;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Плата (СКС)' &&
+            $typeName <> 'Плата (КС)' &&
+            $typeName <> 'Бокс (кросс)' &&
+            $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка (60 пар)')
+            return 0;
+
+        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        if($massLinkedInterface == null)
+            return 0;
+
+        $massLinkedInterface->alias = $alias;
+        $massLinkedInterface->save();
+
+        return 1;
     }
 }

@@ -134,6 +134,11 @@ class NodeController extends Controller
     {
         $node = (new Node)->find($nodeId);
         $node->delete();
+
+        $nodePath = session("nodePath");
+        $nodePathArray = explode('/', $nodePath);
+        if(array_search($nodeId, $nodePathArray))
+            session(["nodePath" => ""]);
     }
 
     public function crossNodeAvailableInterfacesDropdown(Request $request)
@@ -219,12 +224,133 @@ class NodeController extends Controller
             $node = (new Node)->find($nodeId);
 
             $interfaceAlias = Input::get('interfaceAlias');
-            $interfaceName = (new Property)->where('alias', '=', $interfaceAlias)->first()->alias;
+            $interfaceName = (new NodeProperty)->where('alias', '=', $interfaceAlias)->first()->name;
 
 
-            return view('content.node.masslink-modal', ['node' => $node, 'interfaceName' => $interfaceName]);
+            return view('content.node.masslink-modal', ['node' => $node, 'interfaceName' => $interfaceName, 'interfaceAlias' => $interfaceAlias]);
         } else
             return null;
+    }
+
+    public function massLinkAvailableInterfacesSelect(Request $request)
+    {
+        $nodeId = Input::get('nodeId');
+        $node = (new Node)->find($nodeId);
+
+        if(!$node->canMassLink())
+            return;
+
+        $availableMassLinkInterfaces = $node->availableMassLinkInterfaces();
+
+        return view('content.node.available-interfaces-select', ['interfaces' => $availableMassLinkInterfaces]);
+    }
+
+    public function massLinkExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId1 = $request->input('nodeId1');
+            $nodeId2 = $request->input('nodeId2');
+
+            $interfaceAlias1 = $request->input('interfaceAlias1');
+            $interfaceAlias2 = $request->input('interfaceAlias2');
+
+            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get()->toArray();
+            $subNodes2 = (new Node)->where('parent_id', '=', $nodeId2)->get()->toArray();
+
+            if (count($subNodes1) < count($subNodes2))
+                $count = count($subNodes1);
+            else
+                $count = count($subNodes2);
+
+            $numeration = $request->input('numeration');
+            if($numeration == 'rx') {
+                $start = 0;
+                $step = 2;
+            } elseif($numeration == 'tx') {
+                $start = 1;
+                $step = 2;
+            } else {
+                $start = 0;
+                $step = 1;
+            }
+
+            $i = $start;
+            $j = 0;
+            while( $i < count($subNodes1) && $j < count($subNodes2) ) {
+            //for ($i = $start; $i < $count; $i += $step) {
+                $subNode1 = $subNodes1[$i];
+                $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
+
+                $subNode2 = $subNodes2[$j];
+                $subNodeProperty2 = (new NodeProperty)->where('node_id', '=', $subNode2['id'])->where('alias', $interfaceAlias2)->first();
+
+                $subNodeProperty1->value = $subNodeProperty2->id;
+                $subNodeProperty1->save();
+
+                $subNodeProperty2->value = $subNodeProperty1->id;
+                $subNodeProperty2->save();
+
+                $i += $step;
+                $j++;
+            }
+            $node1 = (new Node)->find($nodeId1);
+            $node1->setMassLink($interfaceAlias1);
+            $node2 = (new Node)->find($nodeId2);
+            $node2->setMassLink($interfaceAlias2);
+        }
+    }
+
+    public function massUnlinkModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId = Input::get('nodeId');
+            $nodeName = (new Node)->find($nodeId)->name;
+
+            return view('content.node.massUnlink-modal', ['nodeId' => $nodeId, 'nodeName' => $nodeName]);
+        } else
+            return null;
+    }
+
+    public function massUnlinkExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId1 = $request->input('nodeId');
+            $node1 = (new Node)->find($nodeId1);
+
+            $interfaceAlias1 = $node1->getMassLink();
+            if($interfaceAlias1 == null)
+                return;
+
+            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get()->toArray();
+            $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNodes1[0]['id'])->where('alias', $interfaceAlias1)->first();
+            $subNodeProperty2 = (new NodeProperty)->find($subNodeProperty1->value);
+            $subNode2 = (new Node)->find($subNodeProperty2->node_id);
+            $subNodes2 = (new Node)->where('parent_id', '=', $subNode2->parent_id)->get()->toArray();
+            $node2 = (new Node)->find($subNode2->parent_id);
+            $interfaceAlias2 = $node2->getMassLink();
+
+            if (count($subNodes1) < count($subNodes2))
+                $count = count($subNodes1);
+            else
+                $count = count($subNodes2);
+
+            for ($i = 0; $i < $count; $i++) {
+                $subNode1 = $subNodes1[$i];
+                $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
+
+                $subNode2 = $subNodes2[$i];
+                $subNodeProperty2 = (new NodeProperty)->where('node_id', '=', $subNode2['id'])->where('alias', $interfaceAlias2)->first();
+
+                $subNodeProperty1->value = null;
+                $subNodeProperty1->save();
+
+                $subNodeProperty2->value = null;
+                $subNodeProperty2->save();
+            }
+
+            $node1->setMassLink(null);
+            $node2->setMassLink(null);
+        }
     }
 
     public function decrossModal(Request $request)
@@ -279,6 +405,7 @@ class NodeController extends Controller
     {
         $parentNodeId = Input::get('parentNodeId');
         $nodes = Node::all()->sortBy('id')->where('parent_id', '=', $parentNodeId);
+
         $arr = array();
         foreach ($nodes as $node) {
             $tmpArr = array("title" => $node->fullName(), "key" => $node->id);
@@ -296,6 +423,7 @@ class NodeController extends Controller
             $tmpArr["canDelete"] = $node->canDelete();
             $tmpArr["canEdit"] = $node->canEdit();
             $tmpArr["canMassLink"] = $node->canMassLink();
+            $tmpArr["canMassUnlink"] = $node->canMassUnlink();
 
             $arr[] = $tmpArr;
         }
@@ -452,11 +580,11 @@ class NodeController extends Controller
 
         $arr = array();
         foreach ($availableMassLinkInterfaces as $interface) {
-            $interface_alias = $interface->alias;
+            $interfaceAlias = $interface->alias;
 
-            $arr["interface_".$interface_alias] = array(
+            $arr["interface_".$interfaceAlias] = array(
                 "name" => $interface->name,
-                "callback" => "function () { $callback($interface_alias); }"
+                "callback" => "function () { $callback('$interfaceAlias'); }"
             );
         }
         $json = json_encode($arr);

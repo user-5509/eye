@@ -13,7 +13,7 @@ class NodeProperty extends Model
      */
     protected $table = 'node_properties';
 
-    protected $fillable = array('name', 'value');
+    protected $fillable = array('name', 'alias', 'value');
 
 
 }

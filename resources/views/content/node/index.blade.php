@@ -179,6 +179,26 @@
             );
         }
 
+        function massUnlinkPrepare()
+        {
+            var nodeId = $("#tree").fancytree("getActiveNode").key;
+            $('#nodeActionModal').modal('show');
+            $('#nodeActionModal').find('.modal-content').load(
+                "http://localhost/content/node/massUnlink/modal", {
+                    _method: "get",
+                    nodeId: nodeId,
+                    _token: "{{ csrf_token() }}"
+                },
+                function( response, status, xhr )
+                {
+                    if ( status == "error" ) {
+                        var msg = "Sorry but there was an error: ";
+                        alert( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
+        }
+
         $(function()
         {
             // Tree init
@@ -244,6 +264,7 @@
                         break;
 
                     case "massLink":
+                        console.log('case:' + action);
                         url = 'http://localhost/node/contextSubMenuMassLink';
                         break;
 
@@ -251,8 +272,8 @@
                         url ='';
                 }
 
-                if(url === '') {
-                    console.log('[contextSubMenu]: Empty url');
+                if(url == '') {
+                    console.log('[contextSubMenu]: Empty url, ' + action);
                     return;
                 }
 
@@ -309,11 +330,21 @@
                             }
                         };
                     }
+                    console.log(node.data.canMassLink);
                     if(node.data.canMassLink) {
-                        items.edit = {
+                        items.link = {
                             name: "Связать...",
                             icon: "loading",
                             items: contextSubMenu('massLink', 'massLinkNodePrepare')
+                        };
+                    }
+                    if(node.data.canMassUnlink) {
+                        items.unlink = {
+                            name: "Отвязать",
+                            items: contextSubMenu('massUnlink', 'massUnlinkNodePrepare'),
+                            callback: function () {
+                                massUnlinkPrepare();
+                            }
                         };
                     }
                     if(node.data.canCross) {

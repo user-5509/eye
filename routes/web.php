@@ -45,7 +45,11 @@ Route::get('/content/node/cross/modal', 'NodeController@crossModal');
 
 Route::post('/node/cross/execute', 'NodeController@crossExecute');
 
-Route::get('/content/node/masslink/modal', 'NodeController@massLinkModal');
+Route::get('/content/node/massLink/modal', 'NodeController@massLinkModal');
+
+Route::get('/content/node/cross/available-masslink-interfaces-select', 'NodeController@massLinkAvailableInterfacesSelect');
+
+Route::post('/node/massLink/execute', 'NodeController@massLinkExecute');
 
 Route::get('/content/node/decross/modal', 'NodeController@decrossModal');
 
@@ -81,3 +85,7 @@ Route::get('/node/contextSubMenuCross', 'NodeController@contextSubMenuCross');
 Route::get('/node/contextSubMenuDecross', 'NodeController@contextSubMenuDecross');
 
 Route::get('/node/contextSubMenuMassLink', 'NodeController@contextSubMenuMassLink');
+
+Route::get('/content/node/massUnlink/modal', 'NodeController@massUnlinkModal');
+
+Route::post('/node/massUnlinkExecute', 'NodeController@massUnlinkExecute');

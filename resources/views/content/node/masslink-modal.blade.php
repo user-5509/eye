@@ -6,6 +6,17 @@
 </div>
 <div class="modal-body">
 
+    <form>
+        <div class="form-group">
+            <label for="numeration">Нумерация</label>
+            <select class="form-control" id="numeration">
+                <option data-type="">Подряд</option>
+                <option data-type="rx">ПСП Передача (1, 3, 5...)</option>
+                <option data-type="tx">ПСП Прием (2, 4, 6...)</option>
+            </select>
+        </div>
+    </form>
+
     <!-- Node tree -->
     <div id="tree1"></div>
 
@@ -18,7 +29,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-    <button type="button" class="btn btn-primary" id="massLinkNodeExecute">Связать</button>
+    <button type="button" class="btn btn-primary" id="massLinkExecute">Связать</button>
 </div>
 
 <script type="text/javascript">
@@ -33,12 +44,8 @@
         return path;
     }
 
-    $(function(){
-        @if($node->line_id <> "")
-            $('select option[data-id={{$node->line_id}}]').prop('selected', true);
-            $('select').prop('disabled', true);
-        @endif
-
+    $(function()
+    {
         // Create the tree inside the <div id="tree"> element.
         $("#tree1").fancytree({
             autoScroll: true,
@@ -47,9 +54,10 @@
                $('#interfaceSelect').html("");
                 var nodeId = $("#tree1").fancytree("getActiveNode").key;
                 $('#interfaceSelect')
-                    .load(  "http://localhost/content/node/cross/available-interfaces-select",
+                    .load(  "http://localhost/content/node/cross/available-masslink-interfaces-select",
                         { _method: "get", _token: "{{ csrf_token() }}", nodeId: nodeId },
-                        function( response, status, xhr ) {
+                        function( response, status, xhr )
+                        {
                             if ( status == "error" ) {
                                 var msg = "[interfaceSelect] Sorry but there was an error: ";
                                 alert( msg + xhr.status + " " + xhr.statusText );
@@ -59,7 +67,7 @@
             },
             source: {
                 url: "/getTreeData",
-                data: {mode: "children", parentNodeId: 1}
+                data: {mode: "children", parentNodeId: 1, massLink: true}
             },
             lazyLoad: function(event, data)
             {
@@ -67,7 +75,7 @@
                 // Load child nodes via ajax GET /getTreeData?mode=children&parent=1234
                 data.result = {
                     url: "/getTreeData",
-                    data: {mode: "children", parentNodeId: node.key},
+                    data: {mode: "children", parentNodeId: node.key, massLink: true},
                     cache: false
                 };
             },
@@ -89,24 +97,27 @@
         });
     });
 
-    $("#crossNodeExecute").on("click",function () {
-        $.post( "http://localhost/node/cross/execute", {
-            _token: "{{ csrf_token() }}",
-            nodeId1: $("#tree").fancytree("getActiveNode").key,
-            interfaceId1: "{{ $interface->id }}",
-            nodeId2: $("#tree1" ).fancytree("getActiveNode").key,
-            interfaceId2: $("select#interfaceSelect option:selected").data("id"),
-            lineId: $("select#lineSelect option:selected").data("id")
+    $("#massLinkExecute").on("click",function ()
+    {
+        console.log($("select#numeration option:selected").data("type"));
+        $.post( "http://localhost/node/massLink/execute", {
+                _token: "{{ csrf_token() }}",
+                nodeId1: $("#tree").fancytree("getActiveNode").key,
+                interfaceAlias1: "{{ $interfaceAlias }}",
+                nodeId2: $("#tree1" ).fancytree("getActiveNode").key,
+                interfaceAlias2: $("select#interfaceSelect option:selected").data("alias"),
+                numeration: $("select#numeration option:selected").data("type")
             },
-            function( data ) {
+            function( data )
+            {
                 $('#nodeActionModal').modal('hide');
                 //var node =  $("#tree").fancytree("getActiveNode");
                 //node.parent.load(true);
+
+                $("#tree").fancytree("getActiveNode").parent.load(true);
+
                 var path = getKeyPath($("#tree1"));
                 var tree = $("#tree").fancytree("getTree");
-                //tree.visit(function(node){
-                //    node.setExpanded(false);
-                //});
                 tree.loadKeyPath(path, function(node, status){
                     if(status === "loaded") {
                         console.log("loaded intermiediate node " + node);
