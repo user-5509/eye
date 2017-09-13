@@ -212,21 +212,19 @@ class Node extends Model
     public function fullName()
     {
         if($this->type->name == 'Пара') {
-            $fullName = $this->name . " ";
-            $properties = $this->properties->sortBy('id');
-            foreach ($properties as $property) {
-                $crossedNodeId = $property->value;
-                $crossedNode = (new Node)->whereHas('properties', function ($query) use ($crossedNodeId) {
-                    $query->where('id', '=', $crossedNodeId);
-                })->first();
-                if($crossedNode <> null)
-                    $crossedNodeName = $crossedNode->name;
-                else
-                    $crossedNodeName = "";
-                $fullName .= ", " . $property->name . ": " . $crossedNodeName;
+            $nodeName = $this->name;
+            $fullName = "";
+
+            $linkedNode1 = $this->getLinkedNodeByAlias('channel');
+            if($linkedNode1) {
+                $fullName .= '<small class="text-muted">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small>';
             }
-            if($this->line <> null) {
-                $fullName .= ", тракт: " . $this->line->name;
+
+            $fullName .= " &rArr; <b>".$this->name . "</b> &rArr; ";
+
+            $linkedNode2 = $this->getLinkedNodeByAlias('station');
+            if($linkedNode2) {
+                $fullName .= '<small class="text-muted">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
             }
             return $fullName;
         } else {
@@ -440,5 +438,38 @@ class Node extends Model
         $massLinkedInterface->save();
 
         return 1;
+    }
+
+    public function getLinkedInterfaceByAlias($alias)
+    {
+        if($this->type == null)
+            return null;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Пара')
+            return null;
+
+        $linkedInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
+
+        return (new NodeProperty)->find($linkedInterfaceId);
+    }
+
+    public function getLinkedNodeByAlias($alias)
+    {
+        if($this->type == null)
+            return null;
+
+        $typeName = $this->type->name;
+        if($typeName <> 'Пара')
+            return null;
+
+        $remoteInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
+
+        //$remoteInterfaceId = (new NodeProperty)->find($localInterfaceId)->id;
+        $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
+            $query->where('id', '=', $remoteInterfaceId);
+        })->first();
+
+        return $remoteNode;
     }
 }

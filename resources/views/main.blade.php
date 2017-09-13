@@ -13,7 +13,7 @@
     <style type="text/css">
         .fancytree-container {
             height: 500px;
-            width: 450px;
+            width: 550px;
             overflow: auto;
         }
     </style>

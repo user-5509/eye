@@ -245,6 +245,15 @@ class NodeController extends Controller
         return view('content.node.available-interfaces-select', ['interfaces' => $availableMassLinkInterfaces]);
     }
 
+    public function select(Request $request)
+    {
+        $parentNodeId = Input::get('parentNodeId');
+
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
+
+        return view('content.node.select', ['nodes' => $nodes, 'counter' => 0]);
+    }
+
     public function massLinkExecute(Request $request)
     {
         if ($request->ajax()) {
@@ -254,30 +263,31 @@ class NodeController extends Controller
             $interfaceAlias1 = $request->input('interfaceAlias1');
             $interfaceAlias2 = $request->input('interfaceAlias2');
 
+            $startNodeNum1 = $request->input('startNodeNum1');
+            $startNodeNum2 = $request->input('startNodeNum2');
+            $count = $request->input('count');
+
             $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get()->toArray();
             $subNodes2 = (new Node)->where('parent_id', '=', $nodeId2)->get()->toArray();
 
-            if (count($subNodes1) < count($subNodes2))
-                $count = count($subNodes1);
-            else
-                $count = count($subNodes2);
+//            if (count($subNodes1) < count($subNodes2))
+//                $count = count($subNodes1);
+//            else
+//                $count = count($subNodes2);
 
-            $numeration = $request->input('numeration');
-            if($numeration == 'rx') {
-                $start = 0;
-                $step = 2;
-            } elseif($numeration == 'tx') {
-                $start = 1;
-                $step = 2;
-            } else {
-                $start = 0;
+            $order = $request->input('order');
+            if($order == 0) {
                 $step = 1;
+            } else {
+                $step = 2;
             }
 
-            $i = $start;
-            $j = 0;
-            while( $i < count($subNodes1) && $j < count($subNodes2) ) {
+            $i = $startNodeNum1;
+            $j = $startNodeNum2;
+            //while( $i < count($subNodes1) && $j < count($subNodes2) ) {
             //for ($i = $start; $i < $count; $i += $step) {
+            $count += $j;
+            while( $j < $count ) {
                 $subNode1 = $subNodes1[$i];
                 $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
 

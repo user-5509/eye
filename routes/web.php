@@ -89,3 +89,5 @@ Route::get('/node/contextSubMenuMassLink', 'NodeController@contextSubMenuMassLin
 Route::get('/content/node/massUnlink/modal', 'NodeController@massUnlinkModal');
 
 Route::post('/node/massUnlinkExecute', 'NodeController@massUnlinkExecute');
+
+Route::get('/content/node/select', 'NodeController@select');
