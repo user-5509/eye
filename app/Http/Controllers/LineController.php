@@ -31,9 +31,11 @@ class LineController extends Controller
     {
         if ($request->ajax()) {
             $lineId = Input::get('lineId');
-            $nodes = Node::all()->sortBy('id')->where('line_id', '=', $lineId);
+            $lineName = (new Line)->find($lineId)->getName();
 
-            return view('content.line.about', ['nodes' => $nodes]);
+            $nodes = (new NodeController)->getOrderedByLine($lineId);
+
+            return view('content.line.about', ['lineName' => $lineName, 'nodes' => $nodes]);
         }
         else
             return null;
@@ -80,4 +82,17 @@ class LineController extends Controller
         $line->delete();
     }
 
+    public function editExecute(Request $request)
+    {
+        if ($request->ajax()) {
+            $lineId = $request->input('lineId');
+            $lineNewName = $request->input('lineNewName');
+
+            $line = (new Line)->find($lineId);
+            $line->name = $lineNewName;
+            $line->save();
+
+            return json_encode(array('id' => $lineId, 'name' => $lineNewName));
+        }
+    }
 }

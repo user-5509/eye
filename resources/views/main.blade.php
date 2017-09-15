@@ -34,12 +34,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="#" id="menuLines">Тракты</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Пусто</a>
+           {{-- <li class="nav-item">
+                <a class="nav-link" href="#" id="menuTypes">Типы</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Пусто</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Пусто</a>
+            </li>--}}
         </ul>
     </div>
 </nav>
@@ -84,6 +87,20 @@
             );
         }
 
+        function loadTypes(contentContainer)
+        {
+            contentContainer.load(  "http://localhost/content/type/index",
+                { _method: "get", _token: "{{ csrf_token() }}" },
+                function( response, status, xhr )
+                {
+                    if ( status == "error" ) {
+                        var msg = "[loadLines] Sorry but there was an error: ";
+                        alert( msg + xhr.status + " " + xhr.statusText );
+                    }
+                }
+            );
+        }
+
         function loadContent()
         {
             contentContainer.load(  "http://localhost/content/line/index",
@@ -101,6 +118,8 @@
         // default...
         $(function()
         {
+            $('[data-toggle="tooltip"]').tooltip();
+
             loadNodes($('#content'));
         });
 
@@ -116,6 +135,13 @@
             loadLines($('#content'));
             $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
             $('#menuLines').addClass("active");
+        });
+
+        $("#menuTypes").on("click",function ()
+        {
+            loadTypes($('#content'));
+            $( "ul.navbar-nav" ).find( ".active" ).removeClass("active");
+            $('#menuTypes').addClass("active");
         });
     </script>
 </body>

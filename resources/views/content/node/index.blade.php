@@ -1,6 +1,6 @@
     <!-- Modal: node action -->
     <div class="modal fade" id="nodeActionModal" tabindex="-1" role="dialog" aria-labelledby="nodeActionModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
             </div>
         </div>
@@ -224,8 +224,20 @@
                     data.result = {
                         url: "/getTreeData",
                         data: {mode: "children", parentNodeId: node.key},
-                        cache: false
+                        cache: false,
+
                     };
+                },
+                renderNode: function(event, data)
+                {
+                    // Optionally tweak data.node.span
+                    var node = data.node;
+                    //if(node.data.cstrender){
+                    if(node.data._icon){
+                        console.log("icon="+node.data._icon);
+                        var $span = $(node.span);
+                        $span.find("> span.fancytree-icon").html("<span>" + node.data._icon + "</span>").removeClass("fancytree-icon");
+                    }
                 },
                 init: function(event, data)
                 {

@@ -107,6 +107,7 @@ class NodeController extends Controller
             $nodeId = $request->input('nodeId');
             $node = (new Node)->find($nodeId);
             $node->name = $request->input('nodeName');
+            $node->description = $request->input('nodeDescription');
             $node->save();
         }
     }
@@ -191,7 +192,6 @@ class NodeController extends Controller
             $interfaceId1 = $request->input('interfaceId1');
             $interfaceId2 = $request->input('interfaceId2');
 
-
             $node1 = (new Node)->find($nodeId1);
             $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
             $node1Property->value = $interfaceId2;
@@ -204,14 +204,16 @@ class NodeController extends Controller
 
             $lineId = $request->input('lineId');
 
-            if ($node1->line_id == null) {
-                $node1->line_id = $lineId;
-                $node1->save();
-            }
-            if ($node2->line_id == null) {
-                $node2->line_id = $lineId;
-                $node2->save();
-            }
+            $node1->line_id = $lineId;
+            $node1->save();
+            $node1->updateLine();
+
+            $node2->line_id = $lineId;
+            $node2->save();
+            $node2->updateLine();
+
+
+
             return 1;
         } else
             return "1212121221";
@@ -396,13 +398,17 @@ class NodeController extends Controller
             $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
             $node1Property->value = null;
             $node1Property->save();
-            $node1->updateLine();
+
+            if(!$node1->haveConnections())
+                $node1->line_id = null;
 
             $node2 = (new Node)->find($nodeId2);
             $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
             $node2Property->value = null;
             $node2Property->save();
-            $node2->updateLine();
+
+            if(!$node2->haveConnections())
+                $node2->line_id = null;
         }
     }
 
@@ -414,11 +420,24 @@ class NodeController extends Controller
     public function getTreeData(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
-        $nodes = Node::all()->sortBy('id')->where('parent_id', '=', $parentNodeId);
 
         $arr = array();
+        $order = (new Node)->find($parentNodeId)->getOrder();
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
         foreach ($nodes as $node) {
-            $tmpArr = array("title" => $node->fullName(), "key" => $node->id);
+            $tmpArr = array();
+
+            $line = (new Node)->find($node->id)->line;
+            if($line <> null)
+                $lineId = $line->id;
+            else
+                $lineId = null;
+
+            $tmpArr["title"] = $node->fullName($lineId);
+            $tmpArr["key"] = $node->id;
+
+            $tmpArr["_icon"] = (new Node)->find($node->id)->getIcon();
+
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
             if ($subNodesCount > 0) {
                 $tmpArr["folder"] = "true";
@@ -427,6 +446,7 @@ class NodeController extends Controller
             if ($node->type->id == 6) {
                 $tmpArr["about"] = "true";
             }
+
             $tmpArr["canCreate"] = $node->canCreate();
             $tmpArr["canCross"] = $node->canCross();
             $tmpArr["canDecross"] = $node->canDecross();
@@ -600,6 +620,19 @@ class NodeController extends Controller
         $json = json_encode($arr);
 
         return json_encode($json);
+    }
+
+    public function getOrderedByLine($lineId)
+    {
+        $orderedNodes = array();
+        $node = (new Node)->getFirstInLine($lineId);
+
+        while($node <> null) {
+            $orderedNodes[] = $node;
+            $node = $node->getLinkedNodeByAlias('station');
+        }
+
+        return $orderedNodes;
     }
 
 }

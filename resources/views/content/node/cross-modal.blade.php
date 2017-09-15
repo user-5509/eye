@@ -47,8 +47,8 @@
 
     $(function(){
         @if($node->line_id <> "")
-            $('select option[data-id={{$node->line_id}}]').prop('selected', true);
-            $('select').prop('disabled', true);
+            $('select#lineSelect option[data-id={{$node->line_id}}]').prop('selected', true);
+            $('select#lineSelect').prop('disabled', true);
         @endif
 
         // Create the tree inside the <div id="tree"> element.
@@ -85,6 +85,8 @@
             },
             init: function(event, data)
             {
+                $("#tree1").find("#fancytree-container").css({ width: "850px" });
+
                 // Expand tree nodes to target node
                 var tree1 = $("#tree1").fancytree("getTree");
                 var path = getKeyPath($("#tree"));

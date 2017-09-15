@@ -36,7 +36,7 @@ class NodeTypesSeeder extends Seeder
      */
     public function run()
     {
-        $this->add('Мир', '');
+        /*$this->add('Мир', '');
         $this->add('Здание', 'Мир');
         $this->add('Помещение', 'Здание');
         $this->add('ПСП', 'Помещение');
@@ -52,5 +52,11 @@ class NodeTypesSeeder extends Seeder
         $this->add('Шкаф (кросс)', 'Помещение');
         $this->add('Бокс (кросс)', 'Шкаф (кросс)');
         $this->addParent('Пара', 'Бокс (кросс)');
+        $this->add('Шкаф (телеком)', 'Помещение');
+        $this->add('Бокс Crone', 'Шкаф (телеком)');
+        $this->add('Гребенка Crone (10 пар)', 'Бокс Crone');
+        $this->addParent('Пара', 'Гребенка Crone (10 пар)');*/
+        $this->add('Патч-панель (аналог)', 'Шкаф (телеком)');
+        $this->addParent('Пара', 'Патч-панель (аналог)');
     }
 }

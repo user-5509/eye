@@ -1,13 +1,10 @@
-<ul class="list-group">
+<div class="list-group">
     @foreach ($lines as $line)
-        <li class="list-group-item" data-id="{{ $line->id }}">{{ $line->name }}
-            <button type="button" class="close" aria-label="Close" data-id="{{ $line->id }}" data-toggle="modal"
-                    data-target="#actionModal">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <li class="list-group-item list-group-item-action" id="line-{{ $line->id }}" data-id="{{ $line->id }}">
+            {{ $line->name }}
         </li>
     @endforeach
-</ul>
+</div>
 
 <script type="text/javascript">
 

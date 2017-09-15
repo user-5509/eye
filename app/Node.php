@@ -164,6 +164,63 @@ class Node extends Model
             }
         }
 
+        if ($this->type_id == (new NodeType)->getByName("Гребенка Crone (10 пар)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
+            for ($i = 1; $i <= 10; $i++) {
+                $subName = $i;
+                $subNode = new Node;
+                $subNode->name = $subName;
+                $subType = new NodeType();
+                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->parent_id = $this->id;
+                $subNode->save();
+
+                $properties = array(
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                );
+                $subNode->properties()->saveMany($properties);
+            }
+        }
+
+        if ($this->type_id == (new NodeType)->getByName("Патч-панель (аналог)")->id) {
+            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
+            $this->properties()->save($property);
+            $this->save();
+
+            for ($i = 1; $i <= 36; $i++) {
+                // Передача
+                $subNode = new Node;
+                $subNode->name = $i . ' (пер)';
+                $subType = new NodeType;
+                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->parent_id = $this->id;
+                $subNode->save();
+
+                $properties = array(
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                );
+                $subNode->properties()->saveMany($properties);
+
+                // Прием
+                $subNode = new Node;
+                $subNode->name = $i . ' (пр)';
+                $subType = new NodeType;
+                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->parent_id = $this->id;
+                $subNode->save();
+
+                $properties = array(
+                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                );
+                $subNode->properties()->saveMany($properties);
+            }
+        }
     }
 
     /**
@@ -209,11 +266,21 @@ class Node extends Model
     /**
      * @return mixed|string
      */
-    public function fullName()
+    public function fullName($lineId = null)
     {
+        if($lineId <> null) {
+            $lineName = (new Line)->find($lineId)->getName();
+            $tooltip = " data-toggle=\"tooltip\" data-placement=\"top\" title=\"$lineName\"";
+            $badge = "<span class=\"badge badge-success\">$lineName</span>";
+        }
+        else {
+            $tooltip = "";
+            $badge = "";
+        }
+
         if($this->type->name == 'Пара') {
             $nodeName = $this->name;
-            $fullName = "";
+            $fullName = "<span>";
 
             $linkedNode1 = $this->getLinkedNodeByAlias('channel');
             if($linkedNode1) {
@@ -226,10 +293,20 @@ class Node extends Model
             if($linkedNode2) {
                 $fullName .= '<small class="text-muted">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
             }
+
+            $fullName .= "</span>   $badge";
+
             return $fullName;
         } else {
-            return $this->name;
+            $nodeDescription = $this->description;
+            if($nodeDescription <> null) {
+                $nodeName = $this->name;
+                $fullName = "$nodeName  <small class=\"text-muted\">($nodeDescription)</small>";
+                return $fullName;
+            }
+
         }
+        return $this->name;
     }
 
     public function nameWithParent()
@@ -242,18 +319,28 @@ class Node extends Model
         return $name;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
     public function getPath()
     {
         $path = "";
         $curNode = $this->parent;
         while($curNode->parent <> null) {
-            $path = $curNode->parent->name . "\\" . $path;
+            $path = $curNode->parent->name . " \\ " . $path;
             $curNode = $curNode->parent;
         }
         return $path;
     }
 
-    public function updateLine()
+    public function setLine()
     {
         $hasLine = 0;
         foreach ($this->properties as $property) {
@@ -346,6 +433,7 @@ class Node extends Model
             $typeName <> 'Плата (КС)' &&
             $typeName <> 'Бокс (кросс)' &&
             $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка Crone (10 пар)' &&
             $typeName <> 'Гребенка (60 пар)')
             return false;
 
@@ -371,6 +459,7 @@ class Node extends Model
             $typeName <> 'Плата (КС)' &&
             $typeName <> 'Бокс (кросс)' &&
             $typeName <> 'Бокс (100 пар)' &&
+            $typeName <> 'Гребенка Crone (10 пар)' &&
             $typeName <> 'Гребенка (60 пар)')
             return false;
 
@@ -471,5 +560,66 @@ class Node extends Model
         })->first();
 
         return $remoteNode;
+    }
+
+    public function getOrder()
+    {
+        if($this->type == null)
+            return 0;
+
+        switch($this->type->name) {
+            case 'ПСП' :
+                $order = "name";
+                break;
+            default:
+                $order = "id";
+                break;
+        }
+
+        return $order;
+    }
+
+    public function updateLine()
+    {
+        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        foreach($interfaces as $interface) {
+            $remoteInterfaceId = $interface->value;
+            $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
+                $query->where('id', '=', $remoteInterfaceId);
+            })->first();
+
+            if(  $this->line_id <> null && $remoteNode->line_id <> $this->line_id) {
+                $remoteNode->line_id = $this->line_id;
+                $remoteNode->save();
+                $remoteNode->updateLine();
+            }
+        }
+    }
+
+    public function haveConnections()
+    {
+        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        if($interfaces->count() > 0)
+            return true;
+        else
+            return false;
+    }
+
+    public function getFirstInLine($lineId)
+    {
+        return $this->where('line_id', '=', $lineId)->whereHas('properties',
+            function ($query)
+            {
+                $query->where('alias', '=', 'channel')->where('value', '=', null);
+            })->first();
+    }
+
+    public function getIcon()
+    {
+
+        if($this->type == null)
+            return null;
+
+        return $this->type->getIcon();
     }
 }

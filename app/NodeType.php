@@ -27,6 +27,11 @@ class NodeType extends Model
         return $this->belongsToMany('App\NodeType', 'type2type', 'child_id', 'parent_id');
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     /**
      * @param $name
      * @return Model|null|static
@@ -34,5 +39,21 @@ class NodeType extends Model
     public function getByName($name)
     {
         return $this->where('name', $name)->first();
+    }
+
+    public function getIcon()
+    {
+        switch($this->name) {
+
+            case 'Пара' :
+                $icon = "&#x02237;";
+                break;
+
+                default:
+                $icon = null;
+                break;
+        }
+
+        return $icon;
     }
 }

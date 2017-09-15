@@ -12,4 +12,9 @@ class Line extends Model
      * @var string
      */
     protected $table = 'lines';
+
+    function getName()
+    {
+        return $this->name;
+    }
 }

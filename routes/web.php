@@ -74,6 +74,8 @@ Route::get('/content/line/create/modal', 'LineController@createLineModal');
 
 Route::post('/line/create/execute', 'LineController@createLineExecute');
 
+Route::post('/line/edit/execute', 'LineController@editExecute');
+
 Route::get('/content/line/delete/modal', 'LineController@deleteLineModal');
 
 Route::delete('line/{id?}/delete', 'LineController@deleteLineExecute')->where('id', '[0-9]+');
@@ -91,3 +93,9 @@ Route::get('/content/node/massUnlink/modal', 'NodeController@massUnlinkModal');
 Route::post('/node/massUnlinkExecute', 'NodeController@massUnlinkExecute');
 
 Route::get('/content/node/select', 'NodeController@select');
+
+Route::get('/content/type/index', 'NodeTypeController@index');
+
+Route::get('/content/type/list', 'NodeTypeController@getList');
+
+Route::get('/type/getParents', 'NodeTypeController@getParents');

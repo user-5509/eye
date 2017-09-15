@@ -1,4 +1,4 @@
-<button type="button" id="createLineButton" class="btn btn-secondary btn-sm" data-toggle="modal"
+<button type="button" id="createTypeButton" class="btn btn-secondary btn-sm" data-toggle="modal"
         data-target="#actionModal">Создать</button>
 <table>
         <colgroup>
@@ -6,11 +6,11 @@
             <col width="90%">
         </colgroup>
         <tr>
-            <td valign="top" id="listContainer">
+            <td valign="top" id="typeContainer">
 
             </td>
             <td valign="top">
-                <div id="lineAbout"></div>
+                <div id="typeAbout"></div>
             </td>
         </tr>
 </table>
@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
 
-    $("#createLineButton").on("click",function () {
+    $("#createTypeButton").on("click",function () {
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/create/modal",
             {_method: "get", _token: "{{ csrf_token() }}"},
@@ -38,10 +38,9 @@
         );
     });
 
-    function linesListReload() {
-        console.log('linesListReload');
-        $('#listContainer').load(
-            "http://localhost/content/line/list",
+    function typesListReload() {
+        $('#typeContainer').load(
+            "http://localhost/content/type/list",
             {_method: "get", _token: "{{ csrf_token() }}"},
             function (response, status, xhr) {
                 if (status == "error") {
@@ -71,21 +70,37 @@
 
     function editLinePrepare($trigger)
     {
-        var lineId = $trigger.data('id');
-        var lineName = $trigger.text().trim();
+        console.log('editLinePrepare');
+        var typeId = $trigger.data('id');
+        var typeName = $trigger.text().trim();
+        var typeParents = '';
+
+        $.get( "http://localhost/type/getParents", {
+            _token: "{{ csrf_token() }}",
+            typeId: typeId
+        }, function( jsonTypes )
+        {
+            var types = JSON.parse(jsonTypes);
+            $.each(types, function(index, value) {
+                typeParents += " " + value;
+            });
+            typeParents = typeParents.trim();
+        });
+
 
         var newHtml =
-            '<form class="form-inline" id="lineEdit" data-id="' + lineId + '">' +
-            '<input type="text" class="form-control" id="lineName"  value="' + lineName + '">' +
-            '<input type="hidden" class="form-control" id="lineNameBackup"  value="' + lineName + '">' +
-            '<button type="button" class="btn btn-sm btn-primary" id="editLineExecute">&#10004;</button>' +
-            '<button type="button" class="btn btn-sm btn-secondary" id="editLineCancel">&#10008;</button>' +
+            '<form class="form-inline" id="typeEdit" data-id="' + typeId + '">' +
+            '<input type="text" class="form-control" id="typeName"  value="' + typeName + '">' +
+            '<input type="text" class="form-control" id="typeParents"  value="' + typeParents + '">' +
+            '<input type="hidden" class="form-control" id="typeNameBackup"  value="' + typeName + '">' +
+            '<button type="button" class="btn btn-sm btn-primary" id="editTypeExecute">&#10004;</button>' +
+            '<button type="button" class="btn btn-sm btn-secondary" id="editTypeCancel">&#10008;</button>' +
             '</form>';
 
         $trigger.html(newHtml);
 
-        $("button#editLineExecute").on("click", editLineExecute);
-        $("button#editLineCancel").on("click", editLineCancel);
+        $("button#editTypeExecute").on("click", editTypeExecute);
+        $("button#editTypeCancel").on("click", editTypeCancel);
     }
 
     function editLineExecute()
@@ -149,7 +164,7 @@
 
     $(function(){
         $("title").text("Кросс - тракты");
-        linesListReload();}
+        typesListReload();}
     );
 
 </script>

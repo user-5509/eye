@@ -8,9 +8,13 @@
     <form id="editNodeForm" class="node-form">
         <div class="form-group">
             <label for="nodeName">Наименование</label>
-            <input type="text" class="form-control" name="nodeName" id="nodeName" placeholder="Наименование" value="{{ $node->name }}">
+            <input type="text" class="form-control" name="nodeName" placeholder="Наименование" value="{{ $node->getName() }}">
         </div>
-        <input type="hidden" name = "nodeId" value="{{ $node->id }}">
+        <div class="form-group">
+            <label for="nodeName">Описание</label>
+            <input type="text" class="form-control" name="nodeDescription" placeholder="Описание" value="{{ $node->getDescription() }}">
+        </div>
+        <input type="hidden" name="nodeId" value="{{ $node->id }}">
         {{ csrf_field() }}
     </form>
 </div>
