@@ -1,2 +1,2 @@
 rem "C:\Program Files\PostgreSQL\9.6\bin\pg_restore.exe" --data-only C:\eye\eyedb.backup
-"C:\Program Files\PostgreSQL\9.6\bin\psql.exe" -1 --host localhost --port 5432 --username postgres eye1 < C:\eye\999.backup
+"C:\Program Files\PostgreSQL\9.6\bin\psql.exe" -1 --host localhost --port 5432 --username postgres eye < C:\eye\000.backup

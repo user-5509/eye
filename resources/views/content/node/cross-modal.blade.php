@@ -11,7 +11,7 @@
             <label for="lineSelect">Тракт</label>
             <select class="form-control" id="lineSelect">
                 @foreach ($lines as $line)
-                    <option data-id="{{$line->id}}">{{$line->name}}</option>
+                    <option data-id="{{$line->id}}" @if($line->id == $predefinedLineId) selected @endif >{{$line->name}}</option>
                 @endforeach
             </select>
         </div>
@@ -46,10 +46,10 @@
     }
 
     $(function(){
-        @if($node->line_id <> "")
+        {{--@if($node->line_id <> "")
             $('select#lineSelect option[data-id={{$node->line_id}}]').prop('selected', true);
             $('select#lineSelect').prop('disabled', true);
-        @endif
+        @endif--}}
 
         // Create the tree inside the <div id="tree"> element.
         $("#tree1").fancytree({
@@ -59,9 +59,14 @@
                $('#interfaceSelect').html("");
                 var nodeId = $("#tree1").fancytree("getActiveNode").key;
                 $('#interfaceSelect')
-                    .load(  "http://localhost/content/node/cross/available-interfaces-select",
-                        { _method: "get", _token: "{{ csrf_token() }}", nodeId: nodeId },
-                        function( response, status, xhr ) {
+                    .load("http://localhost/content/node/cross/available-interfaces-select", {
+                            _token: "{{ csrf_token() }}",
+                            _method: "get",
+                            nodeId: nodeId,
+                            node1InterfaceAlias: "{{$node1InterfaceAlias}}"
+                        },
+                        function( response, status, xhr )
+                        {
                             if ( status == "error" ) {
                                 var msg = "[interfaceSelect] Sorry but there was an error: ";
                                 alert( msg + xhr.status + " " + xhr.statusText );
@@ -89,7 +94,6 @@
                 var node = data.node;
                 //if(node.data.cstrender){
                 if(node.data._icon){
-                    console.log("icon="+node.data._icon);
                     var $span = $(node.span);
                     $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + '"></i>').removeClass("fancytree-icon");
                 }
@@ -132,6 +136,9 @@
                 //tree.visit(function(node){
                 //    node.setExpanded(false);
                 //});
+
+                $("#tree").fancytree("getActiveNode").parent.load(true);
+
                 tree.loadKeyPath(path, function(node, status){
                     if(status === "loaded") {
                         console.log("loaded intermiediate node " + node);
@@ -141,6 +148,7 @@
                         //node.setExpanded(true);
                     }
                 });
+
                 $("#tree").fancytree("getActiveNode").parent.load(true);
             }
         );

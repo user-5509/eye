@@ -154,9 +154,14 @@ class NodeController extends Controller
     public function crossNodeAvailableInterfacesSelect(Request $request)
     {
         $nodeId = Input::get('nodeId');
+        $node1InterfaceAlias = Input::get('node1InterfaceAlias');
+
+
         $interfaces = (new Node)->find($nodeId)->properties;
 
-        return view('content.node.available-interfaces-select', ['interfaces' => $interfaces]);
+        return view('content.node.available-interfaces-select', [
+            'interfaces' => $interfaces,
+            'node1InterfaceAlias' => $node1InterfaceAlias]);
     }
 
     /**
@@ -172,10 +177,21 @@ class NodeController extends Controller
             $interfaceId = Input::get('interfaceId');
             $interface = $node->properties()->find($interfaceId);
 
+            $node1InterfaceAlias = $interface->alias;
+
+            if($node->line <> null)
+                $predefinedLineId = $node->line->id;
+            else
+                $predefinedLineId = null;
 
             $lines = (new LineController)->getLines();
 
-            return view('content.node.cross-modal', ['lines' => $lines, 'node' => $node, 'interface' => $interface]);
+            return view('content.node.cross-modal', [
+                'lines' => $lines,
+                'node' => $node,
+                'interface' => $interface,
+                'predefinedLineId' => $predefinedLineId,
+                'node1InterfaceAlias' => $node1InterfaceAlias]);
         } else
             return null;
     }
@@ -394,22 +410,30 @@ class NodeController extends Controller
             $interfaceId1 = $request->input('interfaceId1');
             $interfaceId2 = $request->input('interfaceId2');
 
+            $removeLinkBinding = $request->input('removeLinkBinding');
+
 
             $node1 = (new Node)->find($nodeId1);
             $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
             $node1Property->value = null;
             $node1Property->save();
 
-            if(!$node1->haveConnections())
+            if($node1->haveConnections() == null || $removeLinkBinding == true) {
                 $node1->line_id = null;
+                $node1->save();
+                $node1->resetLine();
+            }
 
             $node2 = (new Node)->find($nodeId2);
             $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
             $node2Property->value = null;
             $node2Property->save();
 
-            if(!$node2->haveConnections())
+            if($node2->haveConnections() == null || $removeLinkBinding == true) {
                 $node2->line_id = null;
+                $node2->save();
+                $node2->resetLine();
+            }
         }
     }
 
@@ -637,6 +661,20 @@ class NodeController extends Controller
         }
 
         return $orderedNodes;
+    }
+
+    public function getPath(Request $request)
+    {
+        if ($request->ajax()) {
+            $nodeId = Input::get('nodeId');
+            $path = "";
+            $curNode = (new Node)->find($nodeId);
+            while($curNode->type->id <> NodeType::_WORLD_) {
+                $path = "/" . $curNode->id . $path;
+                $curNode = $curNode->parent;
+            }
+            return $path;
+        }
     }
 
 }

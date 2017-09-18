@@ -3,7 +3,7 @@
         <span class="text-muted">{{ $node->getPath() }}</span>
     </div>
     <div class="card-block">
-        <span class="h4"><span class="text-muted">{{ $node->type->getName() }}</span> {{ $node->nameWithParent() }}</span>
+        <span class="h6"><span class="text-muted">{{ $node->type->getName() }}</span> {{ $node->nameWithParent() }}</span>
     </div>
     <div class="card-footer">
         @if ($line)

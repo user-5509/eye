@@ -40,10 +40,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#" id="menuLines">Тракты</a>
                         </li>
-                        <li class="nav-item">
+                        {{--<li class="nav-item">
                              <a class="nav-link" href="#" id="menuTypes">Типы</a>
                          </li>
-                        {{--  <li class="nav-item">
+                          <li class="nav-item">
                              <a class="nav-link disabled" href="#">Пусто</a>
                          </li>
                          <li class="nav-item">

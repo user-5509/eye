@@ -21,6 +21,8 @@
 
     <script type="text/javascript">
 
+
+
         function getNodePath()
         {
             var parents = $("#tree").fancytree("getActiveNode").getParentList();
@@ -203,6 +205,7 @@
         {
             // Tree init
             $("#tree").fancytree({
+                autoScroll: true,
                 activate: function(event, data)
                 {
                     console.log("Active node: " + data.node.key);
@@ -211,7 +214,69 @@
                             nodePath: getNodePath()
                         }
                     );
+
                     updateAbout();
+
+
+                    var node = data.node;
+
+                    $(".int-prev-"+node.key+":not(.bound)").addClass('bound').on("dblclick", function () {
+
+                        var nodeId = $('.int-prev-'+node.key).data('id');
+
+                        $.get("http://localhost/node/getPath", {
+                            _token: "{{ csrf_token() }}",
+                            nodeId: nodeId,
+                        }, function (data) {
+                            console.log('recieved path: [' + data + ']');
+                            var tree = $("#tree").fancytree("getTree");
+
+                            /*tree.visit(function(node){
+                                if(node.key != 2)
+                                    node.setExpanded(false);
+                            });*/
+
+                            tree.loadKeyPath(data, function (node, status) {
+                                if (status === "loaded") {
+                                    //node.setExpanded(true);
+                                    //console.log("loaded intermiediate node " + node);
+                                } else if (status === "ok") {
+                                    //console.log("Node to activate: " + node);
+                                    $("#tree").fancytree("getTree").activateKey(node.key);
+                                    //node.setExpanded(true);
+                                }
+                            });
+                        });
+                    });
+
+                    $(".int-next-"+node.key+":not(.bound)").addClass('bound').on("dblclick", function () {
+
+                        var nodeId = $('.int-next-'+node.key).data('id');
+
+                        $.get("http://localhost/node/getPath", {
+                            _token: "{{ csrf_token() }}",
+                            nodeId: nodeId,
+                        }, function (data) {
+                            console.log('recieved path: [' + data + ']');
+                            var tree = $("#tree").fancytree("getTree");
+
+                            /*tree.visit(function(node){
+                                if(node.key != 2)
+                                    node.setExpanded(false);
+                            });*/
+
+                            tree.loadKeyPath(data, function (node, status) {
+                                if (status === "loaded") {
+                                    //node.setExpanded(true);
+                                    //console.log("loaded intermiediate node " + node);
+                                } else if (status === "ok") {
+                                    //console.log("Node to activate: " + node);
+                                    $("#tree").fancytree("getTree").activateKey(node.key);
+                                    //node.setExpanded(true);
+                                }
+                            });
+                        });
+                    });
                 },
                 source: {
                     url: "/getTreeData",
@@ -234,10 +299,17 @@
                     var node = data.node;
                     //if(node.data.cstrender){
                     if(node.data._icon){
-                        console.log("icon="+node.data._icon);
                         var $span = $(node.span);
                         $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + '"></i>').removeClass("fancytree-icon");
                     }
+
+
+
+
+
+                    $(".int-next-"+node.data.id).on("dblclick",function () {
+                        console.log('int-next clicked');
+                    });
                 },
                 init: function(event, data)
                 {
@@ -250,7 +322,7 @@
                         if(status === "loaded") {
                             //console.log("loaded intermiediate node " + node);
                         }else if(status === "ok") {
-                            //console.log("Node to activate: " + node);
+                            console.log("Node to activate: " + node);
                             $("#tree").fancytree("getTree").activateKey(node.key);
                             //node.setExpanded(true);
                         }
@@ -278,6 +350,11 @@
                     case "massLink":
                         console.log('case:' + action);
                         url = 'http://localhost/node/contextSubMenuMassLink';
+                        break;
+
+                    case "removeLinkFromChain":
+                        console.log('case:' + action);
+                        url = 'http://localhost/node/removeLinkFromChain';
                         break;
 
                     default:

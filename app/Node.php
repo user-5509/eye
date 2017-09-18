@@ -283,16 +283,16 @@ class Node extends Model
             $nodeName = $this->name;
             $fullName = "<span>";
 
-            $linkedNode1 = null; //$this->getLinkedNodeByAlias('channel');
+            $linkedNode1 = $this->getLinkedNodeByAlias('channel');
             if($linkedNode1) {
-                $fullName .= '<small class="text-muted">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small>';
+                $fullName .= '<small class="int-prev-'.$this->id.' text-muted" data-id="'.$linkedNode1->id.'">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small>';
             }
 
             $fullName .= " &rArr; <b>".$nodeName. "</b> &rArr; ";
 
-            $linkedNode2 =  null; //$this->getLinkedNodeByAlias('station');
+            $linkedNode2 =  $this->getLinkedNodeByAlias('station');
             if($linkedNode2) {
-                $fullName .= '<small class="text-muted">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
+                $fullName .= '<small class="int-next-'.$this->id.' text-muted" data-id="'.$linkedNode2->id.'">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
             }
 
             $fullName .= "</span>   $badge";
@@ -429,12 +429,12 @@ class Node extends Model
             return false;
 
         $typeId = $this->type->id;
-        if($typeId == NodeType::CROSS_BOX &&
-            $typeId == NodeType::BOARD_CSS &&
-            $typeId == NodeType::BOARD_CS &&
-            $typeId == NodeType::CRONE_BOX_100 &&
-            $typeId == NodeType::CRONE_BOX_10 &&
-            $typeId == NodeType::COMMON_BOX_60)
+        if($typeId <> NodeType::CROSS_BOX &&
+            $typeId <> NodeType::BOARD_CSS &&
+            $typeId <> NodeType::BOARD_CS &&
+            $typeId <> NodeType::CRONE_BOX_100 &&
+            $typeId <> NodeType::CRONE_BOX_10 &&
+            $typeId <> NodeType::COMMON_BOX_60)
             return false;
 
         //$massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -580,6 +580,8 @@ class Node extends Model
 
     public function updateLine()
     {
+        $lineId = $this->line->id;
+
         $interfaces = $this->properties()->where('value', '<>', null)->get();
         foreach($interfaces as $interface) {
             $remoteInterfaceId = $interface->value;
@@ -587,11 +589,48 @@ class Node extends Model
                 $query->where('id', '=', $remoteInterfaceId);
             })->first();
 
-            if(  $this->line_id <> null && $remoteNode->line_id <> $this->line_id) {
-                $remoteNode->line_id = $this->line_id;
+            if( $this->line_id <> null &&
+                $remoteNode->line_id <> $lineId) {
+
+                $remoteNode->line_id = $lineId;
                 $remoteNode->save();
                 $remoteNode->updateLine();
             }
+        }
+    }
+
+    public function resetLine()
+    {
+        //$lineId = $this->line->id;
+
+        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        foreach($interfaces as $interface) {
+            $remoteInterfaceId = $interface->value;
+            $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
+                $query->where('id', '=', $remoteInterfaceId);
+            })->first();
+
+            if($remoteNode <> null)
+                if($remoteNode->line_id <> null){
+                    $remoteNode->line_id = null;
+                    $remoteNode->save();
+                    $remoteNode->resetLine();
+                }
+        }
+    }
+
+    public function removeLineFromChain()
+    {
+        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        foreach($interfaces as $interface) {
+            $remoteInterfaceId = $interface->value;
+            $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
+                $query->where('id', '=', $remoteInterfaceId);
+            })->first();
+
+            $remoteNode->line_id = $this->line_id;
+            $remoteNode->save();
+            $remoteNode->removeLineFromChain();
         }
     }
 

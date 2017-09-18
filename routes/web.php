@@ -98,4 +98,4 @@ Route::get('/content/type/index', 'NodeTypeController@index');
 
 Route::get('/content/type/list', 'NodeTypeController@getList');
 
-Route::get('/type/getParents', 'NodeTypeController@getParents');
+Route::get('/node/getPath', 'NodeController@getPath');
