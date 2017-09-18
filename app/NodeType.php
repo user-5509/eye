@@ -6,9 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class NodeType extends Model
 {
-    const BOX_60P = 0;
-    const BOX_100P = 1;
-    const SPM_BOARD = 2;
+    const _WORLD_  = 1;
+    const BUILDING  = 2;
+    const ROOM      = 3;
+    const PSP       = 4;
+    const COMMON_BOX_60   = 5;
+    const PAIR      = 6;
+    const CRONE_BOX_100  = 7;
+    const SPM       = 8;
+    const BOARD_CS  = 9;
+    const BOARD_CSS  = 10;
+    const CROSS_ENCLOSURE  = 11;
+    const CROSS_BOX  = 12;
+    const TELCO_ENCLOSURE  = 14;
+    const CRONE_RACK  = 15;
+    const CRONE_BOX_10  = 16;
+    const PATCH_PANEL_24  = 17;
 
     /**
      * The table associated with the model.
@@ -17,7 +30,7 @@ class NodeType extends Model
      */
     protected $table = 'node_types';
 
-    /**
+        /**
      * Get parent nodes
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -43,17 +56,17 @@ class NodeType extends Model
 
     public function getIcon()
     {
-        switch($this->name) {
+        /*switch($this->id) {
 
-            case 'Пара' :
+            case NodeType::PAIR :
                 $icon = "&#x02237;";
                 break;
 
                 default:
                 $icon = null;
                 break;
-        }
+        }*/
 
-        return $icon;
+        return $this->icon;
     }
 }

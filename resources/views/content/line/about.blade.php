@@ -1,4 +1,4 @@
-<div class="text-center h2">
+<div class="text-center h4">
     {{ $lineName }}
 </div>
 <div class="text-center h2">

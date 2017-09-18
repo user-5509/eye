@@ -11,15 +11,15 @@ class LineController extends Controller
 {
     public function index(Request $request)
     {
-        return view('content.line.index', ['title' => 'Тракты']);
+        $lines = Line::all();
+        return view('content.line.index', ['title' => 'Тракты', 'lines' => $lines]);
     }
 
     public function getList(Request $request)
     {
         $lines = Line::all();
+        return view('content.line.list', ['lines' => $lines]);
 
-        return view('content.line.list', [
-            'lines' => $lines]);
     }
 
     public function getLines()

@@ -21,7 +21,7 @@ class Node extends Model
         $this->parent_id = $parentId;
         $this->save();
 
-        if ($this->type_id == (new NodeType)->getByName("Гребенка (60 пар)")->id) {
+        if ( $this->type->id == NodeType::COMMON_BOX_60 ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -33,7 +33,7 @@ class Node extends Model
                     $subNode = new Node;
                     $subNode->name = $subName;
                     $subType = new NodeType();
-                    $subNode->type_id = $subType->getByName("Пара")->id;
+                    $subNode->type_id = $this->type->id == NodeType::PAIR;
                     $subNode->parent_id = $this->id;
                     $subNode->save();
 
@@ -46,7 +46,7 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Бокс (100 пар)")->id) {
+        if ( $this->type->id == NodeType::CRONE_BOX_100 ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -56,7 +56,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = $subName;
                 $subType = new NodeType();
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -68,7 +68,7 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Плата (КС)")->id) {
+        if ( $this->type->id == NodeType::BOARD_CS ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -78,7 +78,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пер)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -92,7 +92,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пр)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -104,7 +104,7 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Плата (СКС)")->id) {
+        if ( $this->type->id == NodeType::BOARD_CSS) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -114,7 +114,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пер)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -129,7 +129,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пр)';
                 $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -142,7 +142,7 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Бокс (кросс)")->id) {
+        if ( $this->type->id == NodeType::CROSS_BOX ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -152,7 +152,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = $subName;
                 $subType = new NodeType();
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -164,7 +164,7 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Гребенка Crone (10 пар)")->id) {
+        if ( $this->type->id == NodeType::CRONE_BOX_10 ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
@@ -174,7 +174,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = $subName;
                 $subType = new NodeType();
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -186,15 +186,15 @@ class Node extends Model
             }
         }
 
-        if ($this->type_id == (new NodeType)->getByName("Патч-панель (аналог)")->id) {
+        if ( $this->type->id == NodeType::PATCH_PANEL_24 ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();
 
-            for ($i = 1; $i <= 36; $i++) {
+            for ($i = 1; $i <= 24; $i++) {
                 // Передача
                 $subNode = new Node;
-                $subNode->name = $i . ' (пер)';
+                $subNode->name = 'Порт №' . $i . ' (пер)';
                 $subType = new NodeType;
                 $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
@@ -208,7 +208,7 @@ class Node extends Model
 
                 // Прием
                 $subNode = new Node;
-                $subNode->name = $i . ' (пр)';
+                $subNode->name = 'Порт №' . $i . ' (пр)';
                 $subType = new NodeType;
                 $subNode->type_id = $subType->getByName("Пара")->id;
                 $subNode->parent_id = $this->id;
@@ -268,8 +268,9 @@ class Node extends Model
      */
     public function fullName($lineId = null)
     {
-        if($lineId <> null) {
-            $lineName = (new Line)->find($lineId)->getName();
+        if($this->line <> null) {
+            //$lineName = (new Line)->find($lineId)->getName();
+            $lineName = $this->line->getName();
             $tooltip = " data-toggle=\"tooltip\" data-placement=\"top\" title=\"$lineName\"";
             $badge = "<span class=\"badge badge-success\">$lineName</span>";
         }
@@ -278,18 +279,18 @@ class Node extends Model
             $badge = "";
         }
 
-        if($this->type->name == 'Пара') {
+        if($this->type->id == NodeType::PAIR) {
             $nodeName = $this->name;
             $fullName = "<span>";
 
-            $linkedNode1 = $this->getLinkedNodeByAlias('channel');
+            $linkedNode1 = null; //$this->getLinkedNodeByAlias('channel');
             if($linkedNode1) {
                 $fullName .= '<small class="text-muted">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small>';
             }
 
-            $fullName .= " &rArr; <b>".$this->name . "</b> &rArr; ";
+            $fullName .= " &rArr; <b>".$nodeName. "</b> &rArr; ";
 
-            $linkedNode2 = $this->getLinkedNodeByAlias('station');
+            $linkedNode2 =  null; //$this->getLinkedNodeByAlias('station');
             if($linkedNode2) {
                 $fullName .= '<small class="text-muted">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
             }
@@ -333,7 +334,7 @@ class Node extends Model
     {
         $path = "";
         $curNode = $this->parent;
-        while($curNode->parent <> null) {
+        while($curNode->parent->type->id <> NodeType::_WORLD_) {
             $path = $curNode->parent->name . " \\ " . $path;
             $curNode = $curNode->parent;
         }
@@ -362,14 +363,14 @@ class Node extends Model
     public function canCreate()
     {
         if($this->type <> null) {
-            $typeName = $this->type->name;
-            if($typeName == 'Пара' ||
-                $typeName == 'Бокс (кросс)' ||
-                $typeName == 'Плата (СКС)' ||
-                $typeName == 'Плата (КС)' ||
-                $typeName == 'Бокс (кросс)' ||
-                $typeName == 'Бокс (100 пар)' ||
-                $typeName == 'Гребенка (60 пар)')
+            $typeId = $this->type->id;
+            if($typeId == NodeType::PAIR ||
+                $typeId == NodeType::CRONE_BOX_10 ||
+                $typeId == NodeType::BOARD_CSS ||
+                $typeId == NodeType::BOARD_CS ||
+                $typeId == NodeType::CROSS_BOX ||
+                $typeId == NodeType::CRONE_BOX_100 ||
+                $typeId == NodeType::COMMON_BOX_60)
                 return false;
             else
                 return true;
@@ -380,8 +381,8 @@ class Node extends Model
     public function canCross()
     {
         if($this->type <> null) {
-            $typeName = $this->type->name;
-            if($typeName == 'Пара') {
+            $typeId = $this->type->id;
+            if($typeId == NodeType::PAIR) {
                 $cnt = $this->properties()->where('value', null)->count();
                 if($cnt > 0)
                     return true;
@@ -392,8 +393,8 @@ class Node extends Model
     public function canDecross()
     {
         if($this->type <> null) {
-            $typeName = $this->type->name;
-            if($typeName == 'Пара') {
+            $typeId = $this->type->id;
+            if($typeId == NodeType::PAIR) {
                 $cnt = $this->properties()->where('value', '<>',null)->count();
                 if($cnt > 0)
                     return true;
@@ -405,8 +406,8 @@ class Node extends Model
     public function canDelete()
     {
         if($this->type <> null) {
-            $typeName = $this->type->name;
-            if($typeName <> 'Пара')
+            $typeId = $this->type->id;
+            if($typeId <> NodeType::PAIR)
                 return true;
         }
         return false;
@@ -415,8 +416,8 @@ class Node extends Model
     public function canEdit()
     {
         if($this->type <> null) {
-            $typeName = $this->type->name;
-            if($typeName <> 'Пара')
+            $typeId = $this->type->id;
+            if($typeId <> NodeType::PAIR)
                 return true;
         }
         return false;
@@ -427,14 +428,13 @@ class Node extends Model
         if($this->type == null)
             return false;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Плата (СКС)' &&
-            $typeName <> 'Плата (КС)' &&
-            $typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Бокс (100 пар)' &&
-            $typeName <> 'Гребенка Crone (10 пар)' &&
-            $typeName <> 'Гребенка (60 пар)')
+        $typeId = $this->type->id;
+        if($typeId == NodeType::CROSS_BOX &&
+            $typeId == NodeType::BOARD_CSS &&
+            $typeId == NodeType::BOARD_CS &&
+            $typeId == NodeType::CRONE_BOX_100 &&
+            $typeId == NodeType::CRONE_BOX_10 &&
+            $typeId == NodeType::COMMON_BOX_60)
             return false;
 
         //$massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -453,14 +453,13 @@ class Node extends Model
         if($this->type == null)
             return false;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Плата (СКС)' &&
-            $typeName <> 'Плата (КС)' &&
-            $typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Бокс (100 пар)' &&
-            $typeName <> 'Гребенка Crone (10 пар)' &&
-            $typeName <> 'Гребенка (60 пар)')
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::CROSS_BOX &&
+            $typeId <> NodeType::BOARD_CSS &&
+            $typeId <> NodeType::BOARD_CS &&
+            $typeId <> NodeType::CRONE_BOX_100 &&
+            $typeId <> NodeType::CRONE_BOX_10 &&
+            $typeId <> NodeType::COMMON_BOX_60)
             return false;
 
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -479,13 +478,13 @@ class Node extends Model
         if($this->type == null)
             return null;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Плата (СКС)' &&
-            $typeName <> 'Плата (КС)' &&
-            $typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Бокс (100 пар)' &&
-            $typeName <> 'Гребенка (60 пар)')
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::CROSS_BOX &&
+            $typeId <> NodeType::BOARD_CSS &&
+            $typeId <> NodeType::BOARD_CS &&
+            $typeId <> NodeType::CRONE_BOX_100 &&
+            $typeId <> NodeType::CRONE_BOX_10 &&
+            $typeId <> NodeType::COMMON_BOX_60)
             return null;
 
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -510,13 +509,13 @@ class Node extends Model
         if($this->type == null)
             return 0;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Плата (СКС)' &&
-            $typeName <> 'Плата (КС)' &&
-            $typeName <> 'Бокс (кросс)' &&
-            $typeName <> 'Бокс (100 пар)' &&
-            $typeName <> 'Гребенка (60 пар)')
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::CROSS_BOX &&
+            $typeId <> NodeType::BOARD_CSS &&
+            $typeId <> NodeType::BOARD_CS &&
+            $typeId <> NodeType::CRONE_BOX_100 &&
+            $typeId <> NodeType::CRONE_BOX_10 &&
+            $typeId <> NodeType::COMMON_BOX_60)
             return 0;
 
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -534,8 +533,8 @@ class Node extends Model
         if($this->type == null)
             return null;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Пара')
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::PAIR)
             return null;
 
         $linkedInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
@@ -548,8 +547,8 @@ class Node extends Model
         if($this->type == null)
             return null;
 
-        $typeName = $this->type->name;
-        if($typeName <> 'Пара')
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::PAIR)
             return null;
 
         $remoteInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
@@ -560,15 +559,15 @@ class Node extends Model
         })->first();
 
         return $remoteNode;
-    }
+}
 
     public function getOrder()
     {
         if($this->type == null)
             return 0;
 
-        switch($this->type->name) {
-            case 'ПСП' :
+        switch($this->type->id) {
+            case NodeType::PSP :
                 $order = "name";
                 break;
             default:

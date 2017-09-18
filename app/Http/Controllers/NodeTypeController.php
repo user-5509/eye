@@ -10,15 +10,9 @@ class NodeTypeController extends Controller
 {
     public function index(Request $request)
     {
-        return view('content.type.index', ['title' => 'Типы']);
-    }
-
-    public function getList(Request $request)
-    {
         $types = (new NodeType)->all();
 
-        return view('content.type.list', [
-            'types' => $types]);
+        return view('content.type.index', ['title' => 'Типы', 'types' => $types]);
     }
 
     public function getParents(Request $request)

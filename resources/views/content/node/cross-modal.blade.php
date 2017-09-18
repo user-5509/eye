@@ -83,9 +83,20 @@
                     cache: false
                 };
             },
+            renderNode: function(event, data)
+            {
+                // Optionally tweak data.node.span
+                var node = data.node;
+                //if(node.data.cstrender){
+                if(node.data._icon){
+                    console.log("icon="+node.data._icon);
+                    var $span = $(node.span);
+                    $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + '"></i>').removeClass("fancytree-icon");
+                }
+            },
             init: function(event, data)
             {
-                $("#tree1").find("#fancytree-container").css({ width: "850px" });
+                $("#tree1").find(".fancytree-container").css({ height: "280px" });
 
                 // Expand tree nodes to target node
                 var tree1 = $("#tree1").fancytree("getTree");

@@ -6,21 +6,18 @@
         </div>
     </div>
 
-    <table>
-        <colgroup>
-            <col width="300px" valign="top">
-            <col width="90%">
-        </colgroup>
-        <tr>
-            <td valign="top">
-                <!-- Tree: nodes -->
+
+        <div class="container pt-3">
+        <!-- Контент разбит на 2 row -->
+        <div class="row">
+            <div class="col-6">
                 <div id="tree"></div>
-            </td>
-            <td valign="top">
+            </div>
+            <div class="col-6">
                 <div id="nodeAbout"></div>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript">
 
@@ -52,6 +49,9 @@
                         }
                     }
                 );
+            }
+            else {
+                $("#nodeAbout").html('');
             }
         }
 
@@ -236,7 +236,7 @@
                     if(node.data._icon){
                         console.log("icon="+node.data._icon);
                         var $span = $(node.span);
-                        $span.find("> span.fancytree-icon").html("<span>" + node.data._icon + "</span>").removeClass("fancytree-icon");
+                        $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + '"></i>').removeClass("fancytree-icon");
                     }
                 },
                 init: function(event, data)

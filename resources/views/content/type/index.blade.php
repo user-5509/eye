@@ -1,19 +1,22 @@
-<button type="button" id="createTypeButton" class="btn btn-secondary btn-sm" data-toggle="modal"
-        data-target="#actionModal">Создать</button>
-<table>
-        <colgroup>
-            <col width="500px" valign="top">
-            <col width="90%">
-        </colgroup>
-        <tr>
-            <td valign="top" id="typeContainer">
-
-            </td>
-            <td valign="top">
-                <div id="typeAbout"></div>
-            </td>
-        </tr>
-</table>
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-6">
+            <button type="button" id="createTypeButton" class="btn btn-secondary btn-sm" data-toggle="modal"
+                    data-target="#actionModal">Создать</button>
+            <div class="pt-3" id="typeContainer">
+                <div class="list-group">
+                    @foreach ($types as $type)
+                        <li class="list-group-item list-group-item-action" id="type-{{ $type->id }}" data-id="{{ $type->id }}">
+                            {{ $type->name }}
+                        </li>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <div class="col-6" id="typeAbout">
+        </div>
+    </div>
+</div>
 
 <!-- Modal: line action -->
 <div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
@@ -162,9 +165,11 @@
 
     });
 
-    $(function(){
-        $("title").text("Кросс - тракты");
-        typesListReload();}
+    $(function()
+        {
+            $("title").text("Кросс - тракты");
+            //typesListReload();
+        }
     );
 
 </script>

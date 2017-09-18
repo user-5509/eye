@@ -13,6 +13,10 @@ class CreateNodeTypesTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('node_types');
+        Schema::enableForeignKeyConstraints();
+
         Schema::create('node_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');

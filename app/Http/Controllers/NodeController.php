@@ -7,6 +7,7 @@ use App\Node;;
 use App\NodeType;
 use App\NodeProperty;
 use App\Line;
+use App\Log;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Response;
@@ -422,21 +423,24 @@ class NodeController extends Controller
         $parentNodeId = Input::get('parentNodeId');
 
         $arr = array();
+
         $order = (new Node)->find($parentNodeId)->getOrder();
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
         foreach ($nodes as $node) {
             $tmpArr = array();
 
-            $line = (new Node)->find($node->id)->line;
+            //$line = (new Node)->find($node->id)->line;
+            $line = $node->line;
             if($line <> null)
                 $lineId = $line->id;
             else
                 $lineId = null;
 
-            $tmpArr["title"] = $node->fullName($lineId);
+            $tmpArr["title"] = $node->fullName();
             $tmpArr["key"] = $node->id;
 
             $tmpArr["_icon"] = (new Node)->find($node->id)->getIcon();
+            $tmpArr["_icon"] = $node->getIcon();
 
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
             if ($subNodesCount > 0) {
@@ -456,7 +460,7 @@ class NodeController extends Controller
             $tmpArr["canMassUnlink"] = $node->canMassUnlink();
 
             $arr[] = $tmpArr;
-        }
+        };
         return json_encode($arr);
     }
 

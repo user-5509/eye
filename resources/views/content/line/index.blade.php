@@ -1,19 +1,19 @@
-<button type="button" id="createLineButton" class="btn btn-secondary btn-sm" data-toggle="modal"
-        data-target="#actionModal">Создать</button>
-<table>
-        <colgroup>
-            <col width="500px" valign="top">
-            <col width="90%">
-        </colgroup>
-        <tr>
-            <td valign="top" id="listContainer">
+<div class="container pt-3">
+    <!-- Контент разбит на 2 row -->
+    <div class="row">
+        <div class="col-6">
+            <button type="button" id="createLineButton" class="btn btn-secondary btn" data-toggle="modal"
+                    data-target="#actionModal">Создать</button>
+            <div class="pt-2" id="listContainer">
 
-            </td>
-            <td valign="top">
-                <div id="lineAbout"></div>
-            </td>
-        </tr>
-</table>
+            </div>
+        </div>
+        <div class="col-6" id="lineAbout">
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Modal: line action -->
 <div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
@@ -24,6 +24,8 @@
 </div>
 
 <script type="text/javascript">
+
+
 
     $("#createLineButton").on("click",function () {
         $('#actionModal').find('.modal-content').load(
@@ -78,8 +80,9 @@
             '<form class="form-inline" id="lineEdit" data-id="' + lineId + '">' +
             '<input type="text" class="form-control" id="lineName"  value="' + lineName + '">' +
             '<input type="hidden" class="form-control" id="lineNameBackup"  value="' + lineName + '">' +
-            '<button type="button" class="btn btn-sm btn-primary" id="editLineExecute">&#10004;</button>' +
-            '<button type="button" class="btn btn-sm btn-secondary" id="editLineCancel">&#10008;</button>' +
+            '<button type="button" class="btn btn-sm btn-primary ml-2" id="editLineExecute"><i class="fa fa-check"></i></button>' +
+            '<button type="button" class="btn btn-sm btn-secondary ml-2" id="editLineCancel"><i class="fa fa-close"></i></button>' +
+            '' +
             '</form>';
 
         $trigger.html(newHtml);
@@ -147,9 +150,11 @@
 
     });
 
-    $(function(){
-        $("title").text("Кросс - тракты");
-        linesListReload();}
+    $(function()
+        {
+            $("title").text("Кросс - тракты");
+            linesListReload();
+        }
     );
 
 </script>
