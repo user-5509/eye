@@ -1,22 +1,12 @@
 <div class="modal-header">
-    <h5 class="modal-title">Кроссировать {{ $node->name }} ({{ $interface->name }})</h5>
+    <h5 class="modal-title">Кроссировать {{ $node->parent->name . '-' . $node->name }} ({{ $interface->name }})</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
 
-    <form>
-        <div class="form-group">
-            <label for="lineSelect">Тракт</label>
-            <select class="form-control" id="lineSelect">
-                @foreach ($lines as $line)
-                    <option data-id="{{$line->id}}" @if($line->id == $predefinedLineId) selected @endif >{{$line->name}}</option>
-                @endforeach
-            </select>
-        </div>
-    </form>
-
+    <div>Куда:</div>
     <!-- Node tree -->
     <div id="tree1"></div>
 
@@ -24,6 +14,16 @@
         <div class="form-group">
             <select class="form-control" id="interfaceSelect">
 
+            </select>
+        </div>
+    </form>
+    <form>
+        <div class="form-group">
+            <label for="lineSelect">Тракт:</label>
+            <select class="form-control" id="lineSelect">
+                @foreach ($lines as $line)
+                    <option data-id="{{$line->id}}" @if($line->id == $predefinedLineId) selected @endif >{{$line->name}}</option>
+                @endforeach
             </select>
         </div>
     </form>
@@ -119,6 +119,9 @@
     });
 
     $("#crossNodeExecute").on("click",function () {
+
+        $('#crossNodeExecute').html('<i class="fa fa-refresh fa-spin"></i> Ждём...');
+
         $.post( "http://localhost/node/cross/execute", {
             _token: "{{ csrf_token() }}",
             nodeId1: $("#tree").fancytree("getActiveNode").key,
@@ -127,17 +130,12 @@
             interfaceId2: $("select#interfaceSelect option:selected").data("id"),
             lineId: $("select#lineSelect option:selected").data("id")
             },
-            function( data ) {
-                $('#nodeActionModal').modal('hide');
-                //var node =  $("#tree").fancytree("getActiveNode");
-                //node.parent.load(true);
+            function( data )
+            {
+                $("#tree").fancytree("getActiveNode").parent.load(true);
+
                 var path = getKeyPath($("#tree1"));
                 var tree = $("#tree").fancytree("getTree");
-                //tree.visit(function(node){
-                //    node.setExpanded(false);
-                //});
-
-                $("#tree").fancytree("getActiveNode").parent.load(true);
 
                 tree.loadKeyPath(path, function(node, status){
                     if(status === "loaded") {
@@ -145,11 +143,16 @@
                     }else if(status === "ok") {
                         console.log("Node to activate: " + node);
                         tree.activateKey(node.key);
+                        $("#tree").fancytree("getActiveNode").parent.load(true);
                         //node.setExpanded(true);
                     }
                 });
 
-                $("#tree").fancytree("getActiveNode").parent.load(true);
+
+
+                $('#nodeActionModal').find('.modal-content').html('');
+                $('#nodeActionModal').modal('hide');
+
             }
         );
     });
