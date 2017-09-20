@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Node;;
+
+use App\Node;
 use App\NodeType;
 use App\NodeProperty;
 use App\Line;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Response;
 use Symfony\Component\CssSelector\XPath\Extension\NodeExtension;
-
+use DateTime;
 
 class NodeController extends Controller
 {
@@ -444,26 +445,24 @@ class NodeController extends Controller
      */
     public function getTreeData(Request $request)
     {
+        $startTime = (new DateTime('NOW'))->format('u');
+
         $parentNodeId = Input::get('parentNodeId');
 
         $arr = array();
 
         $order = (new Node)->find($parentNodeId)->getOrder();
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
+
+        (new Log)->put('before cycle: '. $startTime->diff((new DateTime('NOW'))->format('u'))->format('%f'));
+        $startTime = new DateTime('NOW');
+
         foreach ($nodes as $node) {
+
             $tmpArr = array();
 
-            //$line = (new Node)->find($node->id)->line;
-            $line = $node->line;
-            if($line <> null)
-                $lineId = $line->id;
-            else
-                $lineId = null;
-
-            $tmpArr["title"] = $node->fullName();
             $tmpArr["key"] = $node->id;
-
-            $tmpArr["_icon"] = (new Node)->find($node->id)->getIcon();
+            $tmpArr["title"] = $node->fullName();
             $tmpArr["_icon"] = $node->getIcon();
 
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
@@ -484,6 +483,9 @@ class NodeController extends Controller
             $tmpArr["canMassUnlink"] = $node->canMassUnlink();
 
             $arr[] = $tmpArr;
+
+            (new Log)->put('iterate '. $node->name. ':' . $startTime->diff((new DateTime('NOW'))->format('u'))->format('%f'));
+            $startTime = (new DateTime('NOW'))->format('u');
         };
         return json_encode($arr);
     }
@@ -591,8 +593,11 @@ class NodeController extends Controller
             else
                 $disabled = false;
 
+
+
             $arr["interface".$interface_id] = array(
                 "name" => $interface->name,
+                "icon" => $interface->getIcon(),
                 "disabled" => $disabled,
                 "callback" => "function () { $callback($interface_id); }"
             );
@@ -620,6 +625,7 @@ class NodeController extends Controller
 
             $arr["interface".$interface_id] = array(
                 "name" => $interface->name,
+                "icon" => $interface->getIcon(),
                 "disabled" => $disabled,
                 "callback" => "function () { $callback($interface_id); }"
             );
@@ -642,6 +648,7 @@ class NodeController extends Controller
 
             $arr["interface_".$interfaceAlias] = array(
                 "name" => $interface->name,
+                "icon" => $interface->getIcon(),
                 "callback" => "function () { $callback('$interfaceAlias'); }"
             );
         }

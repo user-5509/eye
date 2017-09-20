@@ -298,14 +298,13 @@
                     // Optionally tweak data.node.span
                     var node = data.node;
                     //if(node.data.cstrender){
+                    var $span = $(node.span);
                     if(node.data._icon){
-                        var $span = $(node.span);
-                        $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + '"></i>').removeClass("fancytree-icon");
+                        $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>').removeClass("fancytree-icon");
                     }
-
-
-
-
+                    else {
+                        $span.find('> span.fancytree-icon').removeClass("fancytree-icon");
+                    }
 
                     $(".int-next-"+node.data.id).on("dblclick",function () {
                         console.log('int-next clicked');
@@ -320,11 +319,12 @@
                     tree.loadKeyPath(path, function(node, status)
                     {
                         if(status === "loaded") {
+                            $("#tree").fancytree("getTree").activateKey(node.key);
                             //console.log("loaded intermiediate node " + node);
                         }else if(status === "ok") {
                             console.log("Node to activate: " + node);
                             $("#tree").fancytree("getTree").activateKey(node.key);
-                            //node.setExpanded(true);
+                            node.setExpanded(true);
                         }
                     });
                 }
@@ -423,13 +423,14 @@
                     if(node.data.canMassLink) {
                         items.link = {
                             name: "Связать...",
-                            icon: "loading",
+                            icon: "fa-chain",
                             items: contextSubMenu('massLink', 'massLinkNodePrepare')
                         };
                     }
                     if(node.data.canMassUnlink) {
                         items.unlink = {
                             name: "Отвязать",
+                            icon: "fa-chain-broken",
                             items: contextSubMenu('massUnlink', 'massUnlinkNodePrepare'),
                             callback: function () {
                                 massUnlinkPrepare();
@@ -439,14 +440,14 @@
                     if(node.data.canCross) {
                         items.cross = {
                             name: "Кроссировать...",
-                            icon: "loading",
+                            icon: "fa-exchange",
                             items: contextSubMenu('cross', 'crossNodePrepare')
                         };
                     }
                     if(node.data.canDecross) {
                         items.decross = {
                             name: "Убрать кроссировку",
-                            icon: "loading",
+                            icon: "fa-ban",
                             items: contextSubMenu('decross', 'decrossNodePrepare')
                         };
                     }

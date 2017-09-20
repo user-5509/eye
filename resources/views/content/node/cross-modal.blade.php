@@ -107,11 +107,12 @@
                 var path = getKeyPath($("#tree"));
                 tree1.loadKeyPath(path, function(node, status){
                     if(status === "loaded") {
+                        tree1.activateKey(node.key);
                         //console.log("loaded intermiediate node " + node);
                     }else if(status === "ok") {
                         //console.log("Node to activate: " + node);
                         tree1.activateKey(node.key);
-                        node.setExpanded(true);
+                        //node.setExpanded(true);
                     }
                 });
             }

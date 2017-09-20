@@ -285,14 +285,14 @@ class Node extends Model
 
             $linkedNode1 = $this->getLinkedNodeByAlias('channel');
             if($linkedNode1) {
-                $fullName .= '<small class="int-prev-'.$this->id.' text-muted" data-id="'.$linkedNode1->id.'">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small>';
+                $fullName .= '<small class="int-prev-'.$this->id.' text-muted" data-id="'.$linkedNode1->id.'">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small> <i class="fa fa-random text-muted"></i> ';
             }
 
-            $fullName .= " &rArr; <b>".$nodeName. "</b> &rArr; ";
+            $fullName .= "".$nodeName. "";
 
             $linkedNode2 =  $this->getLinkedNodeByAlias('station');
             if($linkedNode2) {
-                $fullName .= '<small class="int-next-'.$this->id.' text-muted" data-id="'.$linkedNode2->id.'">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
+                $fullName .= ' <i class="fa fa-random text-muted"></i> <small class="int-next-'.$this->id.' text-muted" data-id="'.$linkedNode2->id.'">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
             }
 
             $fullName .= "</span>   $badge";

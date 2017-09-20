@@ -16,4 +16,19 @@ class NodeProperty extends Model
     protected $fillable = array('name', 'alias', 'value');
 
 
+    public function getIcon()
+    {
+        switch($this->alias) {
+            case 'channel' :
+                $icon = 'fa-arrow-left';
+                break;
+            case 'station' :
+                $icon = 'fa-arrow-right';
+                break;
+            default:
+                $icon = null;
+        }
+
+        return $icon;
+    }
 }

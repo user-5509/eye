@@ -6,8 +6,10 @@
 </div>
 <div class="modal-body">
 
-        <div class="text-center h5 pt-3">{{ $node1->parent->name . '-' . $node1->name .'('. $interface1->name . ')' }}  <i class="fa fa-random fa-lg"></i>
-            {{ $node2->parent->name . '-' . $node2->name .'('. $interface2->name . ')' }}</div>
+        <div class="text-center h6 pt-3">{{ $node1->parent->name . '-' . $node1->name .'('. $interface1->name . ')' }}
+            <i class="fa fa-random"></i>
+            {{ $node2->parent->name . '-' . $node2->name .'('. $interface2->name . ')' }}
+        </div>
 
     <div class="form-check pt-3">
         <label class="form-check-label">
