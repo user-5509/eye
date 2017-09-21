@@ -102,7 +102,10 @@
                 $('#interfaceSelect').html("");
                 $('#interfaceSelect').load(
                     "http://localhost/content/node/cross/available-masslink-interfaces-select",
-                    { _token: "{{ csrf_token() }}", _method: "get", nodeId: nodeId },
+                    { _token: "{{ csrf_token() }}",
+                        _method: "get",
+                        nodeId: nodeId,
+                        node1InterfaceAlias: "{{$interfaceAlias}}"},
                     function( response, status, xhr )
                     {
                         if ( status == "error" ) {

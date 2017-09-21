@@ -247,7 +247,10 @@ class NodeController extends Controller
             $interfaceName = (new NodeProperty)->where('alias', '=', $interfaceAlias)->first()->name;
 
 
-            return view('content.node.masslink-modal', ['node' => $node, 'interfaceName' => $interfaceName, 'interfaceAlias' => $interfaceAlias]);
+            return view('content.node.masslink-modal', [
+                'node' => $node,
+                'interfaceName' => $interfaceName,
+                'interfaceAlias' => $interfaceAlias]);
         } else
             return null;
     }
@@ -255,6 +258,8 @@ class NodeController extends Controller
     public function massLinkAvailableInterfacesSelect(Request $request)
     {
         $nodeId = Input::get('nodeId');
+        $node1InterfaceAlias = Input::get('node1InterfaceAlias');
+
         $node = (new Node)->find($nodeId);
 
         if(!$node->canMassLink())
@@ -262,14 +267,16 @@ class NodeController extends Controller
 
         $availableMassLinkInterfaces = $node->availableMassLinkInterfaces();
 
-        return view('content.node.available-interfaces-select', ['interfaces' => $availableMassLinkInterfaces]);
+        return view('content.node.available-interfaces-select', [
+            'interfaces' => $availableMassLinkInterfaces,
+            'node1InterfaceAlias' => $node1InterfaceAlias]);
     }
 
     public function select(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
 
-        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy('id')->get();
 
         return view('content.node.select', ['nodes' => $nodes, 'counter' => 0]);
     }
@@ -397,7 +404,14 @@ class NodeController extends Controller
                 $query->where('id', '=', $interfaceId2);
             })->first();
 
-            return view('content.node.decross-modal', ['node1' => $node1, 'interface1' => $interface1, 'node2' => $node2, 'interface2' => $interface2]);
+            $lines = (new LineController)->getLines();
+
+            return view('content.node.decross-modal', [
+                'node1' => $node1,
+                'interface1' => $interface1,
+                'node2' => $node2,
+                'interface2' => $interface2,
+                'lines' => $lines]);
         } else
             return null;
     }
@@ -405,35 +419,51 @@ class NodeController extends Controller
     public function decrossExecute(Request $request)
     {
         if ($request->ajax()) {
+
             $nodeId1 = $request->input('nodeId1');
             $nodeId2 = $request->input('nodeId2');
 
             $interfaceId1 = $request->input('interfaceId1');
             $interfaceId2 = $request->input('interfaceId2');
 
-            $removeLinkBinding = $request->input('removeLinkBinding');
+            $line1Id = Input::get('line1Id');
+            $line2Id = Input::get('line2Id');
+
+            $newLine1Name = Input::get('newLine1Name');
+            $newLine2Name = Input::get('newLine2Name');
 
 
             $node1 = (new Node)->find($nodeId1);
-            $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
-            $node1Property->value = null;
-            $node1Property->save();
+            $node1Interface = $node1->getInterfaceById($interfaceId1);
+            $node1Interface->setValue(null);
 
-            if($node1->haveConnections() == null || $removeLinkBinding == true) {
-                $node1->line_id = null;
-                $node1->save();
-                $node1->resetLine();
+            if($line1Id == -1) {
+
+                (new Line)->create(['name' => $newLine1Name]); // create new line
+            }
+            else {
+
+                if($node1->getLine()->id <> $line1Id ) {
+
+                    $node1->setLine($line1Id);
+                }
             }
 
             $node2 = (new Node)->find($nodeId2);
-            $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
-            $node2Property->value = null;
-            $node2Property->save();
+            $node2Interface = $node2->getInterfaceById($interfaceId2);
+            $node2Interface->setValue(null);
 
-            if($node2->haveConnections() == null || $removeLinkBinding == true) {
-                $node2->line_id = null;
-                $node2->save();
-                $node2->resetLine();
+            if($line2Id == -1) {
+
+                $newLine = (new Line)->create(['name' => $newLine2Name]); // create new line
+                $node2->setLine($newLine->id);
+            }
+            else {
+
+                if($node2->getLine()->id <> $line2Id ) {
+
+                    $node2->setLine($line2Id);
+                }
             }
         }
     }
@@ -445,17 +475,12 @@ class NodeController extends Controller
      */
     public function getTreeData(Request $request)
     {
-        $startTime = (new DateTime('NOW'))->format('u');
-
         $parentNodeId = Input::get('parentNodeId');
 
         $arr = array();
 
         $order = (new Node)->find($parentNodeId)->getOrder();
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
-
-        (new Log)->put('before cycle: '. $startTime->diff((new DateTime('NOW'))->format('u'))->format('%f'));
-        $startTime = new DateTime('NOW');
 
         foreach ($nodes as $node) {
 
@@ -483,9 +508,6 @@ class NodeController extends Controller
             $tmpArr["canMassUnlink"] = $node->canMassUnlink();
 
             $arr[] = $tmpArr;
-
-            (new Log)->put('iterate '. $node->name. ':' . $startTime->diff((new DateTime('NOW'))->format('u'))->format('%f'));
-            $startTime = (new DateTime('NOW'))->format('u');
         };
         return json_encode($arr);
     }

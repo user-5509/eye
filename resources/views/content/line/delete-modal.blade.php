@@ -10,8 +10,8 @@
 </div>
 <div class="modal-footer">
     <input type="hidden" class = "nodeId" value="{{$line->id}}">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-    <button type="button" class="btn btn-primary" id="deleteLineExecute">Удалить</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i> Отмена</button>
+    <button type="button" class="btn btn-primary" id="deleteLineExecute"><i class="fa fa-trash"></i> Удалить</button>
 </div>
 
 <script type="text/javascript">

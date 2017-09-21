@@ -14,8 +14,8 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-    <button type="button" class="btn btn-primary" id="createLineExecute">Создать</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i> Отмена</button>
+    <button type="button" class="btn btn-primary" id="createLineExecute"><i class="fa fa-check"></i> Создать</button>
 </div>
 
 <script type="text/javascript">

@@ -142,6 +142,7 @@
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
             //var interfaceId = $(this).attr('data-interfaceId');
+            $('#nodeActionModal').find('.modal-content').html('');
             $('#nodeActionModal').modal('show');
             $('#nodeActionModal').find('.modal-content').load(
                 "http://localhost/content/node/decross/modal", {

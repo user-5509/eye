@@ -269,7 +269,6 @@ class Node extends Model
     public function fullName($lineId = null)
     {
         if($this->line <> null) {
-            //$lineName = (new Line)->find($lineId)->getName();
             $lineName = $this->line->getName();
             $tooltip = " data-toggle=\"tooltip\" data-placement=\"top\" title=\"$lineName\"";
             $badge = "<span class=\"badge badge-success\">$lineName</span>";
@@ -339,25 +338,6 @@ class Node extends Model
             $curNode = $curNode->parent;
         }
         return $path;
-    }
-
-    public function setLine()
-    {
-        $hasLine = 0;
-        foreach ($this->properties as $property) {
-            $crossedNodeId = $property->value;
-            if($crossedNodeId <> null) {
-                $crossedNode = (new Node)->find($crossedNodeId);
-                if ($crossedNode->line_id <> null) {
-                    $hasLine = 1;
-                    break;
-                }
-            }
-        }
-        if($hasLine == 0) {
-            $this->line_id = null;
-            $this->save();
-        }
     }
 
     public function canCreate()
@@ -434,7 +414,8 @@ class Node extends Model
             $typeId <> NodeType::BOARD_CS &&
             $typeId <> NodeType::CRONE_BOX_100 &&
             $typeId <> NodeType::CRONE_BOX_10 &&
-            $typeId <> NodeType::COMMON_BOX_60)
+            $typeId <> NodeType::COMMON_BOX_60 &&
+            $typeId <> NodeType::PATCH_PANEL_24)
             return false;
 
         //$massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
@@ -528,6 +509,35 @@ class Node extends Model
         return 1;
     }
 
+    public function getInterfaceById($id)
+    {
+        if($this->type == null)
+            return null;
+
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::PAIR)
+            return null;
+
+        return $this->properties()->find($id)->first();
+    }
+
+    public function getInterfaces()
+    {
+        if($this->type == null)
+            return null;
+
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::PAIR)
+            return null;
+
+        return $this->properties()->get();
+    }
+
+    public function getLine()
+    {
+        return $this->line;
+    }
+
     public function getLinkedInterfaceByAlias($alias)
     {
         if($this->type == null)
@@ -540,6 +550,20 @@ class Node extends Model
         $linkedInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
 
         return (new NodeProperty)->find($linkedInterfaceId);
+    }
+
+    public function getByInterfaceId($id)
+    {
+        if($this->type == null)
+            return null;
+
+        $typeId = $this->type->id;
+        if($typeId <> NodeType::PAIR)
+            return null;
+
+        $nodeId = (new NodeProperty)->find($id)->node_id;
+
+        return (new Node)->find($nodeId);
     }
 
     public function getLinkedNodeByAlias($alias)
@@ -559,7 +583,7 @@ class Node extends Model
         })->first();
 
         return $remoteNode;
-}
+    }
 
     public function getOrder()
     {
@@ -568,14 +592,28 @@ class Node extends Model
 
         switch($this->type->id) {
             case NodeType::PSP :
+            case NodeType::ROOM :
                 $order = "name";
-                break;
+                    break;
             default:
                 $order = "id";
                 break;
         }
 
         return $order;
+    }
+
+    public function setLine($lineId)
+    {
+        $this->line_id = $lineId;
+
+        $interfaces = $this->getInterfaces();
+
+        foreach($interfaces as $interface) {
+            $linkedInterfaceId = $interface->value;
+            $linkedNode = (new Node)->getByInterfaceId($linkedInterfaceId);
+            $linkedNode->setLine($lineId);
+        }
     }
 
     public function updateLine()

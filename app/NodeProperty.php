@@ -15,6 +15,11 @@ class NodeProperty extends Model
 
     protected $fillable = array('name', 'alias', 'value');
 
+    public function setValue($value)
+    {
+        $this->value = $value;
+        $this->save();
+    }
 
     public function getIcon()
     {

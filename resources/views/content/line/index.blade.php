@@ -2,8 +2,8 @@
     <!-- Контент разбит на 2 row -->
     <div class="row">
         <div class="col-6">
-            <button type="button" id="createLineButton" class="btn btn-secondary btn" data-toggle="modal"
-                    data-target="#actionModal">Создать</button>
+            <button type="button" id="createLineButton" class="btn btn-primary btn" data-toggle="modal"
+                    data-target="#actionModal"><i class="fa fa-file-o"></i> Создать</button>
             <div class="pt-2" id="listContainer">
 
             </div>
@@ -28,6 +28,7 @@
 
 
     $("#createLineButton").on("click",function () {
+        $('#actionModal').find('.modal-content').html('');
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/create/modal",
             {_method: "get", _token: "{{ csrf_token() }}"},
@@ -58,7 +59,7 @@
     {
         var lineId = $trigger.data('id');
 
-        $('#actionModal').modal('show');
+        $('#actionModal').find('.modal-content').html('');
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/delete/modal",
             { _token: "{{ csrf_token() }}", _method: "get", lineId: lineId },
@@ -66,6 +67,9 @@
                 if ( status == "error" ) {
                     var msg = "Sorry but there was an error: ";
                     alert( msg + xhr.status + " " + xhr.statusText );
+                }
+                else {
+                    $('#actionModal').modal('show');
                 }
             }
         );

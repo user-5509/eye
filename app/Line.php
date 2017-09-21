@@ -13,6 +13,8 @@ class Line extends Model
      */
     protected $table = 'lines';
 
+    protected $fillable = array('name');
+
     function getName()
     {
         return $this->name;
