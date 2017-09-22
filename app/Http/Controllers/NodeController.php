@@ -354,7 +354,7 @@ class NodeController extends Controller
             $nodeId1 = $request->input('nodeId');
             $node1 = (new Node)->find($nodeId1);
 
-            $interfaceAlias1 = $node1->getMassLink();
+            $interfaceAlias1 = $node1->getMassLinkAlias();
             if($interfaceAlias1 == null)
                 return;
 
@@ -364,7 +364,7 @@ class NodeController extends Controller
             $subNode2 = (new Node)->find($subNodeProperty2->node_id);
             $subNodes2 = (new Node)->where('parent_id', '=', $subNode2->parent_id)->get()->toArray();
             $node2 = (new Node)->find($subNode2->parent_id);
-            $interfaceAlias2 = $node2->getMassLink();
+            $interfaceAlias2 = $node2->getMassLinkAlias();
 
             if (count($subNodes1) < count($subNodes2))
                 $count = count($subNodes1);
@@ -455,7 +455,9 @@ class NodeController extends Controller
 
             if($line2Id == -1) {
 
-                $newLine = (new Line)->create(['name' => $newLine2Name]); // create new line
+                $newLine = new Line;
+                $newLine->name = $newLine2Name;
+                $newLine->save();
                 $node2->setLine($newLine->id);
             }
             else {
@@ -480,6 +482,7 @@ class NodeController extends Controller
         $arr = array();
 
         $order = (new Node)->find($parentNodeId)->getOrder();
+
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
 
         foreach ($nodes as $node) {
@@ -491,12 +494,26 @@ class NodeController extends Controller
             $tmpArr["_icon"] = $node->getIcon();
 
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
+
             if ($subNodesCount > 0) {
+
                 $tmpArr["folder"] = "true";
                 $tmpArr["lazy"] = "true";
             }
-            if ($node->type->id == 6) {
-                $tmpArr["about"] = "true";
+
+            $type = $node->getType();
+            if ($type <> null) {
+
+                if ($type->id == NodeType::PAIR) {
+
+                    $tmpArr["about"] = "true";
+                }
+            }
+
+            $line = $node->getLine();
+            if ($line <> null) {
+
+                $tmpArr["line"] = $line->id;
             }
 
             $tmpArr["canCreate"] = $node->canCreate();
@@ -509,6 +526,7 @@ class NodeController extends Controller
 
             $arr[] = $tmpArr;
         };
+
         return json_encode($arr);
     }
 
@@ -604,10 +622,13 @@ class NodeController extends Controller
         $callback = Input::get('callback');
 
         $nodeId = Input::get('nodeId');
-        $interfaces = (new Node)->find($nodeId)->properties;
 
         $arr = array();
+
+        $interfaces = (new Node)->find($nodeId)->properties;
+
         foreach ($interfaces as $interface) {
+
             $interface_id = $interface->id;
 
             if($interface->value <> null)
@@ -615,13 +636,11 @@ class NodeController extends Controller
             else
                 $disabled = false;
 
-
-
             $arr["interface".$interface_id] = array(
-                "name" => $interface->name,
-                "icon" => $interface->getIcon(),
-                "disabled" => $disabled,
-                "callback" => "function () { $callback($interface_id); }"
+                "name"      => $interface->name,
+                "icon"      => $interface->getIcon(),
+                "disabled"  => $disabled,
+                "callback"  => "function () { $callback($interface_id); }"
             );
         }
         $json = json_encode($arr);
@@ -634,22 +653,33 @@ class NodeController extends Controller
         $callback = Input::get('callback');
 
         $nodeId = Input::get('nodeId');
-        $interfaces = (new Node)->find($nodeId)->properties;
+
+        $node = (new Node)->find($nodeId);
+
+        $massLinkedAlias = $node->parent->getMassLinkAlias();
 
         $arr = array();
+
+        $interfaces = $node->properties;
+
         foreach ($interfaces as $interface) {
+
             $interface_id = $interface->id;
 
-            if($interface->value == null)
+            if($interface->value == null || $interface->alias == $massLinkedAlias) {
+
                 $disabled = true;
-            else
+
+            } else {
+
                 $disabled = false;
+            }
 
             $arr["interface".$interface_id] = array(
-                "name" => $interface->name,
-                "icon" => $interface->getIcon(),
-                "disabled" => $disabled,
-                "callback" => "function () { $callback($interface_id); }"
+                "name"      => $interface->name,
+                "icon"      => $interface->getIcon(),
+                "disabled"  => $disabled,
+                "callback"  => "function () { $callback($interface_id); }"
             );
         }
         $json = json_encode($arr);

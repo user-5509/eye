@@ -10,7 +10,6 @@
 
     $(".list-group-item").on("click",function (event) {
         var target = $( event.target );
-        console.log(target);
         var lineId = $(this).data("id");
         if(target.is("li.list-group-item")) {
             $("#lineAbout").load("http://localhost/content/line/about",
@@ -23,8 +22,8 @@
                 }
             );
         } else if(target.is("button.close")) {
-            $('#actionModal').find('.modal-content')
-                .load(  "http://localhost/content/line/delete/modal",
+            $('#actionModal').find('.modal-content').load(
+                "http://localhost/content/line/delete/modal",
                     { _method: "get", _token: "{{ csrf_token() }}", lineId: lineId },
                     function( response, status, xhr ) {
                         if ( status == "error" ) {

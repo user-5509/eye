@@ -9,6 +9,8 @@ use App\Node;
 
 class LineController extends Controller
 {
+
+
     public function index(Request $request)
     {
         $lines = Line::all();
@@ -30,12 +32,20 @@ class LineController extends Controller
     public function about(Request $request)
     {
         if ($request->ajax()) {
+
             $lineId = Input::get('lineId');
+
+            $nodeId = Input::get('nodeId');
+
             $lineName = (new Line)->find($lineId)->getName();
 
             $nodes = (new NodeController)->getOrderedByLine($lineId);
 
-            return view('content.line.about', ['lineName' => $lineName, 'nodes' => $nodes]);
+            return view('content.line.about', [
+                'lineName'  => $lineName,
+                'nodes'     => $nodes,
+                'nodeId'    => $nodeId
+            ]);
         }
         else
             return null;

@@ -42,7 +42,6 @@
     });
 
     function linesListReload() {
-        console.log('linesListReload');
         $('#listContainer').load(
             "http://localhost/content/line/list",
             {_method: "get", _token: "{{ csrf_token() }}"},

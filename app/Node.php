@@ -373,11 +373,17 @@ class Node extends Model
     public function canDecross()
     {
         if($this->type <> null) {
+
             $typeId = $this->type->id;
+
             if($typeId == NodeType::PAIR) {
-                $cnt = $this->properties()->where('value', '<>',null)->count();
-                if($cnt > 0)
+
+                $cnt = $this->getInterfaces('down')->count();
+
+                if($cnt > 0) {
+
                     return true;
+                }
             }
         }
         return false;
@@ -431,44 +437,57 @@ class Node extends Model
 
     public function canMassUnlink()
     {
-        if($this->type == null)
+        if($this->type == null) {
+
             return false;
+        }
 
         $typeId = $this->type->id;
+
         if($typeId <> NodeType::CROSS_BOX &&
             $typeId <> NodeType::BOARD_CSS &&
             $typeId <> NodeType::BOARD_CS &&
             $typeId <> NodeType::CRONE_BOX_100 &&
             $typeId <> NodeType::CRONE_BOX_10 &&
-            $typeId <> NodeType::COMMON_BOX_60)
+            $typeId <> NodeType::COMMON_BOX_60 &&
+            $typeId <> NodeType::PATCH_PANEL_24) {
+
             return false;
+        }
 
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
-        if($massLinkedInterface == null)
+
+        if($massLinkedInterface == null) {
+
             return false;
+        }
 
-        if($massLinkedInterface->alias <> null)
+        if($massLinkedInterface->alias <> null) {
+
             return true;
-
+        }
 
         return false;
     }
 
-    public function getMassLink()
+    public function getMassLinkAlias()
     {
         if($this->type == null)
             return null;
 
         $typeId = $this->type->id;
+
         if($typeId <> NodeType::CROSS_BOX &&
             $typeId <> NodeType::BOARD_CSS &&
             $typeId <> NodeType::BOARD_CS &&
             $typeId <> NodeType::CRONE_BOX_100 &&
             $typeId <> NodeType::CRONE_BOX_10 &&
-            $typeId <> NodeType::COMMON_BOX_60)
+            $typeId <> NodeType::COMMON_BOX_60 &&
+            $typeId <> NodeType::PATCH_PANEL_24)
             return null;
 
         $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+
         if($massLinkedInterface == null)
             return null;
 
@@ -518,24 +537,46 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        return $this->properties()->find($id)->first();
+        return $this->properties()->find($id);
     }
 
-    public function getInterfaces()
+    public function getInterfaces($state)
     {
         if($this->type == null)
+
             return null;
 
         $typeId = $this->type->id;
+
         if($typeId <> NodeType::PAIR)
+
             return null;
 
-        return $this->properties()->get();
+        switch($state) {
+
+            case 'up' :
+                $interfaces = $this->properties()->where('value', '<>', null)->get();
+                break;
+
+            case 'down' :
+                $interfaces = $this->properties()->where('value', '=', null)->get();
+                break;
+
+            default :
+                $interfaces = $this->properties()->get();
+        }
+
+        return $interfaces;
     }
 
     public function getLine()
     {
         return $this->line;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     public function getLinkedInterfaceByAlias($alias)
@@ -606,8 +647,9 @@ class Node extends Model
     public function setLine($lineId)
     {
         $this->line_id = $lineId;
+        $this->save();
 
-        $interfaces = $this->getInterfaces();
+        $interfaces = $this->getInterfaces('up');
 
         foreach($interfaces as $interface) {
             $linkedInterfaceId = $interface->value;

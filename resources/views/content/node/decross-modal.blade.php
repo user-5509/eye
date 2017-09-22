@@ -91,7 +91,6 @@
 
         $('#decrossNodeExecute').html('<i class="fa fa-refresh fa-spin"></i> Ждём...');
 
-
         $.post( "http://localhost/node/decross/execute", {
                 _token: "{{ csrf_token() }}",
                 nodeId1: "{{ $node1->id }}",
@@ -105,9 +104,20 @@
             },
             function( data )
             {
-                $("#tree").fancytree("getActiveNode").parent.load(true);
-                $("#tree").fancytree("getTree").getNodeByKey("{{ $node2->id }}").parent.load(true);
-                $("#tree").fancytree("getTree").activateKey("{{ $node2->id }}");
+                var tree = $("#tree").fancytree("getTree");
+                var node1 = tree.getNodeByKey("{{ $node1->id }}");
+                var node2 = tree.getNodeByKey("{{ $node2->id }}");
+
+                node1.parent.load(true);
+
+                if(node2 != null) {
+
+                    node2.parent.load(true).done(function () {
+
+                        node2.parent.setExpanded();
+                        tree.activateKey(node2.key);
+                    });
+                }
                 //updateAbout();
 
                 //$('#nodeActionModal').find('.modal-content').html('');

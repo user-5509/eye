@@ -7,38 +7,69 @@
     </div>
 
 
-        <div class="container pt-3">
-        <!-- Контент разбит на 2 row -->
+    <div class="container pt-3">
+
         <div class="row">
+
             <div class="col-6">
+
                 <div id="tree"></div>
+
             </div>
+
             <div class="col-6">
-                <div id="nodeAbout"></div>
+
+                <div class="row">
+
+                    <div class="col-12">
+
+                        <div id="nodeAbout"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-12">
+
+                        <div id="lineAbout">12</div>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
     <script type="text/javascript">
-
-
 
         function getNodePath()
         {
             var parents = $("#tree").fancytree("getActiveNode").getParentList();
             var path = "";
+
             for(var i in parents) {
+
                 path = path + "/" + parents[i].key;
             }
+
             path = path + "/" + $("#tree").fancytree("getActiveNode").key;
+
             return path;
         }
 
-        function updateAbout()
+        function updateAboutNode()
         {
             var node = $("#tree").fancytree("getActiveNode");
+
             if(node.data.about) {
-                $("#nodeAbout").load(  "http://localhost/content/node/about", {
+
+                $("#nodeAbout").load(  "http://localhost/content/node/about",
+                    {
                         _method: "get",
                         _token: "{{ csrf_token() }}",
                         nodeId: node.key,
@@ -46,6 +77,7 @@
                     function( response, status, xhr )
                     {
                         if ( status == "error" ) {
+
                             var msg = "[availableTypesDropdown] Sorry but there was an error: ";
                             alert( msg + xhr.status + " " + xhr.statusText );
                         }
@@ -54,6 +86,35 @@
             }
             else {
                 $("#nodeAbout").html('');
+            }
+        }
+
+        function updateAboutLine()
+        {
+            var node = $("#tree").fancytree("getActiveNode");
+
+            if(node.data.line) {
+
+                $("#lineAbout").load(  "http://localhost/content/line/about",
+                    {
+                        _method: "get",
+                        _token: "{{ csrf_token() }}",
+                        lineId: node.data.line,
+                        nodeId: node.key
+                    },
+                    function( response, status, xhr )
+                    {
+                        if ( status == "error" ) {
+
+                            var msg = "[lineAbout] Sorry but there was an error: ";
+                            alert( msg + xhr.status + " " + xhr.statusText );
+                        }
+                    }
+                );
+            }
+            else {
+
+                $("#lineAbout").html('');
             }
         }
 
@@ -141,10 +202,11 @@
         function decrossNodePrepare(interfaceId)
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            //var interfaceId = $(this).attr('data-interfaceId');
-            $('#nodeActionModal').find('.modal-content').html('');
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+            var actionModal = $('#nodeActionModal');
+
+            actionModal.find('.modal-content').html('');
+            actionModal.modal('show');
+            actionModal.find('.modal-content').load(
                 "http://localhost/content/node/decross/modal", {
                     _method: "get",
                     nodeId: nodeId,
@@ -164,8 +226,10 @@
         function massLinkNodePrepare(interfaceAlias)
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+            var actionModal = $('#nodeActionModal');
+
+            actionModal.modal('show');
+            actionModal.find('.modal-content').load(
                 "http://localhost/content/node/massLink/modal", {
                     _method: "get",
                     nodeId: nodeId,
@@ -185,8 +249,10 @@
         function massUnlinkPrepare()
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+            var actionModal = $('#nodeActionModal');
+
+            actionModal.modal('show');
+            actionModal.find('.modal-content').load(
                 "http://localhost/content/node/massUnlink/modal", {
                     _method: "get",
                     nodeId: nodeId,
@@ -209,15 +275,15 @@
                 autoScroll: true,
                 activate: function(event, data)
                 {
-                    console.log("Active node: " + data.node.key);
                     $.post( "http://localhost/node/savePath", {
                             _token: "{{ csrf_token() }}",
                             nodePath: getNodePath()
                         }
                     );
 
-                    updateAbout();
+                    updateAboutNode();
 
+                    updateAboutLine();
 
                     var node = data.node;
 
@@ -229,22 +295,14 @@
                             _token: "{{ csrf_token() }}",
                             nodeId: nodeId,
                         }, function (data) {
-                            console.log('recieved path: [' + data + ']');
+
                             var tree = $("#tree").fancytree("getTree");
 
-                            /*tree.visit(function(node){
-                                if(node.key != 2)
-                                    node.setExpanded(false);
-                            });*/
-
                             tree.loadKeyPath(data, function (node, status) {
-                                if (status === "loaded") {
-                                    //node.setExpanded(true);
-                                    //console.log("loaded intermiediate node " + node);
-                                } else if (status === "ok") {
-                                    //console.log("Node to activate: " + node);
+
+                                if (status === "ok") {
+
                                     $("#tree").fancytree("getTree").activateKey(node.key);
-                                    //node.setExpanded(true);
                                 }
                             });
                         });
@@ -258,22 +316,14 @@
                             _token: "{{ csrf_token() }}",
                             nodeId: nodeId,
                         }, function (data) {
-                            console.log('recieved path: [' + data + ']');
+
                             var tree = $("#tree").fancytree("getTree");
 
-                            /*tree.visit(function(node){
-                                if(node.key != 2)
-                                    node.setExpanded(false);
-                            });*/
-
                             tree.loadKeyPath(data, function (node, status) {
-                                if (status === "loaded") {
-                                    //node.setExpanded(true);
-                                    //console.log("loaded intermiediate node " + node);
-                                } else if (status === "ok") {
-                                    //console.log("Node to activate: " + node);
-                                    $("#tree").fancytree("getTree").activateKey(node.key);
-                                    //node.setExpanded(true);
+
+                                if (status === "ok") {
+
+                                    tree.activateKey(node.key);
                                 }
                             });
                         });
@@ -286,7 +336,7 @@
                 lazyLoad: function(event, data)
                 {
                     var node = data.node;
-                    // Load child nodes via ajax GET /getTreeData?mode=children&parent=1234
+
                     data.result = {
                         url: "/getTreeData",
                         data: {mode: "children", parentNodeId: node.key},
@@ -296,35 +346,39 @@
                 },
                 renderNode: function(event, data)
                 {
-                    // Optionally tweak data.node.span
                     var node = data.node;
-                    //if(node.data.cstrender){
-                    var $span = $(node.span);
+                    var span = $(node.span).find("> span.fancytree-icon");
+
                     if(node.data._icon){
-                        $span.find('> span.fancytree-icon').html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>').removeClass("fancytree-icon");
+
+                        span.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>').removeClass("fancytree-icon");
                     }
                     else {
-                        $span.find('> span.fancytree-icon').removeClass("fancytree-icon");
+
+                        span.removeClass("fancytree-icon");
                     }
 
                     $(".int-next-"+node.data.id).on("dblclick",function () {
+
                         console.log('int-next clicked');
                     });
                 },
+
                 init: function(event, data)
                 {
                     // Expand tree nodes to target node
                     var tree = $("#tree").fancytree("getTree");
                     var path = "{{ $nodePath }}";
-                    console.log(path);
+
                     tree.loadKeyPath(path, function(node, status)
                     {
                         if(status === "loaded") {
-                            $("#tree").fancytree("getTree").activateKey(node.key);
-                            //console.log("loaded intermiediate node " + node);
+
+                            tree.activateKey(node.key);
+
                         }else if(status === "ok") {
-                            console.log("Node to activate: " + node);
-                            $("#tree").fancytree("getTree").activateKey(node.key);
+
+                            tree.activateKey(node.key);
                             node.setExpanded(true);
                         }
                     });
@@ -336,6 +390,7 @@
                 var url;
 
                 switch(action) {
+
                     case "create":
                         url = 'http://localhost/node/contextSubMenuCreate';
                         break;
@@ -405,6 +460,7 @@
                     var node = $("#tree").fancytree("getActiveNode");
 
                     if(node.data.canCreate) {
+
                         items.create = {
                             name: "Создать...",
                             icon: "add",
@@ -412,6 +468,7 @@
                         };
                     }
                     if(node.data.canEdit) {
+
                         items.edit = {
                             name: "Редактировать",
                             icon: "edit",
@@ -420,8 +477,9 @@
                             }
                         };
                     }
-                    console.log(node.data.canMassLink);
+
                     if(node.data.canMassLink) {
+
                         items.link = {
                             name: "Связать...",
                             icon: "fa-chain",
@@ -429,16 +487,20 @@
                         };
                     }
                     if(node.data.canMassUnlink) {
+
                         items.unlink = {
                             name: "Отвязать",
                             icon: "fa-chain-broken",
                             items: contextSubMenu('massUnlink', 'massUnlinkNodePrepare'),
+
                             callback: function () {
+
                                 massUnlinkPrepare();
                             }
                         };
                     }
                     if(node.data.canCross) {
+
                         items.cross = {
                             name: "Кроссировать...",
                             icon: "fa-exchange",
@@ -446,6 +508,7 @@
                         };
                     }
                     if(node.data.canDecross) {
+
                         items.decross = {
                             name: "Убрать кроссировку",
                             icon: "fa-ban",
@@ -453,10 +516,13 @@
                         };
                     }
                     if(node.data.canDelete) {
+
                         items.delete = {
                             name: "Удалить",
                             icon: "delete",
+
                             callback: function () {
+
                                 deleteNodePrepare();
                             }
                         };

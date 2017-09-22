@@ -35,13 +35,15 @@
 
 <script type="text/javascript">
 
-    function getKeyPath(tree) {
+    function getKeyPath(tree)
+    {
         var parents = tree.fancytree("getActiveNode").getParentList();
         var path = "";
+
         for(var i in parents) {
             path = path + "/" + parents[i].key;
         }
-        path = path + "/" + tree.fancytree("getActiveNode").key;
+        //path = path + "/" + tree.fancytree("getActiveNode").key;
         return path;
     }
 
@@ -81,7 +83,7 @@
             lazyLoad: function(event, data)
             {
                 var node = data.node;
-                // Load child nodes via ajax GET /getTreeData?mode=children&parent=1234
+
                 data.result = {
                     url: "/getTreeData",
                     data: {mode: "children", parentNodeId: node.key},
@@ -123,37 +125,37 @@
 
         $('#crossNodeExecute').html('<i class="fa fa-refresh fa-spin"></i> Ждём...');
 
+        var nodeId1 = $("#tree").fancytree("getActiveNode").key;
+        var nodeId2 = $("#tree1").fancytree("getActiveNode").key;
+
         $.post( "http://localhost/node/cross/execute", {
             _token: "{{ csrf_token() }}",
-            nodeId1: $("#tree").fancytree("getActiveNode").key,
+            nodeId1: nodeId1,
             interfaceId1: "{{ $interface->id }}",
-            nodeId2: $("#tree1" ).fancytree("getActiveNode").key,
+            nodeId2: nodeId2,
             interfaceId2: $("select#interfaceSelect option:selected").data("id"),
             lineId: $("select#lineSelect option:selected").data("id")
             },
             function( data )
             {
-                $("#tree").fancytree("getActiveNode").parent.load(true);
-
-                var path = getKeyPath($("#tree1"));
                 var tree = $("#tree").fancytree("getTree");
+                var node1 = tree.getNodeByKey(nodeId1);
+                var node2 = tree.getNodeByKey(nodeId2);
 
-                tree.loadKeyPath(path, function(node, status){
-                    if(status === "loaded") {
-                        console.log("loaded intermiediate node " + node);
-                    }else if(status === "ok") {
-                        console.log("Node to activate: " + node);
-                        tree.activateKey(node.key);
-                        $("#tree").fancytree("getActiveNode").parent.load(true);
-                        //node.setExpanded(true);
-                    }
-                });
+                node1.parent.load(true);
 
+                if(node2 != null) {
 
+                    node2.parent.load(true).done(function () {
+
+                        node2.parent.setExpanded();
+                        tree.activateKey(node2.key);
+                    });
+                }
 
                 $('#nodeActionModal').find('.modal-content').html('');
-                $('#nodeActionModal').modal('hide');
 
+                $('#nodeActionModal').modal('hide');
             }
         );
     });
