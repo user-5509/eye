@@ -76,7 +76,7 @@ class NodeController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function createNodeExecute(Request $request)
+    public function     createNodeExecute(Request $request)
     {
         if ($request->ajax()) {
             $node = new Node();

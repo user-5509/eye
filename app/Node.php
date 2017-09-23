@@ -32,7 +32,6 @@ class Node extends Model
                     $subName = $pairNamePrefix . $i;
                     $subNode = new Node;
                     $subNode->name = $subName;
-                    $subType = new NodeType();
                     $subNode->type_id = $this->type->id == NodeType::PAIR;
                     $subNode->parent_id = $this->id;
                     $subNode->save();
@@ -77,7 +76,6 @@ class Node extends Model
                 // Передача
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пер)';
-                $subType = new NodeType;
                 $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
@@ -91,7 +89,6 @@ class Node extends Model
                 // Прием
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пр)';
-                $subType = new NodeType;
                 $subNode->type_id = $this->type->id == NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
@@ -113,8 +110,7 @@ class Node extends Model
                 // Передача
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пер)';
-                $subType = new NodeType;
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -128,8 +124,7 @@ class Node extends Model
                 // Прием
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пр)';
-                $subType = new NodeType;
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -151,8 +146,7 @@ class Node extends Model
                 $subName =  $i;
                 $subNode = new Node;
                 $subNode->name = $subName;
-                $subType = new NodeType();
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -195,8 +189,7 @@ class Node extends Model
                 // Передача
                 $subNode = new Node;
                 $subNode->name = 'Порт №' . $i . ' (пер)';
-                $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -209,8 +202,7 @@ class Node extends Model
                 // Прием
                 $subNode = new Node;
                 $subNode->name = 'Порт №' . $i . ' (пр)';
-                $subType = new NodeType;
-                $subNode->type_id = $subType->getByName("Пара")->id;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -613,12 +605,17 @@ class Node extends Model
             return null;
 
         $typeId = $this->type->id;
+
         if($typeId <> NodeType::PAIR)
             return null;
 
-        $remoteInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
+        $remoteInterface = $this->properties()->where('alias', '=', $alias)->first();
 
-        //$remoteInterfaceId = (new NodeProperty)->find($localInterfaceId)->id;
+        if($remoteInterface == null)
+            return null;
+
+        $remoteInterfaceId = $remoteInterface->value;
+
         $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
             $query->where('id', '=', $remoteInterfaceId);
         })->first();
