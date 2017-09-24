@@ -103,7 +103,9 @@
         function createNodePrepare(nodeTypeId)
         {
             var parentNodeId = $("#tree").fancytree("getActiveNode").key;
-            $('#nodeActionModal').modal('show');
+
+            $('#nodeActionModal').html('');
+
             $('#nodeActionModal').find('.modal-content').load(
                 "http://localhost/content/node/create/modal", {
                     _token: "{{ csrf_token() }}",
@@ -116,6 +118,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#nodeActionModal').modal('show');
                     }
                 }
             );
@@ -263,6 +267,8 @@
                         }
                     );
 
+                    $('[data-toggle="tooltip"]').tooltip();
+
                     updateAboutNode();
 
                     updateAboutLine();
@@ -322,8 +328,7 @@
                     data.result = {
                         url: "/getTreeData",
                         data: {mode: "children", parentNodeId: node.key},
-                        cache: false,
-
+                        cache: false
                     };
                 },
                 renderNode: function(event, data)

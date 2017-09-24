@@ -32,7 +32,7 @@ class Node extends Model
                     $subName = $pairNamePrefix . $i;
                     $subNode = new Node;
                     $subNode->name = $subName;
-                    $subNode->type_id = $this->type->id == NodeType::PAIR;
+                    $subNode->type_id = NodeType::PAIR;
                     $subNode->parent_id = $this->id;
                     $subNode->save();
 
@@ -55,7 +55,7 @@ class Node extends Model
                 $subNode = new Node;
                 $subNode->name = $subName;
                 $subType = new NodeType();
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -76,7 +76,7 @@ class Node extends Model
                 // Передача
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пер)';
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -89,7 +89,7 @@ class Node extends Model
                 // Прием
                 $subNode = new Node;
                 $subNode->name = 'Гнездо №' . $i . ' (пр)';
-                $subNode->type_id = $this->type->id == NodeType::PAIR;
+                $subNode->type_id = NodeType::PAIR;
                 $subNode->parent_id = $this->id;
                 $subNode->save();
 
@@ -116,8 +116,8 @@ class Node extends Model
 
                 $properties = array(
                     new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station1", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station2", 'value' => null))
+                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
 
@@ -130,8 +130,8 @@ class Node extends Model
 
                 $properties = array(
                     new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station1", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station2", 'value' => null))
+                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
+                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
                 );
                 $subNode->properties()->saveMany($properties);
             }
@@ -260,45 +260,62 @@ class Node extends Model
      */
     public function fullName($lineId = null)
     {
-        if($this->line <> null) {
-            $lineName = $this->line->getName();
-            $tooltip = " data-toggle=\"tooltip\" data-placement=\"top\" title=\"$lineName\"";
-            $badge = "<span class=\"badge badge-success\">$lineName</span>";
-        }
-        else {
-            $tooltip = "";
-            $badge = "";
-        }
-
         if($this->type->id == NodeType::PAIR) {
-            $nodeName = $this->name;
-            $fullName = "<span>";
 
-            $linkedNode1 = $this->getLinkedNodeByAlias('channel');
-            if($linkedNode1) {
-                $fullName .= '<small class="int-prev-'.$this->id.' text-muted" data-id="'.$linkedNode1->id.'">' . $linkedNode1->parent->name . '-' . $linkedNode1->name . '</small> <i class="fa fa-random text-muted"></i> ';
+            switch ($this->parent->type->id) {
+
+                case NodeType::BOARD_CSS :
+
+                    $nodeId = $this->id;
+                    $nodeName = $this->name;
+                    $linkedNode1 = $this->getLinkedNodeByAlias('channel');
+                    $linkedNode2 = $this->getLinkedNodeByAlias('station');
+                    $linkedNode3 = $this->getLinkedNodeByAlias('station1');
+
+                    $view = view('content.node.fullname-spm-css', [
+                        'nodeId' => $nodeId,
+                        'nodeName' => $nodeName,
+                        'linkedNode1' => $linkedNode1,
+                        'linkedNode2' => $linkedNode2,
+                        'linkedNode3' => $linkedNode3,
+                        'line' => $this->line
+                    ])->render();
+
+                    break;
+
+                default :
+
+                    $nodeId = $this->id;
+                    $nodeName = $this->name;
+                    $linkedNode1 = $this->getLinkedNodeByAlias('channel');
+                    $linkedNode2 = $this->getLinkedNodeByAlias('station');
+
+                    $view = view('content.node.fullname-pair', [
+                        'nodeId' => $nodeId,
+                        'nodeName' => $nodeName,
+                        'linkedNode1' => $linkedNode1,
+                        'linkedNode2' => $linkedNode2,
+                        'line' => $this->line
+                    ])->render();
             }
-
-            $fullName .= "".$nodeName. "";
-
-            $linkedNode2 =  $this->getLinkedNodeByAlias('station');
-            if($linkedNode2) {
-                $fullName .= ' <i class="fa fa-random text-muted"></i> <small class="int-next-'.$this->id.' text-muted" data-id="'.$linkedNode2->id.'">' . $linkedNode2->parent->name . '-' . $linkedNode2->name . '</small>';
-            }
-
-            $fullName .= "</span>   $badge";
-
-            return $fullName;
         } else {
+
             $nodeDescription = $this->description;
-            if($nodeDescription <> null) {
+
+            if ($nodeDescription <> null) {
+
                 $nodeName = $this->name;
-                $fullName = "$nodeName  <small class=\"text-muted\">($nodeDescription)</small>";
-                return $fullName;
-            }
+
+                $view = view('content.node.fullname-default', [
+                    'nodeName' => $nodeName,
+                    'nodeDescription' => $nodeDescription,
+                ])->render();
+
+            } else
+                $view = $this->name;
 
         }
-        return $this->name;
+        return $view;
     }
 
     public function nameWithParent()
@@ -486,6 +503,29 @@ class Node extends Model
         return $massLinkedInterface->alias;
     }
 
+    public function getMassLinkedNode()
+    {
+        if($this->type == null)
+            return null;
+
+        $typeId = $this->type->id;
+
+        if($typeId <> NodeType::CROSS_BOX &&
+            $typeId <> NodeType::BOARD_CSS &&
+            $typeId <> NodeType::BOARD_CS &&
+            $typeId <> NodeType::CRONE_BOX_100 &&
+            $typeId <> NodeType::CRONE_BOX_10 &&
+            $typeId <> NodeType::COMMON_BOX_60 &&
+            $typeId <> NodeType::PATCH_PANEL_24)
+            return null;
+
+        $subNode = (new Node)->where('parent_id', '=', $this->id)->first();
+
+        $massLinkAlias = $this->getMassLinkAlias();
+
+        return $subNode->getLinkedNodeByAlias($massLinkAlias)->parent;
+    }
+
     public function availableMassLinkInterfaces()
     {
         if($this->canMassLink()) {
@@ -532,7 +572,20 @@ class Node extends Model
         return $this->properties()->find($id);
     }
 
-    public function getInterfaces($state)
+    public function getInterfaceByAlias($alias)
+    {
+        if($this->type == null)
+            return null;
+
+        $typeId = $this->type->id;
+
+        if($typeId <> NodeType::PAIR)
+            return null;
+
+        return $this->properties()->where('alias', '=', $alias)->first();
+    }
+
+    public function getInterfaces($state = '')
     {
         if($this->type == null)
 
@@ -577,6 +630,7 @@ class Node extends Model
             return null;
 
         $typeId = $this->type->id;
+
         if($typeId <> NodeType::PAIR)
             return null;
 

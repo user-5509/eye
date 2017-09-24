@@ -8,21 +8,34 @@
     ВНИМАНИЕ! Будут удалены связи между объектами!
 </div>
 <div class="modal-footer">
-    <input type="hidden" class = "nodeId" value="{{$nodeId}}">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
     <button type="button" class="btn btn-primary" id="massUnlinkExecute">Удалить</button>
 </div>
 
 <script type="text/javascript">
     $("#massUnlinkExecute").on("click",function () {
+
+        var nodeId1 = $("#tree").fancytree("getActiveNode").key;
+        var nodeId2 = "{{ $nodeId2 }}";
+
         $.post( "http://localhost/node/massUnlinkExecute", {
             _token: "{{ csrf_token() }}",
-            nodeId: "{{$nodeId}}"
+            nodeId1: nodeId1,
+            nodeId2: nodeId2
             },
-            function( data ) {
+            function( data )
+            {
+                var tree = $("#tree").fancytree("getTree");
+                var node1 = tree.getNodeByKey(nodeId1);
+                var node2 = tree.getNodeByKey(nodeId2);
+
+                node1.load(true);
+
+                if(node2 != null) {
+                    node2.load(true);
+                }
+
                 $('#nodeActionModal').modal('hide');
-                var node = $("#tree").fancytree("getActiveNode");
-                $("#tree").fancytree("getActiveNode").parent.load(true);
             }
         );
     });

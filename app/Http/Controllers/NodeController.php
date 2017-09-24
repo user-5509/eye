@@ -257,8 +257,8 @@ class NodeController extends Controller
 
     public function massLinkAvailableInterfacesSelect(Request $request)
     {
-        $nodeId = Input::get('nodeId');
-        $node1InterfaceAlias = Input::get('node1InterfaceAlias');
+        $nodeId                 = Input::get('nodeId');
+        $node1InterfaceAlias    = Input::get('node1InterfaceAlias');
 
         $node = (new Node)->find($nodeId);
 
@@ -268,8 +268,8 @@ class NodeController extends Controller
         $availableMassLinkInterfaces = $node->availableMassLinkInterfaces();
 
         return view('content.node.available-interfaces-select', [
-            'interfaces' => $availableMassLinkInterfaces,
-            'node1InterfaceAlias' => $node1InterfaceAlias]);
+            'interfaces'            => $availableMassLinkInterfaces,
+            'node1InterfaceAlias'   => $node1InterfaceAlias]);
     }
 
     public function select(Request $request)
@@ -292,29 +292,37 @@ class NodeController extends Controller
 
             $startNodeNum1 = $request->input('startNodeNum1');
             $startNodeNum2 = $request->input('startNodeNum2');
+
             $count = $request->input('count');
 
-            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get()->toArray();
-            $subNodes2 = (new Node)->where('parent_id', '=', $nodeId2)->get()->toArray();
+            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->orderBy('id')->get()->toArray();
+            $subNodes2 = (new Node)->where('parent_id', '=', $nodeId2)->orderBy('id')->get()->toArray();
 
 //            if (count($subNodes1) < count($subNodes2))
 //                $count = count($subNodes1);
 //            else
 //                $count = count($subNodes2);
 
-            $order = $request->input('order');
-            if($order == 0) {
-                $step = 1;
+            $order1 = $request->input('order1');
+            if($order1 == 0) {
+                $step1 = 1;
             } else {
-                $step = 2;
+                $step1 = 2;
+            }
+
+            $order2 = $request->input('order2');
+            if($order2 == 0) {
+                $step2 = 1;
+            } else {
+                $step2 = 2;
             }
 
             $i = $startNodeNum1;
             $j = $startNodeNum2;
-            //while( $i < count($subNodes1) && $j < count($subNodes2) ) {
-            //for ($i = $start; $i < $count; $i += $step) {
-            $count += $j;
-            while( $j < $count ) {
+            $k = 0;
+            //$count += $j;
+
+            while( $k < $count ) {
                 $subNode1 = $subNodes1[$i];
                 $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
 
@@ -327,11 +335,14 @@ class NodeController extends Controller
                 $subNodeProperty2->value = $subNodeProperty1->id;
                 $subNodeProperty2->save();
 
-                $i += $step;
-                $j++;
+                $i += $step1;
+                $j += $step2;
+                $k++;
             }
+
             $node1 = (new Node)->find($nodeId1);
             $node1->setMassLink($interfaceAlias1);
+
             $node2 = (new Node)->find($nodeId2);
             $node2->setMassLink($interfaceAlias2);
         }
@@ -340,10 +351,21 @@ class NodeController extends Controller
     public function massUnlinkModal(Request $request)
     {
         if ($request->ajax()) {
-            $nodeId = Input::get('nodeId');
-            $nodeName = (new Node)->find($nodeId)->name;
+            $nodeId1 = Input::get('nodeId');
 
-            return view('content.node.massUnlink-modal', ['nodeId' => $nodeId, 'nodeName' => $nodeName]);
+            $node1 = (new Node)->find($nodeId1);
+
+            $nodeName1 = $node1->name;
+
+            $node2 = $node1->getMassLinkedNode();
+
+            if($node2)
+                $nodeId2 = $node2->id;
+            else
+                $nodeId2 = '';
+
+            return view('content.node.massUnlink-modal', ['nodeId2' => $nodeId2, 'nodeName' => $nodeName1]);
+
         } else
             return null;
     }
@@ -351,42 +373,43 @@ class NodeController extends Controller
     public function massUnlinkExecute(Request $request)
     {
         if ($request->ajax()) {
-            $nodeId1 = $request->input('nodeId');
+
+            $nodeId1 = $request->input('nodeId1');
+            $nodeId2 = $request->input('nodeId2');
+
             $node1 = (new Node)->find($nodeId1);
 
+            if($node1 == null)
+                return;
+
             $interfaceAlias1 = $node1->getMassLinkAlias();
+
             if($interfaceAlias1 == null)
                 return;
 
-            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get()->toArray();
-            $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNodes1[0]['id'])->where('alias', $interfaceAlias1)->first();
-            $subNodeProperty2 = (new NodeProperty)->find($subNodeProperty1->value);
-            $subNode2 = (new Node)->find($subNodeProperty2->node_id);
-            $subNodes2 = (new Node)->where('parent_id', '=', $subNode2->parent_id)->get()->toArray();
-            $node2 = (new Node)->find($subNode2->parent_id);
-            $interfaceAlias2 = $node2->getMassLinkAlias();
+            $subNodes1 = (new Node)->where('parent_id', '=', $nodeId1)->get();
 
-            if (count($subNodes1) < count($subNodes2))
-                $count = count($subNodes1);
-            else
-                $count = count($subNodes2);
+            foreach ($subNodes1 as $subNode1) {
 
-            for ($i = 0; $i < $count; $i++) {
-                $subNode1 = $subNodes1[$i];
-                $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
+                // firstly clear remote interface...
+                $interface2 = $subNode1->getLinkedInterfaceByAlias($interfaceAlias1);
 
-                $subNode2 = $subNodes2[$i];
-                $subNodeProperty2 = (new NodeProperty)->where('node_id', '=', $subNode2['id'])->where('alias', $interfaceAlias2)->first();
+                if($interface2)
+                    $interface2->setValue(null);
 
-                $subNodeProperty1->value = null;
-                $subNodeProperty1->save();
+                // ...then local
+                $interface1 = $subNode1->getInterfaceByAlias($interfaceAlias1);
 
-                $subNodeProperty2->value = null;
-                $subNodeProperty2->save();
+                if($interface1)
+                    $interface1->setValue(null);
             }
 
             $node1->setMassLink(null);
-            $node2->setMassLink(null);
+
+            $node2 = (new Node)->find($nodeId2);
+
+            if($node2 <> null)
+                $node2->setMassLink(null);
         }
     }
 
@@ -484,6 +507,8 @@ class NodeController extends Controller
         $order = (new Node)->find($parentNodeId)->getOrder();
 
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
+        //$nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
+
 
         foreach ($nodes as $node) {
 
