@@ -267,7 +267,11 @@
                         }
                     );
 
-                    $('[data-toggle="tooltip"]').tooltip();
+                    // TODO: correct arrow color
+                    var template = '<div class="tooltip tooltip-success pl-2" role="tooltip"><div class="arrow pl-1"></div><div class="tooltip-inner bg-success"></div></div>';
+                    $('[data-toggle="tooltip"]').tooltip({
+                        template: template
+                    });
 
                     updateAboutNode();
 
@@ -287,10 +291,8 @@
                             var tree = $("#tree").fancytree("getTree");
 
                             tree.loadKeyPath(data, function (node, status) {
-
                                 if (status === "ok") {
-
-                                    $("#tree").fancytree("getTree").activateKey(node.key);
+                                    tree.activateKey(node.key);
                                 }
                             });
                         });

@@ -7,7 +7,7 @@
         ...
     @endif
     <i class="fa fa-random text-muted"></i>
-    <span class="badge badge-primary">
+    <span class="badge @if($line) badge-success @else badge-primary @endif">
          {{ $nodeName }}
     </span>
     <i class="fa fa-random text-muted"></i>

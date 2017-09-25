@@ -13,22 +13,55 @@
 
 
     <style type="text/css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
         .fancytree-container {
             height: 480px;
             width: 100%;
             overflow: auto;
+        }
+
+        .tooltip-success.bs-tooltip-right .arrow::before, .tooltip-success.bs-tooltip-auto[x-placement^="right"] .arrow::before {
+            margin-top: -3px;
+            content: "";
+            border-width: 5px 5px 5px 0;
+            border-right-color: #28A745;
+        }
+
+        .dimm {
+            background: rgba(0,0,0,.5);
+            width:100%;
+            height:100%;
+            position:absolute;
+            top:0;
+            bottom:0;
+            left: 0;
+            right: 0;
+            z-index:999;
+        }
+
+        .acenter {
+            margin: auto;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
         }
     </style>
 
     <title></title>
 </head>
 <body>
-
+<div class="dimm">
+    <span class="center-block">
+        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+    </span>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <nav class="navbar navbar-toggleable-md navbar-light bg-faded h5">
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <nav class="navbar navbar-expand-lg navbar-light bg-faded h5">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <a class="navbar-brand" href="#"><span class="h3">&nesear;</span> <b>КРОСС</b><sup><small>&copy;</small></sup></a>
@@ -60,20 +93,20 @@
     </div>
 </div>
 
-
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="js/jquery-3.2.1.js"></script>
-    <script src="js/tether.min.js"></script>
+    <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fancytree/jquery.fancytree-all-deps.min.js"></script>
     <script src="js/jquery.contextMenu.min.js"></script>
-    <script src="js/jquery.fancytree.contextMenu.js"></script>
 
     <script type="text/javascript">
-        function loadNodes(contentContainer)
+
+        function loadNodes(contentContainer, nodeId = null)
         {
-            contentContainer.load(  "http://localhost/content/node/index",
-                { _method: "get", _token: "{{ csrf_token() }}" },
+            contentContainer.load(  "http://localhost/content/node/index", {
+                _method: "get",
+                _token: "{{ csrf_token() }}",
+                nodeId: nodeId},
                 function( response, status, xhr )
                 {
                     if ( status == "error" ) {

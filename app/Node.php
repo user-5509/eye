@@ -349,6 +349,20 @@ class Node extends Model
         return $path;
     }
 
+    public function getKeyPath()
+    {
+        $keyPath = '';
+
+        $curNode = $this;
+
+        while($curNode->type->id <> NodeType::_WORLD_) {
+            $keyPath =  "/" . $curNode->id . $keyPath;
+            $curNode = $curNode->parent;
+        }
+
+        return $keyPath;
+    }
+
     public function canCreate()
     {
         if($this->type <> null) {
@@ -387,7 +401,7 @@ class Node extends Model
 
             if($typeId == NodeType::PAIR) {
 
-                $cnt = $this->getInterfaces('down')->count();
+                $cnt = $this->getInterfaces('up')->count();
 
                 if($cnt > 0) {
 

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Node;
 use App\NodeType;
 use App\NodeProperty;
@@ -17,26 +15,16 @@ use DateTime;
 
 class NodeController extends Controller
 {
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function index(Request $request)
     {
-        $currentNode = (new Node)->find(1);
-        $nodes = Node::all()->where('parent_id', '=', 1);
-        $parentIdList = [$currentNode->type_id];
-        $availableNodeTypes = (new NodeType)->whereHas('parents', function ($query) use ($parentIdList) {
-            $query->whereIn('id', $parentIdList);
-        })->get();
-        $nodePath = session("nodePath", "");
+        $nodeId = Input::get('nodeId');
+
+        if($nodeId)
+            $nodePath = (new Node)->find($nodeId)->getKeyPath();
+        else
+            $nodePath = session("nodePath", "/2");
 
         return view('content.node.index', [
-            'title' => 'Структура',
-            'currentNode' => $currentNode,
-            'nodes' => $nodes,
-            'availableNodeTypes' => $availableNodeTypes,
             'nodePath' => $nodePath]);
     }
 
@@ -541,13 +529,13 @@ class NodeController extends Controller
                 $tmpArr["line"] = $line->id;
             }
 
-            $tmpArr["canCreate"] = $node->canCreate();
-            $tmpArr["canCross"] = $node->canCross();
-            $tmpArr["canDecross"] = $node->canDecross();
-            $tmpArr["canDelete"] = $node->canDelete();
-            $tmpArr["canEdit"] = $node->canEdit();
-            $tmpArr["canMassLink"] = $node->canMassLink();
+            $tmpArr["canCreate"]    = $node->canCreate();
+            $tmpArr["canEdit"]      = $node->canEdit();
+            $tmpArr["canCross"]     = $node->canCross();
+            $tmpArr["canDecross"]   = $node->canDecross();
+            $tmpArr["canMassLink"]  = $node->canMassLink();
             $tmpArr["canMassUnlink"] = $node->canMassUnlink();
+            $tmpArr["canDelete"]    = $node->canDelete();
 
             $arr[] = $tmpArr;
         };
