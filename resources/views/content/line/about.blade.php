@@ -1,14 +1,20 @@
 <div class="card card-outline-primary mt-4 mx-auto" style="width: 30rem;">
-    <div class="card-header text-secondary pl-2">
+    <div class="card-header text-dark pl-2 alert-secondary">
         <span class="fa-stack small">
             <i class="fa fa-circle-o fa-stack-2x"></i>
             <i class="fa fa-info fa-stack-1x"></i>
         </span>
         Станционный тракт
     </div>
-    <div class="card-block text-center">
+    <div class="card-block text-center pt-4 pb-4">
 
-        <h6 class="card-title mb-3">{{ $lineName }}</h6>
+        <h6 class="card-title text-dark pb-2">
+            <span class="fa-stack text-primary">
+                <i class="fa fa-square-o fa-stack-2x"></i>
+                <i class="fa fa-stack-1x" style="font-size: 20px"><b>А</b></i>
+            </span>
+            {{ $lineName }}
+        </h6>
 
         <i class="fa fa-random"></i>
         @if ($nodeId == null)

@@ -28,8 +28,8 @@
         $.post( "http://localhost/node/edit/execute",
             $("#editNodeForm").serialize(),
             function( data ) {
-                $('#nodeActionModal').modal('hide');
                 $("#tree").fancytree("getActiveNode").parent.load(true);
+                $('#actionModal').modal('hide');
             }
         );
     });

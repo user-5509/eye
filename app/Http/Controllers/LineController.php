@@ -13,13 +13,14 @@ class LineController extends Controller
 
     public function index(Request $request)
     {
-        $lines = Line::all();
-        return view('content.line.index', ['title' => 'Тракты', 'lines' => $lines]);
+        //$lines = (new Line)->orderBy('name')->get();
+        //return view('content.line.index', ['title' => 'Тракты', 'lines' => $lines]);
+        return view('content.line.index');
     }
 
     public function getList(Request $request)
     {
-        $lines = Line::all();
+        $lines = (new Line)->orderBy('type')->orderBy('name')->get();
         return view('content.line.list', ['lines' => $lines]);
 
     }
@@ -65,12 +66,9 @@ class LineController extends Controller
         if ($request->ajax()) {
             $line = new Line();
             $line->name = $request->input('lineName');
+            $line->type = $request->input('lineType');
             $line->save();
-
-            return 1;
         }
-        else
-            return "1212121221";
     }
 
     public function deleteLineModal(Request $request)
@@ -96,13 +94,13 @@ class LineController extends Controller
     {
         if ($request->ajax()) {
             $lineId = $request->input('lineId');
-            $lineNewName = $request->input('lineNewName');
+            $lineName = $request->input('lineName');
+            $lineType = $request->input('lineType');
 
             $line = (new Line)->find($lineId);
-            $line->name = $lineNewName;
+            $line->name = $lineName;
+            $line->type = $lineType;
             $line->save();
-
-            return json_encode(array('id' => $lineId, 'name' => $lineNewName));
         }
     }
 }

@@ -13,7 +13,7 @@ class Line extends Model
      */
     protected $table = 'lines';
 
-    protected $fillable = array('name');
+    protected $fillable = array('name, type');
 
     function getName()
     {

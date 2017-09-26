@@ -1,20 +1,20 @@
 <span @if($line)data-toggle="tooltip" data-placement="right" title="{{ $line->name }}"@endif>
     @if($linkedNode1)
-        <small class="int-prev-{{ $nodeId }} text-muted" data-id="{{ $linkedNode1->id }}">
+        <span class="int-prev-{{ $nodeId }} text-muted" data-id="{{ $linkedNode1->id }}" style="font-size: 11px">
             {{ $linkedNode1->parent->name }}-{{ $linkedNode1->name }}
-        </small>
+        </span>
     @else
         ...
     @endif
     <i class="fa fa-random text-muted"></i>
-    <span class="badge @if($line) badge-success @else badge-primary @endif">
+    <span class=" badge @if($line) badge-primary @else badge-success @endif" style="font-size: 11px">
          {{ $nodeName }}
     </span>
     <i class="fa fa-random text-muted"></i>
     @if($linkedNode2)
-        <small class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode2->id }}">
+        <span class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode2->id }}" style="font-size: 11px">
             {{ $linkedNode2->parent->name }}-{{ $linkedNode2->name }}
-        </small>
+        </span>
     @else
         ...
     @endif

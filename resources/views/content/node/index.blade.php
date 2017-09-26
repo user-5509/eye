@@ -262,12 +262,6 @@
                         }
                     );
 
-                    var template = '<div class="tooltip tooltip-success pl-2" role="tooltip"><div class="arrow pl-1"></div><div class="tooltip-inner bg-success"></div></div>';
-
-                    $('[data-toggle="tooltip"]').tooltip({
-                        template: template
-                    });
-
                     updateAboutNode();
 
                     updateAboutLine();
@@ -315,12 +309,13 @@
                         );
                     });
                 },
+
                 source: {
                     url: "/getTreeData",
-                    data: {mode: "children", parentNodeId: 1}
+                    data: { mode: "children", parentNodeId: 1 }
                 },
-                lazyLoad: function(event, data)
-                {
+
+                lazyLoad: function(event, data) {
                     var node = data.node;
 
                     data.result = {
@@ -328,36 +323,43 @@
                         data: {mode: "children", parentNodeId: node.key},
                         cache: false
                     };
-                },
 
-                postProcess: function(event, data) {
                     //console.dir(data);
                 },
 
-                renderNode: function(event, data)
-                {
-                    var node = data.node;
-                    var span = $(node.span).find("> span.fancytree-icon");
+                expand: function(event, data) {
 
-                    if(node.data._icon)
+                    // Inject tooltip
+                    let template = '<div class="tooltip tooltip-line pl-2" role="tooltip"><div class="arrow pl-1"></div>' +
+                        '<div class="tooltip-inner bg-primary"></div></div>';
+
+                    $('[data-toggle="tooltip"]').tooltip( { template: template } );
+                },
+
+                renderNode: function(event, data) {
+                    let node = data.node;
+                    let span = $(node.span).find("> span.fancytree-icon");
+
+                    if(node.data._icon) {
                         span.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
+                    }
 
                     span.removeClass("fancytree-icon");
 
-                    console.dir($(data.node.span));
+                    //console.dir($(data.node.span));
+                    //console.log('renderNode');
                 },
 
-                init: function(event, data)
-                {
-                    // Expand tree nodes to target node
-                    var tree = $("#tree").fancytree("getTree");
-                    var path = "{{ $nodePath }}";
+                init: function(event, data) {
 
-                    tree.loadKeyPath(path, function(node, status)
-                    {
+                    // Expand tree nodes to target node
+                    let tree = $("#tree").fancytree("getTree");
+                    let path = "{{ $nodePath }}";
+
+                    tree.loadKeyPath(path, function(node, status) {
                         if(status === "loaded") {
                             tree.activateKey(node.key);
-                        }else if(status === "ok") {
+                        } else if(status === "ok") {
                             tree.activateKey(node.key);
                             node.setExpanded(true);
                         }
@@ -365,12 +367,10 @@
                 }
             });
 
-            var contextSubMenu = function (action, callback)
-            {
-                var url;
+            let contextSubMenu = function (action, callback) {
+                let url;
 
-                switch(action) {
-
+                switch (action) {
                     case "create":
                         url = 'http://localhost/node/contextSubMenuCreate';
                         break;
@@ -394,60 +394,60 @@
                         break;
 
                     default:
-                        url ='';
+                        url = '';
                 }
 
-                if(url == '') {
-                    console.log('[contextSubMenu]: Empty url, ' + action);
+                if (url === "") {
+                    console.log("[contextSubMenu]: Empty url, " + action);
                     return;
                 }
 
-                var dfd = jQuery.Deferred();
+                let dfd = jQuery.Deferred();
 
-                $.ajax({url: url,
-                        method: 'get',
-                        data: {_token: "{{ csrf_token() }}",
-                            nodeId: $("#tree").fancytree("getActiveNode").key,
-                            callback: callback
-                        },
-                        dataType: 'json'
-                })
-                .done(function( data )
-                {
-                    var data2 = JSON.parse(data, function(key, value)
+                $.ajax(
                     {
-                        if (key === "callback") {
-                            return eval("(" + value + ")");
-                        }
-                        return value;
+                        url:    url,
+                        method: "get",
+                        data:
+                            {
+                                _token:     "{{ csrf_token() }}",
+                                nodeId:     $("#tree").fancytree("getActiveNode").key,
+                                callback:   callback
+                            },
+                        dataType: "json"
+                    }
+                 )
+                    .done(function (data) {
+                        let data2 = JSON.parse(data, function (key, value) {
+                            if (key === "callback") {
+                                return eval("(" + value + ")");
+                            }
+                            return value;
+                        });
+                        dfd.resolve(data2);
+                    })
+                    .fail(function (err) {
+                        console.log(action, err);
                     });
-                    dfd.resolve(data2);
-                })
-                .fail(function( err )
-                {
-                    console.log(action, err);
-                });
 
                 return dfd.promise();
             };
 
             // setup context menu
-            $.contextMenu({
+            $.contextMenu( {
                 selector: '.fancytree-title',
-                build: function ($trigger, e)
-                {
-                    var items = {};
-                    var node = $("#tree").fancytree("getActiveNode");
+                build: function ( $trigger, e ) {
+                    let items = {};
+                    let node = $("#tree").fancytree("getActiveNode");
 
-                    if(node.data.canCreate) {
-
+                    if( node.data.canCreate ) {
                         items.create = {
                             name: "Создать...",
                             icon: "add",
                             items: contextSubMenu('create', 'createNodePrepare')
                         };
                     }
-                    if(node.data.canEdit) {
+                    if( node.data.canEdit ) {
 
                         items.edit = {
                             name: "Редактировать",
@@ -459,7 +459,6 @@
                     }
 
                     if(node.data.canMassLink) {
-
                         items.link = {
                             name: "Связать...",
                             icon: "fa-chain",
@@ -474,7 +473,6 @@
                             items: contextSubMenu('massUnlink', 'massUnlinkNodePrepare'),
 
                             callback: function () {
-
                                 massUnlinkPrepare();
                             }
                         };
@@ -488,7 +486,6 @@
                         };
                     }
                     if(node.data.canDecross) {
-
                         items.decross = {
                             name: "Убрать кроссировку",
                             icon: "fa-ban",
@@ -496,21 +493,18 @@
                         };
                     }
                     if(node.data.canDelete) {
-
                         items.delete = {
                             name: "Удалить",
                             icon: "delete",
-
                             callback: function () {
-
                                 deleteNodePrepare();
                             }
                         };
                     }
 
                     return {
-                        callback: function (key, options, rootMenu, originalEvent)
-                        {
+                        callback: function (key, options, rootMenu, originalEvent) {
+
                             //console.dir($('.context-menu-active'));
                         },
                         items: items

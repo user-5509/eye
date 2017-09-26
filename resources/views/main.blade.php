@@ -13,6 +13,13 @@
 
 
     <style type="text/css">
+        html, html a {
+            /*-webkit-font-smoothing: antialiased;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.004);*/
+
+            font-smooth: always;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
@@ -23,11 +30,11 @@
             overflow: auto;
         }
 
-        .tooltip-success.bs-tooltip-right .arrow::before, .tooltip-success.bs-tooltip-auto[x-placement^="right"] .arrow::before {
+        .tooltip-line.bs-tooltip-right .arrow::before, .tooltip-line.bs-tooltip-auto[x-placement^="right"] .arrow::before {
             margin-top: -3px;
             content: "";
             border-width: 5px 5px 5px 0;
-            border-right-color: #28A745;
+            border-right-color: #007BFF;
         }
 
         .busy-outer {
@@ -60,7 +67,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <nav class="navbar navbar-expand-lg navbar-light bg-faded h5">
+            <nav class="navbar navbar-expand-lg navbar-light alert-secondary h5">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
