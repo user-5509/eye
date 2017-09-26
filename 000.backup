@@ -9643,7 +9643,7 @@ COPY nodes (id, name, type_id, line_id, parent_id, created_at, updated_at, descr
 -- Name: nodes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('nodes_id_seq', 4169, true);
+SELECT pg_catalog.setval('nodes_id_seq', 4182, true);
 
 
 --

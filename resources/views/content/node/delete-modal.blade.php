@@ -17,12 +17,16 @@
     $("#deleteNodeExecute").on("click",function () {
         $.post( "http://localhost/node/{{$nodeId}}/delete",
             { _method: "delete", _token: "{{ csrf_token() }}" },
-            function( data ) {
-                $('#nodeActionModal').modal('hide');
+            function( data )
+            {
                 var node = $("#tree").fancytree("getActiveNode");
+
                 node.remove();
                 $("#nodeAbout").text("");
+                $('#actionModal').modal('hide');
+                $('#actionModal').find('.modal-content').html('');
             }
         );
     });
+
 </script>

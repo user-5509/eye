@@ -13,16 +13,6 @@
     </div>
 </div>
 
-
-
-<!-- Modal: line action -->
-<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
 
 

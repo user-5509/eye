@@ -1,13 +1,4 @@
-    <!-- Modal: node action -->
-    <div class="modal fade" id="nodeActionModal" tabindex="-1" role="dialog" aria-labelledby="nodeActionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container pt-3">
+ <div class="container pt-3">
         <div class="row">
             <div class="col-6">
                 <div id="tree"></div>
@@ -35,7 +26,6 @@
             var path = "";
 
             for(var i in parents) {
-
                 path = path + "/" + parents[i].key;
             }
 
@@ -59,8 +49,7 @@
                     function( response, status, xhr )
                     {
                         if ( status == "error" ) {
-
-                            var msg = "[availableTypesDropdown] Sorry but there was an error: ";
+                            var msg = "[updateAboutNode] Sorry but there was an error: ";
                             alert( msg + xhr.status + " " + xhr.statusText );
                         }
                     }
@@ -95,7 +84,6 @@
                 );
             }
             else {
-
                 $("#lineAbout").html('');
             }
         }
@@ -104,9 +92,7 @@
         {
             var parentNodeId = $("#tree").fancytree("getActiveNode").key;
 
-            $('#nodeActionModal').html('');
-
-            $('#nodeActionModal').find('.modal-content').load(
+            $('#actionModal').find('.modal-content').load(
                 "http://localhost/content/node/create/modal", {
                     _token: "{{ csrf_token() }}",
                     _method: "get",
@@ -119,7 +105,7 @@
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
                     } else {
-                        $('#nodeActionModal').modal('show');
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -129,8 +115,7 @@
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
 
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+            $('#actionModal').find('.modal-content').load(
                 "http://localhost/content/node/edit/modal", {
                     _token: "{{ csrf_token() }}",
                     _method: "get",
@@ -141,6 +126,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -149,8 +136,8 @@
         function deleteNodePrepare()
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+
+            $('#actionModal').find('.modal-content').load(
                 "http://localhost/content/node/delete/modal",
                 { _method: "get", _token: "{{ csrf_token() }}", nodeId: nodeId },
                 function( response, status, xhr )
@@ -158,6 +145,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -167,8 +156,8 @@
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
             //var interfaceId = $(this).attr('data-interfaceId');
-            $('#nodeActionModal').modal('show');
-            $('#nodeActionModal').find('.modal-content').load(
+
+            $('#actionModal').find('.modal-content').load(
                 "http://localhost/content/node/cross/modal", {
                     _method: "get",
                     nodeId: nodeId,
@@ -180,6 +169,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -188,10 +179,9 @@
         function decrossNodePrepare(interfaceId)
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            var actionModal = $('#nodeActionModal');
+            var actionModal = $('#actionModal');
 
-            actionModal.find('.modal-content').html('');
-            actionModal.modal('show');
+
             actionModal.find('.modal-content').load(
                 "http://localhost/content/node/decross/modal", {
                     _method: "get",
@@ -205,6 +195,9 @@
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
                     }
+                    else {
+                        $('#actionModal').modal('show');
+                    }
                 }
             );
         }
@@ -212,9 +205,8 @@
         function massLinkNodePrepare(interfaceAlias)
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            var actionModal = $('#nodeActionModal');
+            var actionModal = $('#actionModal');
 
-            actionModal.modal('show');
             actionModal.find('.modal-content').load(
                 "http://localhost/content/node/massLink/modal", {
                     _method: "get",
@@ -227,6 +219,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -235,10 +229,9 @@
         function massUnlinkPrepare()
         {
             var nodeId = $("#tree").fancytree("getActiveNode").key;
-            var actionModal = $('#nodeActionModal');
+            var actionModal = $('#actionModal');
 
-            actionModal.modal('show');
-            actionModal.find('.modal-content').load(
+           actionModal.find('.modal-content').load(
                 "http://localhost/content/node/massUnlink/modal", {
                     _method: "get",
                     nodeId: nodeId,
@@ -249,6 +242,8 @@
                     if ( status == "error" ) {
                         var msg = "Sorry but there was an error: ";
                         alert( msg + xhr.status + " " + xhr.statusText );
+                    } else {
+                        $('#actionModal').modal('show');
                     }
                 }
             );
@@ -267,8 +262,8 @@
                         }
                     );
 
-                    // TODO: correct arrow color
                     var template = '<div class="tooltip tooltip-success pl-2" role="tooltip"><div class="arrow pl-1"></div><div class="tooltip-inner bg-success"></div></div>';
+
                     $('[data-toggle="tooltip"]').tooltip({
                         template: template
                     });
@@ -298,25 +293,26 @@
                         });
                     });
 
-                    $(".int-next-"+node.key+":not(.bound)").addClass('bound').on("dblclick", function () {
-
-                        var nodeId = $('.int-next-'+node.key).data('id');
+                    $(".int-next-"+node.key+":not(.bound)").addClass('bound').on("dblclick", function ()
+                    {
+                        let nodeId = $('.int-next-'+node.key).data('id');
 
                         $.get("http://localhost/node/getPath", {
                             _token: "{{ csrf_token() }}",
-                            nodeId: nodeId,
-                        }, function (data) {
+                            nodeId: nodeId
+                            },
+                            function (data)
+                            {
+                                let tree = $("#tree").fancytree("getTree");
 
-                            var tree = $("#tree").fancytree("getTree");
-
-                            tree.loadKeyPath(data, function (node, status) {
-
-                                if (status === "ok") {
-
-                                    tree.activateKey(node.key);
-                                }
-                            });
-                        });
+                                tree.loadKeyPath(data, function (node, status)
+                                {
+                                    if (status === "ok") {
+                                        tree.activateKey(node.key);
+                                    }
+                                });
+                            }
+                        );
                     });
                 },
                 source: {
@@ -333,24 +329,22 @@
                         cache: false
                     };
                 },
+
+                postProcess: function(event, data) {
+                    //console.dir(data);
+                },
+
                 renderNode: function(event, data)
                 {
                     var node = data.node;
                     var span = $(node.span).find("> span.fancytree-icon");
 
-                    if(node.data._icon){
+                    if(node.data._icon)
+                        span.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
 
-                        span.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>').removeClass("fancytree-icon");
-                    }
-                    else {
+                    span.removeClass("fancytree-icon");
 
-                        span.removeClass("fancytree-icon");
-                    }
-
-                    $(".int-next-"+node.data.id).on("dblclick",function () {
-
-                        console.log('int-next clicked');
-                    });
+                    console.dir($(data.node.span));
                 },
 
                 init: function(event, data)
@@ -362,11 +356,8 @@
                     tree.loadKeyPath(path, function(node, status)
                     {
                         if(status === "loaded") {
-
                             tree.activateKey(node.key);
-
                         }else if(status === "ok") {
-
                             tree.activateKey(node.key);
                             node.setExpanded(true);
                         }

@@ -30,33 +30,33 @@
             border-right-color: #28A745;
         }
 
-        .dimm {
-            background: rgba(0,0,0,.5);
-            width:100%;
-            height:100%;
-            position:absolute;
-            top:0;
-            bottom:0;
+        .busy-outer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
+            background: rgba(0,0,0,.5);
             z-index:999;
         }
 
-        .acenter {
-            margin: auto;
+        .busy-inner {
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: 40%;
+            left: 50%;
         }
     </style>
 
     <title></title>
 </head>
 <body>
-<div class="dimm">
-    <span class="center-block">
+
+<div class="busy-outer" hidden>
+    <div class="busy-inner">
         <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-    </span>
+    </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -75,13 +75,7 @@
                         </li>
                         {{--<li class="nav-item">
                              <a class="nav-link" href="#" id="menuTypes">Типы</a>
-                         </li>
-                          <li class="nav-item">
-                             <a class="nav-link disabled" href="#">Пусто</a>
-                         </li>
-                         <li class="nav-item">
-                             <a class="nav-link disabled" href="#">Пусто</a>
-                         </li>--}}
+                         --}}
                     </ul>
                 </div>
             </nav>
@@ -92,6 +86,15 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
 
     <script src="js/jquery-3.2.1.js"></script>
     <script src="js/popper.min.js"></script>

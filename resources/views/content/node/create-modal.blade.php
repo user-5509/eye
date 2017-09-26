@@ -8,10 +8,10 @@
     <form id="createNodeForm" class="node-form">
         <div class="form-group">
             <label for="nodeName">Наименование</label>
-            <input type="text" class="form-control" name="nodeName" id="nodeName" placeholder="Введите наименование">
-            <input type="hidden" name = "nodeTypeId" value="{{$nodeTypeId}}">
+            <input type="text" class="form-control" name="nodeName" placeholder="Введите наименование">
+            <input type="hidden" name="nodeTypeId" value="{{$nodeTypeId}}">
         </div>
-        <input type="hidden" name = "parentNodeId" value="{{$parentNodeId}}">
+        <input type="hidden" name="parentNodeId" value="{{$parentNodeId}}">
         {{ csrf_field() }}
     </form>
 </div>
@@ -24,12 +24,17 @@
     $("#createNodeExecute").on("click",function () {
         $.post( "http://localhost/node/create/execute",
             $("#createNodeForm").serialize(),
-            function( data ) {
-                $('#nodeActionModal').modal('hide');
-                $("#tree").fancytree("getActiveNode").folder = true;
-                $("#tree").fancytree("getActiveNode").lazy = true;
-                $("#tree").fancytree("getActiveNode").load(true);
-                $("#tree").fancytree("getActiveNode").setExpanded(true);
+            function( data )
+            {
+                var activeNode = $("#tree").fancytree("getActiveNode");
+
+                activeNode.folder = true;
+                activeNode.lazy = true;
+                activeNode.load(true);
+                activeNode.setExpanded(true);
+
+                $('#actionModal').modal('hide');
+                $('#actionModal').find('.modal-content').html('');
             }
         );
     });
