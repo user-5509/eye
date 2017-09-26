@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div id="content" hidden>
+<div id="tmpl" hidden>
     <div id="line">
         <div id="create" >
             <div class="modal-header">
@@ -77,49 +77,51 @@
             </div>
         </div>
     </div>
-</div>
-
-
-
-<div id="line-icon" hidden>
-    <div id="type-0">
+    <div id="line-icon">
+        <div id="type-0">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
             <i class="fa fa-stack-1x" style="font-size: 20px"><b>?</b></i>
         </span>
-    </div>
-    <div id="type-1">
+        </div>
+        <div id="type-1">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
             <i class="fa fa-stack-1x" style="font-size: 20px"><b>А</b></i>
         </span>
-    </div>
-    <div id="type-2">
+        </div>
+        <div id="type-2">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
             <i class="fa fa-stack-1x" style="font-size: 20px"><b>И</b></i>
         </span>
-    </div>
-    <div id="type-3">
+        </div>
+        <div id="type-3">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
             <i class="fa fa-phone fa-stack-1x"></i>
         </span>
+        </div>
     </div>
 </div>
+
+
+
 
 <script type="text/javascript">
     $("#create-line").on("click",function () {
         let modal = $("#actionModal");
 
-        modal.find(".modal-content").html($("#content #line #create").html());
+        modal.find(".modal-content").html($("#tmpl").find("#line #create").html());
         modal.find("button#create-line-execute").on("click",function () {
+            let modal = $("#actionModal");
+
             $.post( "http://localhost/line/create/execute",
                 {
                     _token: "{{ csrf_token() }}",
-                    lineId: $("#actionModal").find("#line-id").val(),
-                    lineName: $("#actionModal").find("#line-name").val(),
-                    lineType: $("#actionModal").find("#line-type").val()
+                    lineId: modal.find("#line-id").val(),
+                    lineName: modal.find("#line-name").val(),
+                    lineType: modal.find("#line-type").val()
                 },
                 function( data ) {
                     linesListReload();
@@ -127,7 +129,8 @@
                 }
             );
         });
-        modal.modal('show');    });
+        modal.modal('show');
+    });
 
     function linesListReload() {
         $('#listContainer').load(
@@ -162,58 +165,59 @@
         );
     }
 
-    function editLinePrepare($trigger) {
+    function editLine($trigger) {
         let lineId =    $trigger.data('id');
         let lineName =  $trigger.find("#name").text().trim();
         let lineType =  $trigger.data('type');
-        let modal =     $("#actionModal");
+        let modal    =  $("#actionModal");
 
         modal.find(".modal-content").html($("#line-edit").html());
         modal.find("#line-id").val(lineId);
         modal.find("#line-name").val(lineName);
         modal.find("select#line-type").val(lineType);
         modal.find("button#edit-line-execute").on("click",function () {
+            let modal = $("#actionModal");
+
             $.post( "http://localhost/line/edit/execute",
                 {
-                    _token: "{{ csrf_token() }}",
-                    lineId: $("#actionModal").find("#line-id").val(),
-                    lineName: $("#actionModal").find("#line-name").val(),
-                    lineType: $("#actionModal").find("#line-type").val()
+                    _token  : "{{ csrf_token() }}",
+                    lineId  : modal.find("#line-id").val(),
+                    lineName: modal.find("#line-name").val(),
+                    lineType: modal.find("#line-type").val()
                 },
                 function( data ) {
-                    let lineId   = $("#actionModal").find("#line-id").val();
-                    let lineName = $("#actionModal").find("#line-name").val();
-                    let lineType = $("#actionModal").find("#line-type").val();
-                    let lineIcon = $("#line-icon #type-" + lineType).html();
+                    let modal = $("#actionModal");
+                    let lineId   = modal.find("#line-id").val();
+                    let lineName = modal.find("#line-name").val();
+                    let lineType = modal.find("#line-type").val();
+                    let lineIcon = $("tmpl").find("#line-icon #type-" + lineType).html();
+                    let line = $("#lines-list").find("li[data-id='" + lineId + "']");
 
-                    //console.log(lineName);
-                    $("#lines-list li[data-id='" + lineId + "'] span#name").text(lineName);
-                    $("#lines-list li[data-id='" + lineId + "'] span#icon").html(lineIcon);
-                    $('#actionModal').modal('hide');
+                    line.find("span#name").text(lineName);
+                    line.find("span#icon").html(lineIcon);
+                    modal.modal("hide");
                 }
             );
         });
-        modal.modal('show');
+        modal.modal("show");
     }
-
 
     $(function()
     {
         // setup context menu
-        $.contextMenu({
+        $.contextMenu( {
             selector: '.list-group-item',
-            build: function ($trigger, e)
-            {
-                var items = {};
+            build: function ( $trigger ) {
+                let items = {};
 
                 items.edit = {
                     name: "Редактировать",
                     icon: "edit",
                     callback: function () {
-                        editLinePrepare($trigger);
+                        editLine($trigger);
                     }
                 };
-                items.delete = {
+                items.del = {
                     name: "Удалить",
                     icon: "delete",
                     callback: function () {
@@ -222,8 +226,7 @@
                 };
 
                 return {
-                    callback: function (key, options, rootMenu, originalEvent)
-                    {
+                    callback: function (key, options, rootMenu, originalEvent) {
                         //console.dir($('.context-menu-active'));
                     },
                     items: items

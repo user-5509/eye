@@ -13,16 +13,26 @@
 
 
     <style type="text/css">
+        @font-face {
+            font-family: "San Francisco";
+            font-weight: 400;
+            src: url("fonts/SF-UI-Display-Regular.otf")
+        }
+
         html, html a {
             /*-webkit-font-smoothing: antialiased;
             text-shadow: 1px 1px 1px rgba(0,0,0,0.004);*/
+            font-family: San Francisco;
 
             font-smooth: always;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: San Francisco;
         }
+
+
+
 
         .fancytree-container {
             height: 480px;
@@ -73,16 +83,16 @@
                 </button>
                 <a class="navbar-brand" href="#"><span class="h3">&nesear;</span> <b>КРОСС</b><sup><small>&copy;</small></sup></a>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#" id="menuNodes">Структура</a>
+                    <ul class="navbar-nav" id="navbar">
+                            <li class="nav-item active" id="menuNodes">
+                            <a class="nav-link" href="#">Структура</a>
+                        </li>
+                        <li class="nav-item" id="menuLines">
+                            <a class="nav-link" href="#">Тракты</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="menuLines">Тракты</a>
+                             <a class="nav-link" href="#" id="menuTypes">Types</a>
                         </li>
-                        {{--<li class="nav-item">
-                             <a class="nav-link" href="#" id="menuTypes">Типы</a>
-                         --}}
                     </ul>
                 </div>
             </nav>
@@ -111,16 +121,17 @@
 
     <script type="text/javascript">
 
-        function loadNodes(contentContainer, nodeId = null)
-        {
-            contentContainer.load(  "http://localhost/content/node/index", {
-                _method: "get",
-                _token: "{{ csrf_token() }}",
-                nodeId: nodeId},
-                function( response, status, xhr )
+        function loadNodes(contentContainer, nodeId = null) {
+            contentContainer.load(  "http://localhost/content/node/index",
                 {
+                    _method: "get",
+                    _token: "{{ csrf_token() }}",
+                    nodeId: nodeId
+                },
+                function( response, status, xhr ) {
                     if ( status == "error" ) {
-                        var msg = "[loadNodes] Sorry but there was an error: ";
+                        let msg = "[loadNodes] Sorry but there was an error: ";
+
                         alert( msg + xhr.status + " " + xhr.statusText );
                     }
                 }

@@ -4,7 +4,7 @@
             <i class="fa fa-circle-o fa-stack-2x"></i>
             <i class="fa fa-info fa-stack-1x"></i>
         </span>
-        {{ $node->type->getName() }}
+        <span>{{ $node->type->getName() }}</span>
     </div>
     <div class="card-block text-center pt-4 pb-4">
         <span class="text-muted">{{ $node->getPath() }}</span><span>{{ $node->nameWithParent() }}</span>
