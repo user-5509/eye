@@ -434,7 +434,7 @@ class Node extends Model
 
     public function canMassLink()
     {
-        if($this->type == null)
+        if($this->type === null)
             return false;
 
         $typeId = $this->type->id;
@@ -447,13 +447,12 @@ class Node extends Model
             $typeId <> NodeType::PATCH_PANEL_24)
             return false;
 
-        //$massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
-        //if($massLinkedInterface == null)
-        //    return false;
+        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        if($massLinkedInterface == null)
+            return false;
 
         //if($massLinkedInterface->alias <> null)
         //    return false;
-
 
         return true;
     }

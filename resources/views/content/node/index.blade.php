@@ -1,7 +1,7 @@
  <div class="container pt-3">
         <div class="row">
             <div class="col-6">
-                <div id="tree"></div>
+                <div class="tree" id="tree"></div>
             </div>
             <div class="col-6">
                 <div class="row">
@@ -249,16 +249,14 @@
             );
         }
 
-        $(function()
-        {
+        $(function() {
             // Tree init
-            $("#tree").fancytree({
+            $("#tree").fancytree( {
                 autoScroll: true,
-                activate: function(event, data)
-                {
+                activate:   function(event, data) {
                     $.post( "http://localhost/node/savePath", {
-                            _token: "{{ csrf_token() }}",
-                            nodePath: getNodePath()
+                            _token:     "{{ csrf_token() }}",
+                            nodePath:   getNodePath()
                         }
                     );
 
@@ -437,14 +435,14 @@
             $.contextMenu( {
                 selector: '.fancytree-title',
                 build: function ( $trigger, e ) {
-                    let items = {};
-                    let node = $("#tree").fancytree("getActiveNode");
+                    let items   = {};
+                    let node    = $("#tree").fancytree("getActiveNode");
 
                     if( node.data.canCreate ) {
                         items.create = {
-                            name: "Создать...",
-                            icon: "add",
-                            items: contextSubMenu('create', 'createNodePrepare')
+                            name:   "Создать...",
+                            icon:   "add",
+                            items:  contextSubMenu('create', 'createNodePrepare')
                         };
                     }
                     if( node.data.canEdit ) {

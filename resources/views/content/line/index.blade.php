@@ -87,7 +87,7 @@
         <div id="type-1">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x" style="font-size: 20px"><b>А</b></i>
+            <i class="fa fa-stack-1x" style="   font-size: 20px"><b>А</b></i>
         </span>
         </div>
         <div id="type-2">

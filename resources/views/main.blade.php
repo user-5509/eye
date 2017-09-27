@@ -14,39 +14,30 @@
 
     <style type="text/css">
         @font-face {
-            font-family: "San Francisco";
+            font-family: "SF-UI-Display-Regular";
             font-weight: 400;
             src: url("fonts/SF-UI-Display-Regular.otf")
         }
-
-        html, html a {
+        html, body {
             /*-webkit-font-smoothing: antialiased;
             text-shadow: 1px 1px 1px rgba(0,0,0,0.004);*/
-            font-family: San Francisco;
-
+            font-family: SF-UI-Display-Regular;
             font-smooth: always;
         }
-
-        body {
-            font-family: San Francisco;
+        .tree {
+            font-size: 12px;
         }
-
-
-
-
         .fancytree-container {
             height: 480px;
             width: 100%;
             overflow: auto;
         }
-
         .tooltip-line.bs-tooltip-right .arrow::before, .tooltip-line.bs-tooltip-auto[x-placement^="right"] .arrow::before {
             margin-top: -3px;
             content: "";
             border-width: 5px 5px 5px 0;
             border-right-color: #007BFF;
         }
-
         .busy-outer {
             position: absolute;
             top: 0;
@@ -56,7 +47,6 @@
             background: rgba(0,0,0,.5);
             z-index:999;
         }
-
         .busy-inner {
             position: absolute;
             top: 40%;
@@ -90,9 +80,9 @@
                         <li class="nav-item" id="menuLines">
                             <a class="nav-link" href="#">Тракты</a>
                         </li>
-                        <li class="nav-item">
+                        {{--<li class="nav-item">
                              <a class="nav-link" href="#" id="menuTypes">Types</a>
-                        </li>
+                        </li>--}}
                     </ul>
                 </div>
             </nav>

@@ -1,10 +1,10 @@
 <div class="d-flex flex-row">
     <div class="d-flex align-items-center">
-        <span>
+        <span style="font-size: 12px">
             @if($linkedNode1)
-                <small class="int-prev-{{ $nodeId }} text-muted" data-id="{{ $linkedNode1->id }}">
+                <span class="int-prev-{{ $nodeId }} text-muted" data-id="{{ $linkedNode1->id }}">
                     {{ $linkedNode1->parent->name }}-{{ $linkedNode1->name }}
-                </small>
+                </span>
             @else
             ...
             @endif
@@ -12,27 +12,27 @@
         </span>
     </div>
     <div class="d-flex align-items-center ml-2 mr-2">
-        <span class="badge badge-primary">
+        <span class="badge @if($line) alert-primary @else alert-success @endif" style="font-size: 12px">
             {{ $nodeName }}
         </span>
     </div>
     <div>
-        <div>
+        <div style="font-size: 12px">
             <i class="fa fa-random text-muted"></i>
             @if($linkedNode2)
-                <small class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode2->id }}">
+                <span class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode2->id }}">
                     {{ $linkedNode2->parent->name }}-{{ $linkedNode2->name }}
-                </small>
+                </span>
             @else
             ...
             @endif
         </div>
-        <div>
+        <div style="font-size: 12px">
             <i class="fa fa-random text-muted"></i>
             @if($linkedNode3)
-                <small class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode3->id }}">
+                <span class="int-next-{{ $nodeId }} text-muted" data-id="{{ $linkedNode3->id }}">
                     {{ $linkedNode3->parent->name }}-{{ $linkedNode3->name }}
-                </small>
+                </span>
             @else
                 ...
             @endif
