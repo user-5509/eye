@@ -52,31 +52,41 @@
                 <input type="hidden" id="line-id" name="line-id" value="">
             </form>
         </div>
-    </div>
-    <div id="line-icon">
-        <div id="type-0">
-        <span class="fa-stack text-primary">
-            <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x"><div class="icon-letter">?</div></i>
-        </span>
+        <div id="icon">
+            <div id="type-0">
+                <span class="fa-stack text-primary">
+                    <i class="fa fa-square-o fa-stack-2x"></i>
+                    <i class="fa fa-stack-1x"><div class="icon-letter">?</div></i>
+                </span>
+            </div>
+            <div id="type-1">
+                <span class="fa-stack text-primary">
+                    <i class="fa fa-square-o fa-stack-2x"></i>
+                    <i class="fa fa-stack-1x"><div class="icon-letter">А</div></i>
+                </span>
+            </div>
+            <div id="type-2">
+                <span class="fa-stack text-primary">
+                    <i class="fa fa-square-o fa-stack-2x"></i>
+                    <i class="fa fa-stack-1x"><div class="icon-letter">И</div></i>
+                </span>
+            </div>
+            <div id="type-3">
+                <span class="fa-stack text-primary">
+                    <i class="fa fa-square-o fa-stack-2x"></i>
+                    <i class="fa fa-phone fa-stack-1x"></i>
+                </span>
+            </div>
         </div>
-        <div id="type-1">
-        <span class="fa-stack text-primary">
-            <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x"><div class="icon-letter">А</div></i>
-        </span>
+        <div id="list-wrapper">
+            <div class="list-group" id="lines-list">
+            </div>
         </div>
-        <div id="type-2">
-        <span class="fa-stack text-primary">
-            <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x"><div class="icon-letter">И</div></i>
-        </span>
-        </div>
-        <div id="type-3">
-        <span class="fa-stack text-primary">
-            <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-phone fa-stack-1x"></i>
-        </span>
+        <div id="list-item">
+            <a href="#" class="list-group-item list-group-item-action" id="line-" data-id="" data-type="">
+                <span id="icon"></span>
+                <span id="name"></span>
+            </a>
         </div>
     </div>
 </div>
@@ -98,18 +108,7 @@
     }
 
     function linesListReload() {
-        $('#listContainer').load(
-            "http://localhost/content/line/list",
-            {_method: "get", _token: "{{ csrf_token() }}"},
-            function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "Sorry but there was an error: ";
-                    alert(msg + xhr.status + " " + xhr.statusText);
-                } else {
-                    console.log(response);
-                }
-            }
-        );
+        EyeRender.reloadLinesList();
     }
 
     function deleteLinePrepare($trigger)

@@ -1,0 +1,2 @@
+Set id:
+$(this).attr('id', new_id);
