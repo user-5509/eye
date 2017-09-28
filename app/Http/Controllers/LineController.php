@@ -20,9 +20,9 @@ class LineController extends Controller
 
     public function getList(Request $request)
     {
-        $lines = (new Line)->orderBy('type')->orderBy('name')->get();
-        return view('content.line.list', ['lines' => $lines]);
-
+        $lines = (new Line)->orderBy('type')->orderBy('name')->get()->toArray();
+        return json_encode($lines);
+        //return view('content.line.list', ['lines' => $lines]);
     }
 
     public function getLines()

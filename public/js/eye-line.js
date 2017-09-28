@@ -1,3 +1,9 @@
+class EyeSystem {
+    static CSRF() {
+        return $('meta[name="_token"]').attr('content');
+    }
+}
+
 class EyeRender {
     static createLineDialog(modal) {
         let modalBody = $("#tmpl").find("#line #create").html();
@@ -10,7 +16,7 @@ class EyeRender {
 
             $.post("http://localhost/line/create/execute",
                 {
-                    _token: "{{ csrf_token() }}",
+                    _token: EyeSystem.CSRF(),
                     lineId: modal.find("#line-id").val(),
                     lineName: modal.find("#line-name").val(),
                     lineType: modal.find("#line-type").val()
@@ -30,13 +36,15 @@ class EyeRender {
         let modalBody = $("#tmpl").find("#line #edit").html();
 
         modal.find(".modal-body").html(modalBody);
+        modal.find(".modal-title").text("Редактировать тракт");
+        modal.find("#exec-title").text("Сохранить");
         modal.find("#line-id").val(lineId);
         modal.find("#line-name").val(lineName);
         modal.find("#line-type").val(lineType);
         modal.find("#exec").on("click", function() {
             $.post( "http://localhost/line/edit/execute",
                 {
-                    _token  : "{{ csrf_token() }}",
+                    _token  : EyeSystem.CSRF(),
                     lineId  : modal.find("#line-id").val(),
                     lineName: modal.find("#line-name").val(),
                     lineType: modal.find("#line-type").val()

@@ -105,6 +105,8 @@
                 if (status == "error") {
                     var msg = "Sorry but there was an error: ";
                     alert(msg + xhr.status + " " + xhr.statusText);
+                } else {
+                    console.log(response);
                 }
             }
         );
