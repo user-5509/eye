@@ -14,86 +14,62 @@
 
 <div id="tmpl" hidden>
     <div id="line">
-        <div id="create" >
-            <div class="modal-header">
-                <h5 class="modal-title">Создать</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                {{--TODO: form attr id is needed anymore?--}}
-                <form id="form">
-                    <div class="form-group">
-                        <label for="line-name">Наименование</label>
-                        <input type="text" class="form-control" id="line-name" name="line-name" placeholder="Наименование" value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="line-type">Тип:</label>
-                        <select class="form-control" id="line-type" name="line-type">
-                            <option value="0">черновой</option>
-                            <option value="1">Атлас</option>
-                            <option value="2">Исток</option>
-                            <option value="3">ПТС</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="line-id" name="line-id" value="">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i> Отмена</button>
-                <button type="button" class="btn btn-primary" id="create-line-execute"><i class="fa fa-check"></i> Создать</button>
-            </div>
+        <div id="create">
+            {{--TODO: form attr id is needed anymore?--}}
+            <form id="form">
+                <div class="form-group">
+                    <label for="line-name">Наименование</label>
+                    <input type="text" class="form-control" id="line-name" name="line-name" placeholder="Наименование" value="">
+                </div>
+                <div class="form-group">
+                    <label for="line-type">Тип:</label>
+                    <select class="form-control" id="line-type" name="line-type">
+                        <option value="0">черновой</option>
+                        <option value="1">Атлас</option>
+                        <option value="2">Исток</option>
+                        <option value="3">ПТС</option>
+                    </select>
+                </div>
+                <input type="hidden" id="line-id" name="line-id" value="">
+            </form>
         </div>
-        <div id="edit" >
-            <div class="modal-header">
-                <h5 class="modal-title">Редактировать</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                {{--TODO: form attr id is needed anymore?--}}
-                <form id="form">
-                    <div class="form-group">
-                        <label for="line-name">Наименование</label>
-                        <input type="text" class="form-control" id="line-name" name="line-name" placeholder="Наименование" value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="line-type">Тип:</label>
-                        <select class="form-control" id="line-type" name="line-type">
-                            <option value="0">черновой</option>
-                            <option value="1">Атлас</option>
-                            <option value="2">Исток</option>
-                            <option value="3">ПТС</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="line-id" name="line-id" value="">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-primary" id="edit-line-execute">Сохранить</button>
-            </div>
+        <div id="edit">
+            {{--TODO: form attr id is needed anymore?--}}
+            <form id="form">
+                <div class="form-group">
+                    <label for="line-name">Наименование</label>
+                    <input type="text" class="form-control" id="line-name" name="line-name" placeholder="Наименование" value="">
+                </div>
+                <div class="form-group">
+                    <label for="line-type">Тип:</label>
+                    <select class="form-control" id="line-type" name="line-type">
+                        <option value="0">черновой</option>
+                        <option value="1">Атлас</option>
+                        <option value="2">Исток</option>
+                        <option value="3">ПТС</option>
+                    </select>
+                </div>
+                <input type="hidden" id="line-id" name="line-id" value="">
+            </form>
         </div>
     </div>
     <div id="line-icon">
         <div id="type-0">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x" style="font-size: 20px"><b>?</b></i>
+            <i class="fa fa-stack-1x"><div class="icon-letter">?</div></i>
         </span>
         </div>
         <div id="type-1">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x" style="   font-size: 20px"><b>А</b></i>
+            <i class="fa fa-stack-1x"><div class="icon-letter">А</div></i>
         </span>
         </div>
         <div id="type-2">
         <span class="fa-stack text-primary">
             <i class="fa fa-square-o fa-stack-2x"></i>
-            <i class="fa fa-stack-1x" style="font-size: 20px"><b>И</b></i>
+            <i class="fa fa-stack-1x"><div class="icon-letter">И</div></i>
         </span>
         </div>
         <div id="type-3">
@@ -110,27 +86,16 @@
 
 <script type="text/javascript">
     $("#create-line").on("click",function () {
-        let modal = $("#actionModal");
+        let modal     = $("#actionModal-1");
 
-        modal.find(".modal-content").html($("#tmpl").find("#line #create").html());
-        modal.find("button#create-line-execute").on("click",function () {
-            let modal = $("#actionModal");
-
-            $.post( "http://localhost/line/create/execute",
-                {
-                    _token: "{{ csrf_token() }}",
-                    lineId: modal.find("#line-id").val(),
-                    lineName: modal.find("#line-name").val(),
-                    lineType: modal.find("#line-type").val()
-                },
-                function( data ) {
-                    linesListReload();
-                    $('#actionModal').modal('hide');
-                }
-            );
-        });
-        modal.modal('show');
+        EyeRender.createLineDialog(modal);
     });
+
+    function editLine($trigger) {
+        let modal =  $("#actionModal-1");
+
+        EyeRender.editLineDialog(modal, $trigger);
+    }
 
     function linesListReload() {
         $('#listContainer').load(
@@ -163,43 +128,6 @@
                 }
             }
         );
-    }
-
-    function editLine($trigger) {
-        let lineId =    $trigger.data('id');
-        let lineName =  $trigger.find("#name").text().trim();
-        let lineType =  $trigger.data('type');
-        let modal    =  $("#actionModal");
-
-        modal.find(".modal-content").html($("#line-edit").html());
-        modal.find("#line-id").val(lineId);
-        modal.find("#line-name").val(lineName);
-        modal.find("select#line-type").val(lineType);
-        modal.find("button#edit-line-execute").on("click",function () {
-            let modal = $("#actionModal");
-
-            $.post( "http://localhost/line/edit/execute",
-                {
-                    _token  : "{{ csrf_token() }}",
-                    lineId  : modal.find("#line-id").val(),
-                    lineName: modal.find("#line-name").val(),
-                    lineType: modal.find("#line-type").val()
-                },
-                function( data ) {
-                    let modal = $("#actionModal");
-                    let lineId   = modal.find("#line-id").val();
-                    let lineName = modal.find("#line-name").val();
-                    let lineType = modal.find("#line-type").val();
-                    let lineIcon = $("tmpl").find("#line-icon #type-" + lineType).html();
-                    let line = $("#lines-list").find("li[data-id='" + lineId + "']");
-
-                    line.find("span#name").text(lineName);
-                    line.find("span#icon").html(lineIcon);
-                    modal.modal("hide");
-                }
-            );
-        });
-        modal.modal("show");
     }
 
     $(function()

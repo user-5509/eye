@@ -52,6 +52,10 @@
             top: 40%;
             left: 50%;
         }
+        .icon-letter {
+            margin-top: -2px;
+            font-size: 20px;
+        }
     </style>
 
     <title></title>
@@ -101,13 +105,30 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="actionModal-1" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close mr-1"></i>Отмена</button>
+                <button type="button" class="btn btn-primary" id="exec"><i class="fa fa-check mr-1"></i><span id="exec-title"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script src="js/jquery-3.2.1.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fancytree/jquery.fancytree-all-deps.min.js"></script>
     <script src="js/jquery.contextMenu.min.js"></script>
+    <script src="js/eye-line.js"></script>
 
     <script type="text/javascript">
 

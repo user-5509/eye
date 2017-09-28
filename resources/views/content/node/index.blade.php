@@ -19,17 +19,15 @@
     </div>
 
     <script type="text/javascript">
+        function getNodePath() {
+            let tree    = $("#tree");
+            let parents = tree.fancytree("getActiveNode").getParentList();
+            let path    = "";
 
-        function getNodePath()
-        {
-            var parents = $("#tree").fancytree("getActiveNode").getParentList();
-            var path = "";
-
-            for(var i in parents) {
+            for(let i in parents) {
                 path = path + "/" + parents[i].key;
             }
-
-            path = path + "/" + $("#tree").fancytree("getActiveNode").key;
+            path = path + "/" + tree.fancytree("getActiveNode").key;
 
             return path;
         }
@@ -62,19 +60,17 @@
 
         function updateAboutLine()
         {
-            var node = $("#tree").fancytree("getActiveNode");
+            let node = $("#tree").fancytree("getActiveNode");
 
-            if(node.data.line) {
-
+            if( node.data.line ) {
                 $("#lineAbout").load(  "http://localhost/content/line/about",
                     {
-                        _method: "get",
-                        _token: "{{ csrf_token() }}",
-                        lineId: node.data.line,
-                        nodeId: node.key
+                        _method:    "get",
+                        _token:     "{{ csrf_token() }}",
+                        lineId:     node.data.line,
+                        nodeId:     node.key
                     },
-                    function( response, status, xhr )
-                    {
+                    function( response, status, xhr ) {
                         if ( status == "error" ) {
 
                             var msg = "[lineAbout] Sorry but there was an error: ";
