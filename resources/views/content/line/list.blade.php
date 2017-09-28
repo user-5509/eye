@@ -1,6 +1,6 @@
 <div class="list-group" id="lines-list">
     @foreach ($lines as $line)
-        <li class="list-group-item list-group-item-action" id="line-{{ $line->id }}" data-id="{{ $line->id }}" data-type="{{ $line->type }}">
+        <a href="#" class="list-group-item list-group-item-action" id="line-{{ $line->id }}" data-id="{{ $line->id }}" data-type="{{ $line->type }}">
             <span id="icon">
                 <span class="fa-stack text-primary">
                     <i class="fa fa-square-o fa-stack-2x"></i>
@@ -16,7 +16,7 @@
                 </span>
             </span>
             <span id="name">{{ $line->name }}</span>
-        </li>
+        </a>
     @endforeach
 </div>
 
@@ -33,5 +33,8 @@
                 }
             }
         );
+
+        $("#lines-list").find(".list-group-item-primary").removeClass(".list-group-item-primary");
+        $(this).addClass(".list-group-item-primary");
     });
 </script>
