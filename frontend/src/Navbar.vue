@@ -8,10 +8,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav" id="navbar">
                             <li class="nav-item active" id="menuNodes">
-                            <a class="nav-link" href="#">Структура</a>
+                                <router-link to="/nodes">Структура</router-link>
                         </li>
                         <li class="nav-item" id="menuLines">
-                            <a class="nav-link" href="#">Тракты</a>
+                            <router-link to="/lines">Тракты</router-link>
                         </li>
                     </ul>
                 </div>
@@ -23,7 +23,7 @@
 import $ from 'jquery';
 
 export default {
-  name: 'EyeNavbar',
+  name: 'Navbar',
   data () {
     return {
     }

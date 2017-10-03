@@ -2,25 +2,34 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <div is="EyeNavbar"></div>
+                <div is="Navbar"></div>
+                <div>{{ layout }}</div>
+                <input v-model="layout"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-12" id="content">2</div>
+            <div class="col-12" id="content">
+                <router-view></router-view>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import EyeNavbar from './EyeNavbar.vue';
+    import Navbar from './Navbar.vue';
+    import NodesLayout from './NodesLayout.vue';
+    import LinesLayout from './LinesLayout.vue';
     export default {
-      name: 'AppLayout',
-        data () {
+        name: 'AppLayout',
+        data: function () {
             return {
+                layout: ''
             }
         },
         components: {
-            'EyeNavbar': EyeNavbar
+            'Navbar': Navbar,
+            'NodesLayout': NodesLayout,
+            'LinesLayout': LinesLayout
         }
     }
 </script>
