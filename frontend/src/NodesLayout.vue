@@ -2,7 +2,7 @@
     <div class="container pt-3">
         <div class="row">
             <div class="col-6">
-                <div class="tree" id="tree">tree</div>
+                <div is="NodesTree"></div>
             </div>
             <div class="col-6">
                 <div class="row">
@@ -21,11 +21,15 @@
 </template>
 
 <script>
+    import NodesTree from './NodesTree.vue';
     export default {
-      name: 'NodesLayout',
+        name: 'NodesLayout',
         data () {
             return {
             }
+        },
+        components: {
+            'NodesTree': NodesTree
         }
     }
 </script>
