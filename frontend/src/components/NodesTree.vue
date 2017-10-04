@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    require('../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min');
+    require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
 
     export default {
         name: 'NodesTree',
@@ -53,7 +53,7 @@
 
                             tree.loadKeyPath(data, function (node, status) {
                                 if (status === "ok") {
-                                    tree.activateKey(node.key);
+                                    //tree.activateKey(node.key);
                                 }
                             });
                         });
@@ -95,17 +95,23 @@
                         data: {mode: "children", parentNodeId: node.key},
                         cache: false
                     };
-
-                    //console.dir(data);
                 },
 
-                expand: function(event, data) {
+                beforeExpand: function(event, data) {
+                    //console.log('beforeExpand event, isExpanded=' + data.node.isExpanded());
+                },
+
+                 expand: function(event, data) {
+                    //console.log('expanded');
 
                     // Inject tooltip
-                    let template = '<div class="tooltip tooltip-line pl-2" role="tooltip"><div class="arrow pl-1"></div>' +
+                    /*let template = '<div class="tooltip tooltip-line pl-2" role="tooltip"><div class="arrow pl-1"></div>' +
                         '<div class="tooltip-inner bg-primary"></div></div>';
 
-                    $('[data-toggle="tooltip"]').tooltip( { template: template } );
+                    $('[data-toggle="tooltip"]').tooltip( { template: template } );*/
+                },
+                collapse: function(event, data) {
+                    console.log('collapsed');
                 },
 
                 renderNode: function(event, data) {
@@ -133,7 +139,7 @@
                             tree.activateKey(node.key);
                         } else if(status === "ok") {
                             tree.activateKey(node.key);
-                            node.setExpanded(true);
+                            //node.setExpanded(true);
                         }
                     });
                 }
@@ -141,7 +147,7 @@
         }
     }
 </script>
-<style src="../node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.min.css"></style>
+<style src="../../node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.min.css"></style>
 <style>
     .tree {
         font-size: 12px;
