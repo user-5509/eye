@@ -11,6 +11,11 @@
 |
 */
 
+if (Request::is("*")) {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, If-Modified-Since, Cache-Control, Pragma");
+}
+
 Route::get('', function () {
     return view('main');
 });
