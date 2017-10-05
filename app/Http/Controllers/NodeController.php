@@ -500,6 +500,7 @@ class NodeController extends Controller
 
             $tmpArr["key"] = $node->id;
             $tmpArr["title"] = $node->name; //fullName();
+            $tmpArr["type"] = $node->type->id;
             $tmpArr["_icon"] = $node->getIcon();
 
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();

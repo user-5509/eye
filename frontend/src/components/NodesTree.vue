@@ -3,11 +3,11 @@
 </template>
 
 <script>
-    require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
-
     import Vue from 'vue'
     import { mapGetters, mapActions } from 'vuex'
-    import NodesTreeName from './NodesTreeName.vue';
+
+    require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
+    import {treeNodeIcon, treeNodeName} from './TreePatches'
 
     export default {
         computed: {
@@ -19,7 +19,7 @@
                 savePath: 'savePath'
         }),
 
-        components: { NodesTreeName },
+        components: {  },
 
         mounted: function () {
             const thisComponent = this
@@ -118,33 +118,23 @@
 
                 renderNode: function(event, data) {
                     let node = data.node;
-                    let span_icon = $(node.span).find("span.fancytree-icon");
-                    let span_title = $(node.span).find("span.fancytree-title");
-                    let span = data.node.span;
+
+                    $(node.span).find("span.fancytree-icon").removeClass("fancytree-icon").addClass('awesome-icon');
 
                     if(node.data._icon) {
-                        span_icon.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
+                        let iconName = node.data._icon
+                        let selector = node.span.querySelector("span.awesome-icon")
+
+                        treeNodeIcon(iconName, selector)
                     }
 
-                    //span.removeClass("fancytree-icon");
+                    console.log(node.title)
+                    if(node.data.type === 6) {
+                        let nodeName = node.title
+                        let selector = node.span.querySelector("span.fancytree-title")
 
-                    let nodeName = node.title;
-
-                    //span_title.html('<span is="NodesTreeName" nodeName="' + nodeName + '"></span>');
-
-                    // Создание конструктора
-                    let Name = Vue.extend({
-                        template: '<span is="NodesTreeName" nodeName="' + nodeName+ '"></span> ',
-                        data: function () {
-                            return {
-                                nodeName: nodeName
-                            }
-                        },
-                        components: { NodesTreeName }
-                    })
-                    // создаёт экземпляр Profile и монтирует его к элементу DOM
-                    //console.dir(span)
-                    new Name().$mount(span.querySelector("span.fancytree-title"))
+                        treeNodeName(nodeName, selector)
+                    }
                 },
 
                 init: function(event, data) {
