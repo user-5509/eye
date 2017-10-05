@@ -481,12 +481,65 @@ class NodeController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+
     public function getTreeData(Request $request)
+    {
+        $parentNodeId = Input::get('parentNodeId');
+
+        $arr = array();
+
+        $order = (new Node)->find($parentNodeId)->getOrder();
+
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
+        //$nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
+
+
+        foreach ($nodes as $node) {
+
+            $tmpArr = array();
+
+            $tmpArr["key"] = $node->id;
+            $tmpArr["title"] = $node->name; //fullName();
+            $tmpArr["_icon"] = $node->getIcon();
+
+            $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
+
+            if ($subNodesCount > 0) {
+
+                $tmpArr["folder"] = "true";
+                $tmpArr["lazy"] = "true";
+            }
+
+            $type = $node->getType();
+            if ($type <> null) {
+
+                if ($type->id == NodeType::PAIR) {
+
+                    $tmpArr["about"] = "true";
+                }
+            }
+
+            $line = $node->getLine();
+            if ($line <> null) {
+
+                $tmpArr["line"] = $line->id;
+            }
+
+            $tmpArr["canCreate"]    = $node->canCreate();
+            $tmpArr["canEdit"]      = $node->canEdit();
+            $tmpArr["canCross"]     = $node->canCross();
+            $tmpArr["canDecross"]   = $node->canDecross();
+            $tmpArr["canMassLink"]  = $node->canMassLink();
+            $tmpArr["canMassUnlink"] = $node->canMassUnlink();
+            $tmpArr["canDelete"]    = $node->canDelete();
+
+            $arr[] = $tmpArr;
+        };
+
+        return json_encode($arr);
+    }
+
+    public function getTreeData1(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
 

@@ -5,24 +5,25 @@
 <script>
     require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
 
+    import Vue from 'vue'
     import { mapGetters, mapActions } from 'vuex'
+    import NodesTreeName from './NodesTreeName.vue';
 
     export default {
         computed: {
-            ...mapGetters([
-                'getNodePath'
-            ])
+            ...mapGetters({
+                getPath: 'getPath'
+            })
         },
-        methods: {
-            ...mapActions([
-                'savePath'
-            ])
-        },
-        data() {
-            return {}
-        },
+        methods: mapActions({
+                savePath: 'savePath'
+        }),
+
+        components: { NodesTreeName },
+
         mounted: function () {
-            const mdl = this
+            const thisComponent = this
+
             function getNodePath() {
                 let tree    = $("#tree");
                 let parents = tree.fancytree("getActiveNode").getParentList();
@@ -40,11 +41,7 @@
             $(this.$el).fancytree( {
                 autoScroll: true,
                 activate:   function(event, data) {
-                    $.post( "http://localhost/node/savePath", {
-                            _token:     "{{ csrf_token() }}",
-                            nodePath:   getNodePath()
-                        }
-                    );
+                    thisComponent.savePath(getNodePath())
 
                     //updateAboutNode();
 
@@ -104,13 +101,9 @@
 
                     data.result = {
                         url: "http://localhost/getTreeData",
-                        data: {mode: "children", parentNodeId: node.key},
+                        data: { mode: "children", parentNodeId: node.key },
                         cache: false
                     };
-                },
-
-                beforeExpand: function(event, data) {
-                    //console.log('beforeExpand event, isExpanded=' + data.node.isExpanded());
                 },
 
                  expand: function(event, data) {
@@ -122,35 +115,41 @@
 
                     $('[data-toggle="tooltip"]').tooltip( { template: template } );*/
                 },
-                collapse: function(event, data) {
-                    console.log('collapsed');
-                },
 
                 renderNode: function(event, data) {
                     let node = data.node;
-                    let span = $(node.span).find("> span.fancytree-icon");
+                    let span_icon = $(node.span).find("span.fancytree-icon");
+                    let span_title = $(node.span).find("span.fancytree-title");
+                    let span = data.node.span;
 
                     if(node.data._icon) {
-                        span.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
+                        span_icon.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
                     }
 
-                    span.removeClass("fancytree-icon");
+                    //span.removeClass("fancytree-icon");
 
-                    //console.dir($(data.node.span));
-                    //console.log('renderNode');
+                    let nodeName = node.title;
+
+                    //span_title.html('<span is="NodesTreeName" nodeName="' + nodeName + '"></span>');
+
+                    // Создание конструктора
+                    let Name = Vue.extend({
+                        template: '<span is="NodesTreeName" nodeName="' + nodeName+ '"></span> ',
+                        data: function () {
+                            return {
+                                nodeName: nodeName
+                            }
+                        },
+                        components: { NodesTreeName }
+                    })
+                    // создаёт экземпляр Profile и монтирует его к элементу DOM
+                    //console.dir(span)
+                    new Name().$mount(span.querySelector("span.fancytree-title"))
                 },
 
                 init: function(event, data) {
-
-                    // Expand tree nodes to target node
-                    let tree = $("#tree").fancytree("getTree");
-                    //mdl.$store.dispatch('savePath', 'qwqwqwqw');
-                    let path = ''; //mdl.$store.state.getNodePath;
-
-                    //this.savePath('qwqwqwqw');
-
-
-                    //console.log('path = ' + mdl.$store.state.getNodePath)
+                    let tree = $("#tree").fancytree("getTree"),
+                        path = thisComponent.getPath
 
                     tree.loadKeyPath(path, function(node, status) {
                         if(status === "loaded") {
