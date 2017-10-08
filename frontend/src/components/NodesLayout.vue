@@ -2,7 +2,7 @@
     <div class="container pt-3">
         <div class="row">
             <div class="col-6">
-                <div is="NodesTree"></div>
+                <div is="NodesTree" :key="3"></div>
             </div>
             <div class="col-6">
                 <div class="row">
