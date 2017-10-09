@@ -11,7 +11,7 @@ import * as types from './store/mutation-types'
 
 Vue.use(BootstrapVue);
 
-const app = new Vue({
+var app1 = new Vue({
     router,
     store,
     el: '#app',
