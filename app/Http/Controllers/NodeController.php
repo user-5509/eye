@@ -484,28 +484,52 @@ class NodeController extends Controller
 
     public function getTreeData(Request $request)
     {
+
+
+        //Log::put(json_encode($treeNode));
+
+        //return json_encode($treeNode);
+
         $parentNodeId = Input::get('parentNodeId');
+        Log::put($parentNodeId);
 
         $arr = array();
 
-        $order = (new Node)->find($parentNodeId)->getOrder();
+        $parentNode = (new Node)->find($parentNodeId);
+        if($parentNode) {
+            $order = $parentNode->getOrder();
+        } else {
+            $order = 'name';
+        }
 
-        $nodes = (new Node)->select('id as key', 'name as title')->where('parent_id', '=', $parentNodeId)->orderBy($order)->get()->toJson();
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
 
         Log::put($nodes);
 
-        return $nodes;
+        //return $nodes;
 
         foreach ($nodes as $node) {
-,
-            $tmpArr = array();
 
-            $tmpArr["key"] = $node->id;
-            $tmpArr["title"] = $node->name; //fullName();
-            $tmpArr["type"] = $node->type->id;
-            $tmpArr["_icon"] = $node->getIcon();
+            $treeNode = new \stdClass;
+            $treeNode->id = $node->id;
+            $treeNode->label = $node->name;
+            $treeNode->type = 1;
+            $treeNode->open = false;
+            $treeNode->checked = false;
+            $treeNode->nodeSelectNotAll = false;
+            $treeNode->parentId = $parentNodeId;
+            $treeNode->visible = true;
+            $treeNode->searched = false;
+            $treeNode->children = [];
 
-            $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
+            /*$tmpArr = array();
+
+            $tmpArr["key"] = $treeNode->id;
+            $tmpArr["title"] = $treeNode->name; //fullName();
+            $tmpArr["type"] = $treeNode->type->id;
+            $tmpArr["_icon"] = $treeNode->getIcon();
+
+            $subNodesCount = (new Node)->where('parent_id', '=', $treeNode->id)->count();
 
             if ($subNodesCount > 0) {
 
@@ -513,7 +537,7 @@ class NodeController extends Controller
                 $tmpArr["lazy"] = "true";
             }
 
-            $type = $node->getType();
+            $type = $treeNode->getType();
             if ($type <> null) {
 
                 if ($type->id == NodeType::PAIR) {
@@ -522,21 +546,21 @@ class NodeController extends Controller
                 }
             }
 
-            $line = $node->getLine();
+            $line = $treeNode->getLine();
             if ($line <> null) {
 
                 $tmpArr["line"] = $line->id;
             }
 
-            $tmpArr["canCreate"]    = $node->canCreate();
-            $tmpArr["canEdit"]      = $node->canEdit();
-            $tmpArr["canCross"]     = $node->canCross();
-            $tmpArr["canDecross"]   = $node->canDecross();
-            $tmpArr["canMassLink"]  = $node->canMassLink();
-            $tmpArr["canMassUnlink"] = $node->canMassUnlink();
-            $tmpArr["canDelete"]    = $node->canDelete();
+            $tmpArr["canCreate"]    = $treeNode->canCreate();
+            $tmpArr["canEdit"]      = $treeNode->canEdit();
+            $tmpArr["canCross"]     = $treeNode->canCross();
+            $tmpArr["canDecross"]   = $treeNode->canDecross();
+            $tmpArr["canMassLink"]  = $treeNode->canMassLink();
+            $tmpArr["canMassUnlink"] = $treeNode->canMassUnlink();
+            $tmpArr["canDelete"]    = $treeNode->canDelete();*/
 
-            $arr[] = $tmpArr;
+            $arr[] = $treeNode;
         };
 
         return json_encode($arr);

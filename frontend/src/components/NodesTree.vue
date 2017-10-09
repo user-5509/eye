@@ -1,6 +1,5 @@
 <template>
-    <ZTree
-            ref='tree'
+    <tree
             :treeData="treeData1"
             :options="options1"
             @node-click="itemClick1"
@@ -12,12 +11,12 @@
 <script>
     import Vue from 'vue'
     import axios from 'axios'
-    import ZTree from 'vue2-lazy-tree/src/';
+    import Tree from './tree/tree.vue';
 
-    Vue.use(ZTree)
+    Vue.use(Tree)
 
     const NodesTree = {
-        name: 'Tree3',
+        name: 'NodesTree',
         data: function () {
             return {
                 options1: {
@@ -110,8 +109,8 @@
                 }
                 return tem
             },
-            loadTreeData: function () {
-                let treeData = [
+            loadTreeData: async function () {
+                /*               let treeData = [
                     {
                         id: 1,
                         label: 'раз',
@@ -169,8 +168,25 @@
                         visible: true,
                         searched: false
                     }
-                ]
-                for (let i = 6; i < 50; i++) {
+                ]*/
+                try {
+                    let treeData = await axios.get('http://localhost/getTreeData',
+                        {
+                            params: {
+                                parentNodeId: 1
+                            },
+                            responseType: 'json'
+                        });
+
+                    console.log(treeData.data);
+                    this.treeData1 = treeData.data
+                    Promise.resolve(treeData.data);
+                } catch (e) {
+                    console.log('error=' + e);
+                    Promise.reject(e);
+                }
+
+                /*for (let i = 6; i < 50; i++) {
                     treeData.push(Object.assign({}, {
                         label: '一级节点',
                         type: 1,
@@ -180,15 +196,15 @@
                         visible: true,
                         searched: false
                     }, { id: i}))
-                }
+                }*/
 //                this.treeData1 = this.generateKey(treeData, 0);
-                this.treeData1 = treeData
+
             },
             async loadingChild (node, index) {
                 try {
                     let data = await axios.get('http://localhost/getTreeData', {
                         params: {
-                            parentNodeId: node.parentId
+                            parentNodeId: node.id
                         },
                         responseType: 'json'
                     });
@@ -225,7 +241,9 @@
 
                     // set Children
 //                    Vue.set(tem, 'children', this.generateKey(data, node.key));
-                    Vue.set(tem, 'children', data);
+                    //Vue.set(tem, 'children', data);
+                    //node.children = data.data
+                    Vue.set(node, 'children', data.data);
 
                     Promise.resolve(data);
                 } catch (e) {
@@ -294,7 +312,8 @@
                 return 'icon-square'
             }
 
-        }
+        },
+        components: {Tree}
     }
 
     export default NodesTree

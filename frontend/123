@@ -1,0 +1,71 @@
+[?25l[?25h[?25l[?25h
+axios                   😕  NOTUSED?  Still using axios?
+                                     Depcheck did not find code similar to require('axios') or import from 'axios'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save axios
+
+jquery.fancytree        😕  NOTUSED?  Still using jquery.fancytree?
+                                     Depcheck did not find code similar to require('jquery.fancytree') or import from 'jquery.fancytree'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save jquery.fancytree
+
+node-sass               😕  NOTUSED?  Still using node-sass?
+                                     Depcheck did not find code similar to require('node-sass') or import from 'node-sass'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save node-sass
+
+sass-loader             😕  NOTUSED?  Still using sass-loader?
+                                     Depcheck did not find code similar to require('sass-loader') or import from 'sass-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save sass-loader
+
+url-loader              😕  NOTUSED?  Still using url-loader?
+                                     Depcheck did not find code similar to require('url-loader') or import from 'url-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save url-loader
+
+vue2-lazy-tree          😕  NOTUSED?  Still using vue2-lazy-tree?
+                                     Depcheck did not find code similar to require('vue2-lazy-tree') or import from 'vue2-lazy-tree'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save vue2-lazy-tree
+
+css-loader              😕  NOTUSED?  Still using css-loader?
+                                     Depcheck did not find code similar to require('css-loader') or import from 'css-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save-dev css-loader
+
+file-loader             😕  NOTUSED?  Still using file-loader?
+                                     Depcheck did not find code similar to require('file-loader') or import from 'file-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save-dev file-loader
+
+style-loader            😕  NOTUSED?  Still using style-loader?
+                                     Depcheck did not find code similar to require('style-loader') or import from 'style-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save-dev style-loader
+
+vue-loader              😕  NOTUSED?  Still using vue-loader?
+                                     Depcheck did not find code similar to require('vue-loader') or import from 'vue-loader'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save-dev vue-loader
+
+vue-template-compiler   😕  NOTUSED?  Still using vue-template-compiler?
+                                     Depcheck did not find code similar to require('vue-template-compiler') or import from 'vue-template-compiler'.
+                                     Check your code before removing as depcheck isn't able to foresee all ways dependencies can be used.
+                                     Use --skip-unused to skip this check.
+                                     To remove this package: npm uninstall --save-dev vue-template-compiler
+
+bootstrap               😟  PKG ERR!  Not in the package.json. Found in: \src\main.js
+
+Use npm-check -u for interactive update.
+[?25h
