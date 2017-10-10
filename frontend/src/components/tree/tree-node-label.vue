@@ -1,6 +1,13 @@
 <template>
     <span>
-        {{ node[options.labelKey] }}
+        <span v-if=" hasInterfaces() "
+        >
+            {{ node[options.labelKey] }} ints!!!
+        </span>
+        <span v-else
+        >
+            {{ node[options.labelKey] }}
+        </span>
     </span>
 </template>
 <script>
@@ -19,24 +26,25 @@
             }
         },
         mounted () {
-            //this.loadInterfaces();
+            this.loadInterfaces();
         },
         methods: {
-            loadInterfaces: async function () {
-                try {
-                    let intData = await axios.get('http://localhost/node/getNodeInterfaces',
+            loadInterfaces: function () {
+                if(this.node.hasInterfaces) {
+                    axios.get('http://localhost/node/getNodeInterfaces',
                         {
                             params: {
                                 nodeId: this.node.id
                             },
                             responseType: 'json'
-                        });
-
-                    console.log(intData.data);
-                    Promise.resolve(intData.data);
-                } catch (e) {
-                    console.log('error=' + e);
-                    Promise.reject(e);
+                        }).then((response) => console.log(response.data));
+                }
+            },
+            hasInterfaces () {
+                if (this.node.hasOwnProperty('hasInterfaces') && this.node.hasInterfaces) {
+                    return true
+                } else {
+                    return false
                 }
             }
         }
