@@ -484,12 +484,6 @@ class NodeController extends Controller
 
     public function getTreeData(Request $request)
     {
-
-
-        //Log::put(json_encode($treeNode));
-
-        //return json_encode($treeNode);
-
         $parentNodeId = Input::get('parentNodeId');
         Log::put($parentNodeId);
 
@@ -509,7 +503,6 @@ class NodeController extends Controller
         //return $nodes;
 
         foreach ($nodes as $node) {
-
             $treeNode = new \stdClass;
             $treeNode->id = $node->id;
             $treeNode->label = $node->name;
@@ -520,48 +513,38 @@ class NodeController extends Controller
             $treeNode->parentId = $parentNodeId;
             $treeNode->visible = true;
             $treeNode->searched = false;
+
+            $childCount = $node->getChildCount();
+            if ($childCount == 0) {
+                $treeNode->leaf = true;
+            }
+
             $treeNode->children = [];
-
-            /*$tmpArr = array();
-
-            $tmpArr["key"] = $treeNode->id;
-            $tmpArr["title"] = $treeNode->name; //fullName();
-            $tmpArr["type"] = $treeNode->type->id;
-            $tmpArr["_icon"] = $treeNode->getIcon();
-
-            $subNodesCount = (new Node)->where('parent_id', '=', $treeNode->id)->count();
-
-            if ($subNodesCount > 0) {
-
-                $tmpArr["folder"] = "true";
-                $tmpArr["lazy"] = "true";
-            }
-
-            $type = $treeNode->getType();
-            if ($type <> null) {
-
-                if ($type->id == NodeType::PAIR) {
-
-                    $tmpArr["about"] = "true";
-                }
-            }
-
-            $line = $treeNode->getLine();
-            if ($line <> null) {
-
-                $tmpArr["line"] = $line->id;
-            }
-
-            $tmpArr["canCreate"]    = $treeNode->canCreate();
-            $tmpArr["canEdit"]      = $treeNode->canEdit();
-            $tmpArr["canCross"]     = $treeNode->canCross();
-            $tmpArr["canDecross"]   = $treeNode->canDecross();
-            $tmpArr["canMassLink"]  = $treeNode->canMassLink();
-            $tmpArr["canMassUnlink"] = $treeNode->canMassUnlink();
-            $tmpArr["canDelete"]    = $treeNode->canDelete();*/
 
             $arr[] = $treeNode;
         };
+
+        return json_encode($arr);
+    }
+
+    public function getNodeInterfaces(Request $request)
+    {
+        $nodeId = Input::get('nodeId');
+        $node = (new Node)->find($nodeId);
+
+        $arr = array();
+
+        $interfaces = $node->getInterfaces();
+        if($interfaces) {
+            foreach ($interfaces as $interface) {
+                $int = new \stdClass;
+                $int->id = $interface->id;
+                $int->name = $interface->name;
+                $int->alias = $interface->alias;
+
+                $arr[] = $int;
+            }
+        }
 
         return json_encode($arr);
     }

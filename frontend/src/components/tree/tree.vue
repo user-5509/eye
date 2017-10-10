@@ -5,7 +5,6 @@
             <span class="icon search"></span>
         </div>
         <div class="root">
-
              <i
                  class="icon iconfont"
                  :class="[itemsShow ? treeNodeOptions.iconClass.open : treeNodeOptions.iconClass.close ]"

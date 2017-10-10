@@ -2,7 +2,6 @@
     <ul>
         <li v-for='(item, index) of nodeData'
             :key="item.key"
-
         >
             <div
                 :key="index"
@@ -64,7 +63,13 @@
                 <span
                     class="label"
                 >
-                    {{ item[options.labelKey] }} 
+
+                    <tree-node-label
+                            ref="treenodelabel"
+                            :options="options"
+                            :node="item"
+                    >
+                    </tree-node-label>
                     <i 
                         v-if="options.warning"
                         class="iconfont  " 
@@ -97,6 +102,7 @@
 </template>
 <script>
     import Vue from 'vue'
+    import TreeNodeLabel from './tree-node-label.vue'
 
     export default {
         name: 'treeNode',
@@ -289,7 +295,8 @@
                     el.focus()
                 }
             }
-        }
+        },
+        components: {TreeNodeLabel}
     }
 </script>
 <style lang="scss" >
