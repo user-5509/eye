@@ -500,8 +500,6 @@ class NodeController extends Controller
 
         Log::put($nodes);
 
-        //return $nodes;
-
         foreach ($nodes as $node) {
             $treeNode = new \stdClass;
             $treeNode->id = $node->id;
