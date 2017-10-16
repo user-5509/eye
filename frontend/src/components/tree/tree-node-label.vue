@@ -1,15 +1,14 @@
 <template>
     <span>
-        <span v-if=" hasInterfaces() "
-        >
+        <span v-if=" node.hasInterfaces ">
             {{ node[options.labelKey] }} ints!!!
         </span>
-        <span v-else
-        >
+        <span v-else>
             {{ node[options.labelKey] }}
         </span>
     </span>
 </template>
+
 <script>
     import Vue from 'vue'
     import axios from 'axios'
@@ -20,17 +19,17 @@
             node: Object,
             options: [Object]
         },
-        data () {
+        data() {
             return {
                 nodeData: []
             }
         },
-        mounted () {
+        mounted() {
             this.loadInterfaces();
         },
         methods: {
-            loadInterfaces: function () {
-                if(this.node.hasInterfaces) {
+            loadInterfaces: function() {
+                if (this.node.hasInterfaces) {
                     axios.get('http://localhost/node/getNodeInterfaces',
                         {
                             params: {
@@ -39,17 +38,11 @@
                             responseType: 'json'
                         }).then((response) => console.log(response.data));
                 }
-            },
-            hasInterfaces () {
-                if (this.node.hasOwnProperty('hasInterfaces') && this.node.hasInterfaces) {
-                    return true
-                } else {
-                    return false
-                }
             }
         }
     }
 </script>
+
 <style lang="scss" >
     @import './assets/iconfont/iconfont.css';
 
