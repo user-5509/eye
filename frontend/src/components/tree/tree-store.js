@@ -14,7 +14,6 @@ export default class TreeStore {
             }
         }
         _traverseNodes(this.root)
-
     }
 
     /**

@@ -110,65 +110,6 @@
                 return tem
             },
             loadTreeData: async function () {
-                /*               let treeData = [
-                    {
-                        id: 1,
-                        label: 'раз',
-                        type: 1,
-                        open: false,
-                        checked: false,
-                        nodeSelectNotAll: false,//新增参数，表示父框可以半钩状态
-                        parentId: null,
-                        visible: true,
-                        searched: false,
-                        children: [
-                            {
-                                id: 1001,
-                                label: '一级节点',
-                                open: false,
-                                checked: false,
-                                nodeSelectNotAll: false,//新增参数，表示父框可以半钩状态
-                                parentId: 1,
-                                visible: true,
-                                searched: false
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        label: 'два',
-                        open: false,
-                        type: 2,
-                        checked: false,
-                        nodeSelectNotAll: false,
-                        parentId: null,
-                        visible: true,
-                        searched: false
-                    },
-                    {
-                        id: 3,
-                        label: 'три',
-                        open: false,
-                        type: 3,
-                        checked: false,
-                        nodeSelectNotAll: false,
-                        parentId: null,
-                        visible: true,
-                        searched: false,
-                        leaf: true
-                    },
-                    {
-                        id: 4,
-                        label: 'четыре',
-                        open: false,
-                        type: 4,
-                        checked: false,
-                        nodeSelectNotAll: false,
-                        parentId: null,
-                        visible: true,
-                        searched: false
-                    }
-                ]*/
                 try {
                     let treeData = await axios.get('http://localhost/getTreeData',
                         {
@@ -185,20 +126,6 @@
                     console.log('error=' + e);
                     Promise.reject(e);
                 }
-
-                /*for (let i = 6; i < 50; i++) {
-                    treeData.push(Object.assign({}, {
-                        label: '一级节点',
-                        type: 1,
-                        open: false,
-                        checked: false,
-                        nodeSelectNotAll: false,
-                        visible: true,
-                        searched: false
-                    }, { id: i}))
-                }*/
-//                this.treeData1 = this.generateKey(treeData, 0);
-
             },
             async loadingChild (node, index) {
                 try {
@@ -207,50 +134,16 @@
                             parentNodeId: node.id
                         },
                         responseType: 'json'
-                    });
-                    /*
-                    let data = await new Promise((resolve, reject) => {
-                        setTimeout(() => {
-                            let d = [
-                                {
-                                    "id": 1,
-                                    "label": "节点 1",
-                                    "open": false,
-                                    "checked": false,
-                                    "nodeSelectNotAll": false,
-                                    "parentId": null,
-                                    "visible": true,
-                                    "searched": false
-                                },
-                                {
-                                    "id": 2,
-                                    "label": "节点 2",
-                                    "open": false,
-                                    "checked": false,
-                                    "nodeSelectNotAll": false,
-                                    "parentId": null,
-                                    "visible": true,
-                                    "searched": false
-                                }
-                            ]
-                            resolve(d)
-                        }, 1000)
-                    })
-                    */
+                    });                           
+                    
                     let tem = this.getParentNode(node, this.treeData1)
-
-                    // set Children
-//                    Vue.set(tem, 'children', this.generateKey(data, node.key));
-                    //Vue.set(tem, 'children', data);
-                    //node.children = data.data
+                    
                     Vue.set(node, 'children', data.data);
-
                     Promise.resolve(data);
                 } catch (e) {
                     Promise.reject(e);
                 }
             },
-
 
             itemClick1 (node) {
                 console.log(node.key);

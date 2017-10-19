@@ -63,7 +63,6 @@
                 <span
                     class="label"
                 >
-
                     <tree-node-label
                             ref="treenodelabel"
                             :options="options"
