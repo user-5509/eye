@@ -2,36 +2,24 @@
 
 namespace Hardware\Interfaces;
 
-//use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-
-class GenericInterface
+trait GenericInterface
 {
     /**
-     * All of the user's attributes.
+     * All of the interface attributes.
      *
      * @var array
      */
     protected $attributes;
 
     /**
-     * Create a new generic User object.
+     * Create a new generic Interface object.
      *
      * @param  array  $attributes
      * @return void
      */
     public function __construct(array $attributes)
     {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * Get the name of the unique identifier for the user.
-     *
-     * @return string
-     */
-    public function getAuthIdentifierName()
-    {
-        return 'id';
+           $this->attributes = $attributes;
     }
 
     /**
@@ -39,11 +27,9 @@ class GenericInterface
      *
      * @return mixed
      */
-    public function getAuthIdentifier()
+    public function getId()
     {
-        $name = $this->getAuthIdentifierName();
-
-        return $this->attributes[$name];
+        return $this->attributes['id'];
     }
 
     /**
@@ -51,40 +37,9 @@ class GenericInterface
      *
      * @return string
      */
-    public function getAuthPassword()
+    public function getName()
     {
-        return $this->attributes['password'];
-    }
-
-    /**
-     * Get the "remember me" token value.
-     *
-     * @return string
-     */
-    public function getRememberToken()
-    {
-        return $this->attributes[$this->getRememberTokenName()];
-    }
-
-    /**
-     * Set the "remember me" token value.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public function setRememberToken($value)
-    {
-        $this->attributes[$this->getRememberTokenName()] = $value;
-    }
-
-    /**
-     * Get the column name for the "remember me" token.
-     *
-     * @return string
-     */
-    public function getRememberTokenName()
-    {
-        return 'remember_token';
+        return $this->attributes['name'];
     }
 
     /**

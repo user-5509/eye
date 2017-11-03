@@ -1,65 +1,74 @@
 <?php
-// PIN interface
-$pin = array(
+
+// Interface: contact
+$contact = array(
     'id'    => null,
-    'name'  => 'A1',
-    'type_id' => 1,             // PIN
-    'links' => [null, null]     // references to LINK objects
+    'name'  => '0',
+    'type_id' => 2,     // contact
+    'link' => null      // references to link (1-wire)
 );
 
-// RJ45 interface
+// Interface:RJ45
 $rj45 = array(
     'id'        => null,
     'name'      => 'Port №1',
     'type_id'   => INTERFACE_RJ45,
-    'links'     => [null],          // references to LINK object
-    'interfaces' => [	            // references to child INTERFACE objects (PIN)
-        'pin_1' => null, 
-        'pin_2' => null, 
-        'pin_3' => null, 
-        'pin_4' => null, 
-        'pin_5' => null, 
-        'pin_6' => null, 
-        'pin_7' => null, 
-        'pin_8' => null
+    'links'     => [],  // references to link (patch-cord or cable)
+    'interfaces' => [   // references to nested interfaces (contacts)
+        0 => null,
+        1 => null,
+        2 => null,
+        3 => null,
+        4 => null,
+        5 => null,
+        6 => null,
+        7 => null
     ]
 );
 
-// RJ11 interface
+// Interface: RJ11
 $rj11 = array(
     'id'        => null,
     'name'      => 'Port №1',
     'type_id'   => INTERFACE_RJ11,
-    'links'     => [null],          // references to LINK object
-    'interfaces' => [	            // references to child INTERFACE objects (PIN)
-        'pin_1' => null, 
-        'pin_2' => null, 
-        'pin_3' => null, 
-        'pin_4' => null
+    'links'     => [],          // references to links
+    'interfaces' => [               // references to nested interfaces (contacts)
+        0 => null,
+        1 => null,
+        2 => null,
+        3 => null
     ]
 );
 
-// 'PSP box (60p)' device
+// Interface: pin
+$pin = array(
+    'id'    => null,
+    'name'  => 'A1',
+    'type_id' => 1,             // pin
+    'interfaces' => [null, null]     // references to LINK objects
+);
+
+// Device: 'PSP box (60p)'
 $pspBox = array(
     'id'        => null,
     'name'      => 'C11',
     'type_id'   => DEVICE_PSP_BOX_LEGACY_60,
-    'interfaces' => [	            // references to child INTERFACE objects (PIN)
-        'АБ1' => null, 
-        'АБ2' => null, 
-        'pin_3' => null, 
-        'pin_4' => null
+    'interfaces' => [   // references to nested interfaces (pins)
+        0 => null,
+        1 => null,
+        2 => null,
+        3 => null
     ]
 );
 
-// 'cisco router' device
+// Device: 'Cisco router'
 $ciscoRouter = array(
     'id'        => null,
     'name'      => 'router1',
     'type_id'   => DEVICE_ROUTER,
     'manufacturer_id'   => MANUFACTURER_CISCO,
     'model_id'   => MODEL_2911,
-    'interfaces' => [	            // references to child INTERFACE objects (PIN)
+    'interfaces' => [   // references to nested interfaces
         0 => [
             'id' => null,
             'name' => 'gi0/0',
@@ -74,7 +83,7 @@ $ciscoRouter = array(
             ]
         ]
     ],
-    'modules' => [
+    'modules' => [      // references to nested modules
 
-    ]    
+    ]
 );
