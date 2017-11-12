@@ -56,17 +56,6 @@ class NodeType extends Model
 
     public function getIcon()
     {
-        /*switch($this->id) {
-
-            case NodeType::PAIR :
-                $icon = "&#x02237;";
-                break;
-
-                default:
-                $icon = null;
-                break;
-        }*/
-
         return $this->icon;
     }
 }
