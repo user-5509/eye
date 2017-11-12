@@ -12,7 +12,7 @@ class NodeTypeController extends Controller
     {
         $types = (new NodeType)->all();
 
-        return view('content.type.index', ['title' => 'Типы', 'types' => $types]);
+        return view('content.type.index', ['title' => 'Типы объектов', 'types' => $types]);
     }
 
     public function getParents(Request $request)
@@ -22,7 +22,7 @@ class NodeTypeController extends Controller
 
         $data = array();
         foreach($parents as $parent ) {
-            $data[] = array('id' => $parent->id, 'name' => $parent->name);
+            $data[] = ['id' => $parent->id, 'name' => $parent->name];
         }
 
         return json_encode($data);

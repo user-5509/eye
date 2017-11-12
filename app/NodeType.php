@@ -6,21 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class NodeType extends Model
 {
-    const _WORLD_  = 1;
-    const BUILDING  = 2;
-    const ROOM      = 3;
-    const PSP       = 4;
-    const COMMON_BOX_60   = 5;
-    const PAIR      = 6;
+    const _WORLD_  = -1;
+    const COUNTRY  = 100;
+    const REGION  = 200;
+    const SETTLEMENT  = 300;
+    const BUILDING = 400;
+    const ORGANIZATION = 500;
+    const ROOM      = 600;
+    const PSP       = 700;
+    const LEGACY_BOX   = 5;
+    const CRONE_BOX_10  = 16;
     const CRONE_BOX_100  = 7;
     const SPM       = 8;
     const BOARD_CS  = 9;
     const BOARD_CSS  = 10;
+    const PAIR      = 6;
     const CROSS_ENCLOSURE  = 11;
     const CROSS_BOX  = 12;
     const TELCO_ENCLOSURE  = 14;
     const CRONE_RACK  = 15;
-    const CRONE_BOX_10  = 16;
     const PATCH_PANEL_24  = 17;
 
     /**
@@ -56,17 +60,6 @@ class NodeType extends Model
 
     public function getIcon()
     {
-        /*switch($this->id) {
-
-            case NodeType::PAIR :
-                $icon = "&#x02237;";
-                break;
-
-                default:
-                $icon = null;
-                break;
-        }*/
-
         return $this->icon;
     }
 }

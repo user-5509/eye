@@ -13,17 +13,13 @@ class CreateNodeTypesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('node_types');
-        Schema::enableForeignKeyConstraints();
-
         Schema::create('node_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('can_create')->unsigned()->nullable();
             $table->integer('can_cross')->unsigned()->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('node_types')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('node_types');
             $table->timestamps();
         });
     }

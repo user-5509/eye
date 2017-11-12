@@ -54,7 +54,6 @@ class NodeTypesSeeder extends Seeder
      */
     public function run()
     {
-        $this->add(NodeType::_WORLD_,'Мир', null);
         $this->add(NodeType::BUILDING, 'Здание', NodeType::_WORLD_);
         $this->add(NodeType::ROOM, 'Помещение', NodeType::BUILDING);
         $this->add(NodeType::PSP, 'ПСП', NodeType::ROOM);

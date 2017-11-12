@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 
 class Node extends Model
 {
@@ -21,7 +21,7 @@ class Node extends Model
         $this->parent_id = $parentId;
         $this->save();
 
-        if ( $this->type->id == NodeType::COMMON_BOX_60 ) {
+        if ( $this->type_id == NodeType::COMMON_BOX_60 ) {
             $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
             $this->properties()->save($property);
             $this->save();

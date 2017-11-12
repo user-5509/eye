@@ -1,12 +1,14 @@
 <?php
+
 namespace App\Hardware\Interfaces;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Hardware\Contact;
 
-class Pin extends Model
+class IPoint extends Model
 {
-    protected $table = 'pins';
+    use BaseInterface;
+
+    protected $table = 'i_points';
 
     public function interfaces()
     {
@@ -17,11 +19,9 @@ class Pin extends Model
     {
         $this->name = $name;
         $this->save();
+    }
 
-        // Each pin have 2 contacts
-        $this->interfaces()->saveMany([
-            new Contact(),
-            new Contact(),
-        ]);
+    public function connect(IPin $connectTo, LCrossWire $connectBy) {
+        $this->connections[] = new Connection($connectTo, $connectBy);
     }
 }
