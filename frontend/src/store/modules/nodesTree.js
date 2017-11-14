@@ -1,4 +1,4 @@
-import * as types from './../mutation-types'
+import * as types from './mutation-types'
 
 // initial state
 const state = {
@@ -7,18 +7,13 @@ const state = {
 
 // getters
 const getters = {
-    getNodePath: state => {
-        console.log('getNodePath => ' + state.nodePath)
-        return state.nodePath
-    }
+    getNodePath: state => state.nodePath
 }
 
 // actions
 const actions = {
-    savePath ({ commit }, path) {
+    savePath ({ commit, state }, path) {
         commit(types.NODESTREE_SAVE_PATH, path)
-        console.log('savePath => ' + state.nodePath)
-        return state.nodePath
     }
 }
 

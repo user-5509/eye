@@ -5,24 +5,12 @@
 <script>
     require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
 
-    import { mapGetters, mapActions } from 'vuex'
-
     export default {
-        computed: {
-            ...mapGetters([
-                'getNodePath'
-            ])
-        },
-        methods: {
-            ...mapActions([
-                'savePath'
-            ])
-        },
+        name: 'NodesTree',
         data() {
             return {}
         },
         mounted: function () {
-            const mdl = this
             function getNodePath() {
                 let tree    = $("#tree");
                 let parents = tree.fancytree("getActiveNode").getParentList();
@@ -144,13 +132,7 @@
 
                     // Expand tree nodes to target node
                     let tree = $("#tree").fancytree("getTree");
-                    //mdl.$store.dispatch('savePath', 'qwqwqwqw');
-                    let path = ''; //mdl.$store.state.getNodePath;
-
-                    //this.savePath('qwqwqwqw');
-
-
-                    //console.log('path = ' + mdl.$store.state.getNodePath)
+                    let path = "{{ $nodePath }}";
 
                     tree.loadKeyPath(path, function(node, status) {
                         if(status === "loaded") {
