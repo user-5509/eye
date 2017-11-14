@@ -15,10 +15,6 @@ Route::get('', function () {
     return view('main');
 });
 
-Route::get('', function () {
-    return view('new_main');
-});
-
 Route::get('getTreeData', 'NodeController@getTreeData');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');

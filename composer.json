@@ -10,7 +10,7 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "v5.4.8",
-        "twbs/bootstrap": "v4.0.0-beta"
+        "twbs/bootstrap": "4.0.0-alpha.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

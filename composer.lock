@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "248165b48e552e6e2b73bedfb1a18938",
+    "content-hash": "4979b871b46f3916601d8849c9f384b6",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -2068,16 +2068,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v4.0.0-beta",
+            "version": "4.0.0-alpha.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "35f80bb12e4e71fd777ee60ffa43711d8f84b1a6"
+                "reference": "65ffb1c3b6e94440812a2e228cb8e8be512652ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/35f80bb12e4e71fd777ee60ffa43711d8f84b1a6",
-                "reference": "35f80bb12e4e71fd777ee60ffa43711d8f84b1a6",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/65ffb1c3b6e94440812a2e228cb8e8be512652ec",
+                "reference": "65ffb1c3b6e94440812a2e228cb8e8be512652ec",
                 "shasum": ""
             },
             "replace": {
@@ -2115,7 +2115,7 @@
                 "sass",
                 "web"
             ],
-            "time": "2017-08-11T03:56:35+00:00"
+            "time": "2017-01-06T16:41:52+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -3646,7 +3646,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "twbs/bootstrap": 10
+        "twbs/bootstrap": 15
     },
     "prefer-stable": false,
     "prefer-lowest": false,
