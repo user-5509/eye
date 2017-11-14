@@ -16,9 +16,9 @@
 </template>
 
 <script>
-    import Navbar from './Navbar.vue'
-    import NodesLayout from './NodesLayout.vue'
-    import LinesLayout from './LinesLayout.vue'
+    import Navbar from './Navbar.vue';
+    import NodesLayout from './NodesLayout.vue';
+    import LinesLayout from './LinesLayout.vue';
     export default {
         name: 'AppLayout',
         data: function () {
