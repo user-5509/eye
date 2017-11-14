@@ -17,8 +17,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    routes,
-    linkActiveClass: "active"
+    routes
 })
 
 router.push('/nodes')

@@ -7,11 +7,11 @@
                 <a class="navbar-brand" href="#"><span class="h3">&nesear;</span> <b>КРОСС</b><sup><small>&copy;</small></sup></a>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav" id="navbar">
-                            <li class="nav-item" id="menuNodes">
-                                <router-link to="nodes" class="nav-link">Структура</router-link>
+                            <li class="nav-item active" id="menuNodes">
+                                <router-link to="/nodes">Структура</router-link>
                         </li>
                         <li class="nav-item" id="menuLines">
-                            <router-link to="lines" class="nav-link">Тракты</router-link>
+                            <router-link to="/lines">Тракты</router-link>
                         </li>
                     </ul>
                 </div>
