@@ -490,14 +490,12 @@ class NodeController extends Controller
 
         $order = (new Node)->find($parentNodeId)->getOrder();
 
-        $nodes = (new Node)->select('id as key', 'name as title')->where('parent_id', '=', $parentNodeId)->orderBy($order)->get()->toJson();
+        $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
+        //$nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
 
-        Log::put($nodes);
-
-        return $nodes;
 
         foreach ($nodes as $node) {
-,
+
             $tmpArr = array();
 
             $tmpArr["key"] = $node->id;
