@@ -3,11 +3,11 @@
 </template>
 
 <script>
+    require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
+
     import Vue from 'vue'
     import { mapGetters, mapActions } from 'vuex'
-
-    require('../../node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min')
-    import {treeNodeIcon, treeNodeName} from './TreePatches'
+    import NodesTreeName from './NodesTreeName.vue';
 
     export default {
         computed: {
@@ -19,7 +19,7 @@
                 savePath: 'savePath'
         }),
 
-        components: {  },
+        components: { NodesTreeName },
 
         mounted: function () {
             const thisComponent = this
@@ -118,23 +118,33 @@
 
                 renderNode: function(event, data) {
                     let node = data.node;
-
-                    $(node.span).find("span.fancytree-icon").removeClass("fancytree-icon").addClass('awesome-icon');
+                    let span_icon = $(node.span).find("span.fancytree-icon");
+                    let span_title = $(node.span).find("span.fancytree-title");
+                    let span = data.node.span;
 
                     if(node.data._icon) {
-                        let iconName = node.data._icon
-                        let selector = node.span.querySelector("span.awesome-icon")
-
-                        treeNodeIcon(iconName, selector)
+                        span_icon.html('<i class="fa fa-' + node.data._icon + ' fa-lg"></i>');
                     }
 
-                    console.log(node.title)
-                    if(node.data.type === 6) {
-                        let nodeName = node.title
-                        let selector = node.span.querySelector("span.fancytree-title")
+                    //span.removeClass("fancytree-icon");
 
-                        treeNodeName(nodeName, selector)
-                    }
+                    let nodeName = node.title;
+
+                    //span_title.html('<span is="NodesTreeName" nodeName="' + nodeName + '"></span>');
+
+                    // Создание конструктора
+                    let Name = Vue.extend({
+                        template: '<span is="NodesTreeName" nodeName="' + nodeName+ '"></span> ',
+                        data: function () {
+                            return {
+                                nodeName: nodeName
+                            }
+                        },
+                        components: { NodesTreeName }
+                    })
+                    // создаёт экземпляр Profile и монтирует его к элементу DOM
+                    //console.dir(span)
+                    new Name().$mount(span.querySelector("span.fancytree-title"))
                 },
 
                 init: function(event, data) {
