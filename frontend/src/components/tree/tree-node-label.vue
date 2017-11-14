@@ -1,12 +1,11 @@
 <template>
     <span>
-        {{ node[options.labelKey] }}
-        <span v-for='iface in node.ifaces'
-            :key="iface.key"
-        >
-            {{ iface.name }}
+        <span v-if=" node.hasInterfaces ">
+            {{ node[options.labelKey] }} ints!!!
         </span>
-        
+        <span v-else>
+            {{ node[options.labelKey] }}
+        </span>
     </span>
 </template>
 
@@ -22,11 +21,11 @@
         },
         data() {
             return {
-                nodeInterfaces: []
+                nodeData: []
             }
         },
         mounted() {
-            //this.loadInterfaces();
+            this.loadInterfaces();
         },
         methods: {
             loadInterfaces: function() {
@@ -37,7 +36,7 @@
                                 nodeId: this.node.id
                             },
                             responseType: 'json'
-                        }).then((response) => this.nodeInterfaces = response.data);
+                        }).then((response) => console.log(response.data));
                 }
             }
         }

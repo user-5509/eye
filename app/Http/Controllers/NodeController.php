@@ -519,7 +519,6 @@ class NodeController extends Controller
 
             if ( $node->getInterfaces() ) {
                 $treeNode->hasInterfaces = true;
-                $treeNode->ifaces = $this->getNodeInterfaces1($node->id);
             }
 
             $treeNode->children = [];
@@ -550,28 +549,6 @@ class NodeController extends Controller
         }
 
         return json_encode($arr);
-    }
-
-    public function getNodeInterfaces1($nodeId)
-    {
-        //$nodeId = Input::get('nodeId');
-        $node = (new Node)->find($nodeId);
-
-        $arr = array();
-
-        $interfaces = $node->getInterfaces();
-        if($interfaces) {
-            foreach ($interfaces as $interface) {
-                $int = new \stdClass;
-                $int->id = $interface->id;
-                $int->name = $interface->name;
-                $int->alias = $interface->alias;
-
-                $arr[] = $int;
-            }
-        }
-
-        return $arr;
     }
 
     public function getTreeData1(Request $request)

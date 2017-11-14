@@ -83,6 +83,7 @@
                 }, this.options)
 
             this.dealTreeData()
+
         },
 
         watch: {
