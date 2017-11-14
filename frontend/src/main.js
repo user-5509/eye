@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue' // TODO: is bootstrap must be here or in modules?
 import 'bootstrap/dist/css/bootstrap.css'
@@ -18,6 +17,11 @@ const app = new Vue({
     render: h => h(App),
     mounted: () => {
         router.push('/nodes')
+        store.commit(types.NODESTREE_SAVE_PATH, '123');
+        console.log('>>>>>>>>>>>' + store.state.getNodePath);
+        console.log('>>>>>>>>>>>' + store.state.getNodePath);
+        console.log('>>>>>>>>>>>' + store.state.getNodePath);
+        console.log('>>>>>>>>>>>' + store.state.getNodePath);
     }
 });
 

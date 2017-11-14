@@ -2,18 +2,23 @@ import * as types from './../mutation-types'
 
 // initial state
 const state = {
-    nodePath: null
+    nodePath: ''
 }
 
 // getters
 const getters = {
-    getPath: state =>  state.nodePath
+    getNodePath: state => {
+        console.log('getNodePath => ' + state.nodePath)
+        return state.nodePath
+    }
 }
 
 // actions
 const actions = {
     savePath ({ commit }, path) {
         commit(types.NODESTREE_SAVE_PATH, path)
+        console.log('savePath => ' + state.nodePath)
+        return state.nodePath
     }
 }
 
