@@ -108,5 +108,3 @@ Route::get('/content/type/index', 'NodeTypeController@index');
 Route::get('/content/type/list', 'NodeTypeController@getList');
 
 Route::get('/node/getPath', 'NodeController@getPath');
-
-Route::get('/node/getNodeInterfaces', 'NodeController@getNodeInterfaces');

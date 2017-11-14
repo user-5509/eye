@@ -363,11 +363,6 @@ class Node extends Model
         return $keyPath;
     }
 
-    public function getChildCount()
-    {
-        return (new Node)->where('parent_id', '=', $this->id)->count();
-    }
-
     public function canCreate()
     {
         if($this->type <> null) {
