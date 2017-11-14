@@ -13,7 +13,6 @@ class NodeTypesSeeder extends Seeder
             return null;
         }
 
-
         $type = new NodeType(array('id' => $id, 'name' => $name));
         $type->save();
 

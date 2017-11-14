@@ -504,7 +504,7 @@ class NodeController extends Controller
             $treeNode = new \stdClass;
             $treeNode->id = $node->id;
             $treeNode->label = $node->name;
-            $treeNode->type = 3333;
+            $treeNode->type = $node->type_id;
             $treeNode->open = false;
             $treeNode->checked = false;
             $treeNode->nodeSelectNotAll = false;
