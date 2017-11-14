@@ -4,24 +4,18 @@ class EyeSystem {
     }
 }
 
-class EyeWidget {
-    constructor() {
-        this.templates = $("#tmpl");
-    }
+class EyeWidgets {
     static lineListWrapper() {
-        return this.templates.find("#line #list-wrapper");
+        return $("#tmpl").find("#line #list-wrapper");
     }
     static lineListItem() {
-        return this.templates.find("#line #list-item");
-    }
-    static createLineDialog() {
-        return this.templates.find("#line #create").html();
+        return $("#tmpl").find("#line #list-item");
     }
 }
 
 class EyeRender {
     static createLineDialog(modal) {
-        let modalBody = EyeWidget.createLineDialog();
+        let modalBody = $("#tmpl").find("#line #create").html();
 
         modal.find(".modal-body").html(modalBody);
         modal.find(".modal-title").text("Создать тракт");
@@ -80,49 +74,47 @@ class EyeRender {
         });
         modal.modal("show");
     }
-    static reloadLinesList() {
-        (async function () {
-            let listContainer = $("#listContainer");
-            let response = await fetch( "http://localhost/content/line/list", { _token: EyeSystem.CSRF() } );
-            let lines = await response.json();
+    static async reloadLinesList() {
+        let listContainer = $("#listContainer");
+        let response = await fetch("http://localhost/content/line/list", { _token: EyeSystem.CSRF() });
+        let lines = await response.json();
 
-            listContainer.html( EyeWidget.lineListWrapper().html() );
+        listContainer.html(EyeWidgets.lineListWrapper().html());
 
-            lines.forEach((line) => {
-                let lineTemplate = EyeWidget.lineListItem();
+        lines.forEach((line)=>{
+            let lineTemplate = EyeWidgets.lineListItem();
 
-                lineTemplate.find("a").attr("id", "line-" + line.id);
-                lineTemplate.find("a").attr("data-id", line.id);
-                lineTemplate.find("a").attr("data-type", line.type);
-                lineTemplate.find("#name").text(line.name);
-                lineTemplate.find("#icon").html($("#tmpl").find("#line #icon #type-" + line.type).html());
+            lineTemplate.find("a").attr("id", "line-" + line.id);
+            lineTemplate.find("a").attr("data-id", line.id);
+            lineTemplate.find("a").attr("data-type", line.type);
+            lineTemplate.find("#name").text(line.name);
+            lineTemplate.find("#icon").html($("#tmpl").find("#line #icon #type-" + line.type).html());
 
-                listContainer.find("#lines-list").append(lineTemplate.html());
-            });
+            listContainer.find("#lines-list").append(lineTemplate.html());
+        });
 
-            listContainer.find(".list-group-item").on("click", function () {
-                let lineId = $(this).data("id");
+        listContainer.find(".list-group-item").on("click", function () {
+            let lineId = $(this).data("id");
 
-                $("#lineAbout").load("http://localhost/content/line/about",
-                    {
-                        _method: "get",
-                        _token: "{{ csrf_token() }}",
-                        lineId: lineId
-                    },
-                    function (response, status, xhr) {
-                        if (status === "error") {
-                            let msg = "[lineAbout] Sorry but there was an error: ";
+            $("#lineAbout").load("http://localhost/content/line/about",
+                {
+                    _method:    "get",
+                    _token:     "{{ csrf_token() }}",
+                    lineId:     lineId
+                },
+                function (response, status, xhr) {
+                    if (status === "error") {
+                        let msg = "[lineAbout] Sorry but there was an error: ";
 
-                            alert(msg + xhr.status + " " + xhr.statusText);
-                        }
+                        alert(msg + xhr.status + " " + xhr.statusText);
                     }
-                );
+                }
+            );
 
-                $("#lines-list").find(".list-group-item-primary").removeClass(".list-group-item-primary");
-                $(this).addClass(".list-group-item-primary");
-            });
+            $("#lines-list").find(".list-group-item-primary").removeClass(".list-group-item-primary");
+            $(this).addClass(".list-group-item-primary");
+        });
 
-            console.log("list reload:" + lines);
-        }())
+        console.log("list reload:" + lines);
     }
 }

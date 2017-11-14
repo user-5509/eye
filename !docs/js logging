@@ -1,7 +1,4 @@
-Logging:
-
 window.log=function(){if(this.console){console.log(Array.prototype.slice.call(arguments));}};
 jQuery.fn.log=function (msg){console.log("%s: %o", msg,this);return this;};
-$(".classname").log(); //show an array of all elements with classname class
 
------
+$(".classname").log(); //show an array of all elements with classname class
