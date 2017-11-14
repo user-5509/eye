@@ -519,10 +519,6 @@ class NodeController extends Controller
                 $treeNode->leaf = true;
             }
 
-            if ( $node->getInterfaces() ) {
-                $treeNode->hasInterfaces = true;
-            }
-
             $treeNode->children = [];
 
             $arr[] = $treeNode;
