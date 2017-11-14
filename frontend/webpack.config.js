@@ -52,13 +52,7 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map',
-  plugins: [
-      new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
-      })
-  ]
+  devtool: '#eval-source-map'
 }
 
 if (process.env.NODE_ENV === 'production') {
