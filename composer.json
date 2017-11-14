@@ -8,7 +8,6 @@
     "require": {
         "php": ">=5.6.0",
         "barryvdh/laravel-ide-helper": "^2.4",
-        "felixfbecker/language-server": "dev-master",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "v5.4.8",

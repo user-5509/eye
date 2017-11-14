@@ -2,24 +2,36 @@
 
 namespace Hardware\Interfaces;
 
-trait GenericInterface
+//use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+
+class GenericInterface
 {
     /**
-     * All of the interface attributes.
+     * All of the user's attributes.
      *
      * @var array
      */
     protected $attributes;
 
     /**
-     * Create a new generic Interface object.
+     * Create a new generic User object.
      *
      * @param  array  $attributes
      * @return void
      */
     public function __construct(array $attributes)
     {
-           $this->attributes = $attributes;
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'id';
     }
 
     /**
@@ -27,9 +39,11 @@ trait GenericInterface
      *
      * @return mixed
      */
-    public function getId()
+    public function getAuthIdentifier()
     {
-        return $this->attributes['id'];
+        $name = $this->getAuthIdentifierName();
+
+        return $this->attributes[$name];
     }
 
     /**
@@ -37,9 +51,40 @@ trait GenericInterface
      *
      * @return string
      */
-    public function getName()
+    public function getAuthPassword()
     {
-        return $this->attributes['name'];
+        return $this->attributes['password'];
+    }
+
+    /**
+     * Get the "remember me" token value.
+     *
+     * @return string
+     */
+    public function getRememberToken()
+    {
+        return $this->attributes[$this->getRememberTokenName()];
+    }
+
+    /**
+     * Set the "remember me" token value.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setRememberToken($value)
+    {
+        $this->attributes[$this->getRememberTokenName()] = $value;
+    }
+
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
     }
 
     /**
