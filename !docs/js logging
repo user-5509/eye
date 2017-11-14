@@ -1,9 +1,7 @@
-Logging:
-
 window.log=function(){if(this.console){console.log(Array.prototype.slice.call(arguments));}};
 jQuery.fn.log=function (msg){console.log("%s: %o", msg,this);return this;};
-$(".classname").log(); //show an array of all elements with classname class
 
+<<<<<<< HEAD:!docs/js.man
 -----
 
 Я не особо вникал, но кажется тут творится рекурсивный ад. Вам повезло, что JS довольно быстрый, иначе бы вы залипли на хоть сколько нибудь большом дереве.
@@ -34,3 +32,6 @@ github.com/the-teacher/the_sortable_tree/blob/master/app/assets/javascripts/rend
 
 -----
 
+=======
+$(".classname").log(); //show an array of all elements with classname class
+>>>>>>> parent of 7c2470f... 111:!docs/js logging
