@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NodeType extends Model
 {
-    const _WORLD_  = 1;
+    const WORLD  = 1;
     const BUILDING  = 2;
     const ROOM      = 3;
     const PSP       = 4;
@@ -37,7 +37,8 @@ class NodeType extends Model
      */
     public function parents()
     {
-        return $this->belongsToMany('App\NodeType', 'type2type', 'child_id', 'parent_id');
+        return $this->belongsToMany('App\NodeType', 'node_types_node_types', 'child_id',
+            'parent_id');
     }
 
     public function getName()
@@ -56,17 +57,6 @@ class NodeType extends Model
 
     public function getIcon()
     {
-        /*switch($this->id) {
-
-            case NodeType::PAIR :
-                $icon = "&#x02237;";
-                break;
-
-                default:
-                $icon = null;
-                break;
-        }*/
-
         return $this->icon;
     }
 }

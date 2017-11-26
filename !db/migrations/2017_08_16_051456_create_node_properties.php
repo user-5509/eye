@@ -13,7 +13,7 @@ class CreateNodeProperties extends Migration
      */
     public function up()
     {
-        Schema::create('node_properties', function (Blueprint $table) {
+        Schema::create('node_interfaces', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('alias')->nullable();;
@@ -31,6 +31,6 @@ class CreateNodeProperties extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('node_properties');
+        Schema::dropIfExists('node_interfaces');
     }
 }

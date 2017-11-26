@@ -12,7 +12,7 @@ class NodeTypeController extends Controller
     {
         $types = (new NodeType)->all();
 
-        return view('content.type.index', ['title' => 'Типы', 'types' => $types]);
+        return view('content.nodetype.index', ['title' => 'Типы', 'types' => $types]);
     }
 
     public function getParents(Request $request)
@@ -26,5 +26,20 @@ class NodeTypeController extends Controller
         }
 
         return json_encode($data);
+    }
+
+    public function getById($id)
+    {
+        $type = (new NodeType)->find($id);
+
+        $parents = $type->parents;
+        $parentsArray = array();
+        foreach($parents as $parent) {
+            $parentsArray[$parent->id] = $parent->name;
+        }
+
+        $allTypes = (new NodeType)->all();
+
+        return view('content.nodetype.info', ['type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
     }
 }

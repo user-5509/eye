@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class Node extends Model
 {
@@ -22,8 +21,8 @@ class Node extends Model
         $this->save();
 
         if ( $this->type->id == NodeType::COMMON_BOX_60 ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             $pairNamePrefixes = ["АБ", "ВГ", "ДЕ"];
@@ -37,17 +36,17 @@ class Node extends Model
                     $subNode->save();
 
                     $properties = array(
-                        new NodeProperty(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
-                        new NodeProperty(array('name' => "Станция", 'alias' => "station", 'value' => null))
+                        new NodeInterface(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
+                        new NodeInterface(array('name' => "Станция", 'alias' => "station", 'value' => null))
                     );
-                    $subNode->properties()->saveMany($properties);
+                    $subNode->interfaces()->saveMany($properties);
                 }
             }
         }
 
         if ( $this->type->id == NodeType::CRONE_BOX_100 ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 100; $i++) {
@@ -60,16 +59,16 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
 
         if ( $this->type->id == NodeType::BOARD_CS ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 36; $i++) {
@@ -81,10 +80,10 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
 
                 // Прием
                 $subNode = new Node;
@@ -94,16 +93,16 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
 
         if ( $this->type->id == NodeType::BOARD_CSS) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 36; $i++) {
@@ -115,11 +114,11 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
 
                 // Прием
                 $subNode = new Node;
@@ -129,17 +128,17 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция 1', 'alias' => "station", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция 2', 'alias' => "station1", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
 
         if ( $this->type->id == NodeType::CROSS_BOX ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 24; $i++) {
@@ -151,16 +150,16 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => "Станция", 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => "Канал", 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => "Станция", 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
 
         if ( $this->type->id == NodeType::CRONE_BOX_10 ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 10; $i++) {
@@ -173,16 +172,16 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
 
         if ( $this->type->id == NodeType::PATCH_PANEL_24 ) {
-            $property = new NodeProperty(array('name' => "massLinkedInterface", 'value' => null));
-            $this->properties()->save($property);
+            $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
+            $this->interfaces()->save($property);
             $this->save();
 
             for ($i = 1; $i <= 24; $i++) {
@@ -194,10 +193,10 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
 
                 // Прием
                 $subNode = new Node;
@@ -207,10 +206,10 @@ class Node extends Model
                 $subNode->save();
 
                 $properties = array(
-                    new NodeProperty(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
-                    new NodeProperty(array('name' => 'Станция', 'alias' => "station", 'value' => null))
+                    new NodeInterface(array('name' => 'Канал', 'alias' => "channel", 'value' => null)),
+                    new NodeInterface(array('name' => 'Станция', 'alias' => "station", 'value' => null))
                 );
-                $subNode->properties()->saveMany($properties);
+                $subNode->interfaces()->saveMany($properties);
             }
         }
     }
@@ -246,13 +245,13 @@ class Node extends Model
     }
 
     /**
-     * Get propertys
+     * Get interfaces
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function properties()
+    public function interfaces()
     {
-        return $this->hasMany('App\NodeProperty');
+        return $this->hasMany('App\NodeInterface');
     }
 
     /**
@@ -386,7 +385,7 @@ class Node extends Model
         if($this->type <> null) {
             $typeId = $this->type->id;
             if($typeId == NodeType::PAIR) {
-                $cnt = $this->properties()->where('value', null)->count();
+                $cnt = $this->interfaces()->where('value', null)->count();
                 if($cnt > 0)
                     return true;
             }
@@ -447,7 +446,7 @@ class Node extends Model
             $typeId <> NodeType::PATCH_PANEL_24)
             return false;
 
-        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        $massLinkedInterface = $this->interfaces()->where('name', '=', 'massLinkedInterface')->first();
         if($massLinkedInterface == null)
             return false;
 
@@ -477,7 +476,7 @@ class Node extends Model
             return false;
         }
 
-        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        $massLinkedInterface = $this->interfaces()->where('name', '=', 'massLinkedInterface')->first();
 
         if($massLinkedInterface == null) {
 
@@ -508,7 +507,7 @@ class Node extends Model
             $typeId <> NodeType::PATCH_PANEL_24)
             return null;
 
-        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        $massLinkedInterface = $this->interfaces()->where('name', '=', 'massLinkedInterface')->first();
 
         if($massLinkedInterface == null)
             return null;
@@ -563,7 +562,7 @@ class Node extends Model
             $typeId <> NodeType::COMMON_BOX_60)
             return 0;
 
-        $massLinkedInterface = $this->properties()->where('name', '=', 'massLinkedInterface')->first();
+        $massLinkedInterface = $this->interfaces()->where('name', '=', 'massLinkedInterface')->first();
         if($massLinkedInterface == null)
             return 0;
 
@@ -582,7 +581,7 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        return $this->properties()->find($id);
+        return $this->interfaces()->find($id);
     }
 
     public function getInterfaceByAlias($alias)
@@ -595,7 +594,7 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        return $this->properties()->where('alias', '=', $alias)->first();
+        return $this->interfaces()->where('alias', '=', $alias)->first();
     }
 
     public function getInterfaces($state = '')
@@ -613,15 +612,15 @@ class Node extends Model
         switch($state) {
 
             case 'up' :
-                $interfaces = $this->properties()->where('value', '<>', null)->get();
+                $interfaces = $this->interfaces()->where('value', '<>', null)->get();
                 break;
 
             case 'down' :
-                $interfaces = $this->properties()->where('value', '=', null)->get();
+                $interfaces = $this->interfaces()->where('value', '=', null)->get();
                 break;
 
             default :
-                $interfaces = $this->properties()->get();
+                $interfaces = $this->interfaces()->get();
         }
 
         return $interfaces;
@@ -647,9 +646,9 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        $linkedInterfaceId = $this->properties()->where('alias', '=', $alias)->first()->value;
+        $linkedInterfaceId = $this->interfaces()->where('alias', '=', $alias)->first()->value;
 
-        return (new NodeProperty)->find($linkedInterfaceId);
+        return (new NodeInterface)->find($linkedInterfaceId);
     }
 
     public function getByInterfaceId($id)
@@ -661,7 +660,7 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        $nodeId = (new NodeProperty)->find($id)->node_id;
+        $nodeId = (new NodeInterface)->find($id)->node_id;
 
         return (new Node)->find($nodeId);
     }
@@ -676,7 +675,7 @@ class Node extends Model
         if($typeId <> NodeType::PAIR)
             return null;
 
-        $remoteInterface = $this->properties()->where('alias', '=', $alias)->first();
+        $remoteInterface = $this->interfaces()->where('alias', '=', $alias)->first();
 
         if($remoteInterface == null)
             return null;
@@ -726,7 +725,7 @@ class Node extends Model
     {
         $lineId = $this->line->id;
 
-        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        $interfaces = $this->interfaces()->where('value', '<>', null)->get();
         foreach($interfaces as $interface) {
             $remoteInterfaceId = $interface->value;
             $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
@@ -747,7 +746,7 @@ class Node extends Model
     {
         //$lineId = $this->line->id;
 
-        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        $interfaces = $this->interfaces()->where('value', '<>', null)->get();
         foreach($interfaces as $interface) {
             $remoteInterfaceId = $interface->value;
             $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
@@ -765,7 +764,7 @@ class Node extends Model
 
     public function removeLineFromChain()
     {
-        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        $interfaces = $this->interfaces()->where('value', '<>', null)->get();
         foreach($interfaces as $interface) {
             $remoteInterfaceId = $interface->value;
             $remoteNode = (new Node)->whereHas('properties', function ($query) use ($remoteInterfaceId) {
@@ -780,7 +779,7 @@ class Node extends Model
 
     public function haveConnections()
     {
-        $interfaces = $this->properties()->where('value', '<>', null)->get();
+        $interfaces = $this->interfaces()->where('value', '<>', null)->get();
         if($interfaces->count() > 0)
             return true;
         else

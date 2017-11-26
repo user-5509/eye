@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class NodeProperty extends Model
+class NodeInterface extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'node_properties';
+    protected $table = 'node_interfaces';
 
     protected $fillable = array('name', 'alias', 'value');
 

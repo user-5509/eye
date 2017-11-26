@@ -1,13 +1,15 @@
 <div class="container pt-3">
     <div class="row">
-        <div class="col-6">
-            <button type="button" id="createTypeButton" class="btn btn-secondary btn-sm" data-toggle="modal"
+        <div class="col-4">
+            <button type="button" id="createTypeButton" class="btn btn-outline-primary" data-toggle="modal"
                     data-target="#actionModal">Создать</button>
             <div class="pt-3" id="typeContainer">
                 <div class="list-group">
                     @foreach ($types as $type)
-                        <li class="list-group-item list-group-item-action" id="type-{{ $type->id }}" data-id="{{ $type->id }}">
-                            {{ $type->name }}
+                        <li class="list-group-item list-group-item-action p-0 m-0" id="type-{{ $type->id }}" data-id="{{ $type->id }}">
+                            <a href="/admin/nodetypes/{{ $type->id }}" class="nav-link" data-link="ajax">
+                                {{ $type->name }}
+                            </a>
                         </li>
                     @endforeach
                 </div>
@@ -27,14 +29,17 @@
 </div>
 
 <script type="text/javascript">
+    (function() {
+        $("title").text("Кросс > типы узлов");
+    })();
 
     $("#createTypeButton").on("click",function () {
-        $('#actionModal').find('.modal-content').load(
-            "http://localhost/content/line/create/modal",
+        let modalContent = $('#actionModal').find('.modal-content');
+        modalContent.load("http://localhost/content/line/create/modal",
             {_method: "get", _token: "{{ csrf_token() }}"},
             function( response, status, xhr ) {
-                if ( status == "error" ) {
-                    var msg = "Sorry but there was an error: ";
+                if ( status === "error" ) {
+                    let msg = "Sorry but there was an error: ";
                     alert( msg + xhr.status + " " + xhr.statusText );
                 }
             }
@@ -164,12 +169,4 @@
 
 
     });
-
-    $(function()
-        {
-            $("title").text("Кросс - тракты");
-            //typesListReload();
-        }
-    );
-
 </script>

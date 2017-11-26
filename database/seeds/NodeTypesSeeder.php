@@ -6,40 +6,53 @@ use App\Log;
 
 class NodeTypesSeeder extends Seeder
 {
-    private function add($id, $name, $parentId = null)
+    /**
+     * @param $id
+     * @param $name
+     * @param array $parents
+     * @param null $icon
+     * @return NodeType|null
+     */
+    private function add($name, $parents = [], $icon = null)
     {
-        if($id == null) {
-            Log::put($this,'$id == null');
+        if ($name == null) {
+            //Log::put($this, 'name is not set!');
             return null;
         }
 
-
-        $type = new NodeType(array('id' => $id, 'name' => $name));
+        $type = new NodeType(['name' => $name, 'icon' => $icon]);
         $type->save();
 
-        if($parentId <> null){
-            $parent  = (new NodeType)->find($parentId);
-            if($parent == null) {
-                Log::put($this,'$parent == null');
-                return null;
+        if (is_array($parents)) {
+            foreach ($parents as $parentName) {
+                $node = (new NodeType)->where('name', '=', $parentName)->first();
+                if ($node == null) {
+                    //Log::put($this, 'parent not found!');
+                    return null;
+                }
+                $type->parents()->save($node);
             }
-            $type->parents()->save($parent);
         }
 
         return $type;
     }
 
+    /**
+     * @param $id
+     * @param $parentId
+     * @return mixed|null|static
+     */
     private function addParent($id, $parentId)
     {
         $node = (new NodeType)->find($id);
-        if($node == null) {
-            Log::put($this,'$node == null');
+        if ($node == null) {
+            Log::put($this, '$node == null');
             return null;
         }
 
         $parent = (new NodeType)->find($parentId);
-        if($parent == null) {
-            Log::put($this,'$parent == null');
+        if ($parent == null) {
+            Log::put($this, '$parent == null');
             return null;
         }
 
@@ -54,27 +67,29 @@ class NodeTypesSeeder extends Seeder
      */
     public function run()
     {
-        $this->add(NodeType::_WORLD_,'Мир', null);
-        $this->add(NodeType::BUILDING, 'Здание', NodeType::_WORLD_);
-        $this->add(NodeType::ROOM, 'Помещение', NodeType::BUILDING);
-        $this->add(NodeType::PSP, 'ПСП', NodeType::ROOM);
-        $this->add(NodeType::COMMON_BOX_60, 'Гребенка (60 пар)', NodeType::PSP);
-        $this->add(NodeType::PAIR, 'Пара', NodeType::COMMON_BOX_60);
-        $this->add(NodeType::CRONE_BOX_100, 'Бокс (100 пар)', NodeType::PSP);
-        $this->addParent(NodeType::PAIR, NodeType::CRONE_BOX_100);
-        $this->add(NodeType::SPM, 'СПМ', NodeType::ROOM);
-        $this->add(NodeType::BOARD_CS, 'Плата (КС)', NodeType::SPM);
-        $this->addParent(NodeType::PAIR, NodeType::BOARD_CS);
-        $this->add(NodeType::BOARD_CSS, 'Плата (КСС)', NodeType::SPM);
-        $this->addParent(NodeType::PAIR, NodeType::BOARD_CSS);
-        $this->add(NodeType::CROSS_ENCLOSURE, 'Шкаф (кросс)', NodeType::ROOM);
-        $this->add(NodeType::CROSS_BOX, 'Бокс (кросс)', NodeType::CROSS_ENCLOSURE);
-        $this->addParent(NodeType::PAIR, NodeType::CROSS_BOX);
-        $this->add(NodeType::TELCO_ENCLOSURE, 'Шкаф (телеком)', NodeType::ROOM);
-        $this->add(NodeType::CRONE_RACK, 'Crone rack', NodeType::TELCO_ENCLOSURE);
-        $this->add(NodeType::CRONE_BOX_10, 'Гребенка Crone (10 пар)', NodeType::CRONE_RACK);
-        $this->addParent(NodeType::PAIR, NodeType::CRONE_BOX_10);
-        $this->add(NodeType::PATCH_PANEL_24, 'Патч-панель (24 порта)', NodeType::TELCO_ENCLOSURE);
-        $this->addParent(NodeType::PAIR, NodeType::PATCH_PANEL_24);
+        $this->add('Мир');
+        $this->add('Здание', ['Мир'], 'building-o');
+        $this->add('Помещение', ['Здание'], 'sign-in');
+        $this->add('ПСП', ['Помещение'], 'braille');
+        $this->add('Гребенка (60 пар)', ['ПСП'], 'microchip');
+        $this->add('Бокс (100 пар)', ['ПСП'], 'microchip');
+        $this->add('СПМ', ['Помещение'], 'braille');
+        $this->add('Плата (КС)', ['СПМ'], 'object-group');
+        $this->add('Плата (КСС)', ['СПМ'], 'object-group');
+        $this->add('Шкаф (кросс)', ['Помещение'], 'object-group');
+        $this->add('Бокс (кросс)', ['Шкаф (кросс)'], 'microchip');
+        $this->add('Шкаф (телеком)', ['Помещение'], 'object-group');
+        $this->add('Crone rack', ['Шкаф (телеком)'], 'object-group');
+        $this->add('Гребенка Crone (10 пар)', ['Crone rack'], 'microchip');
+        $this->add('Патч-панель (24 порта)', ['Шкаф (телеком)'], 'ellipsis-h');
+        $this->add('Пара', [
+            'Гребенка (60 пар)',
+            'Бокс (100 пар)',
+            'Плата (КС)',
+            'Плата (КСС)',
+            'Бокс (кросс)',
+            'Гребенка Crone (10 пар)',
+            'Патч-панель (24 порта)'
+        ]);
     }
 }

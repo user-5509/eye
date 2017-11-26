@@ -1,0 +1,22 @@
+{
+  "siteTitle": "Кросс",
+  "mainPage": "nodes",
+  "pages": {
+    "nodes": {
+      "title": "Структура",
+      "menu": "nodes"
+    },
+    "lines": {
+      "title": "Тракты",
+      "menu": "lines",
+      "inSitemap": true,
+      "updated": "2017-05-15"
+    },
+    "admin": {
+      "title": "Admin",
+      "menu": "admin",
+      "inSitemap": true,
+      "updated": "2017-05-20"
+    }
+  }
+}

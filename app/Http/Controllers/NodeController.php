@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Node;
 use App\NodeType;
-use App\NodeProperty;
+use App\NodeInterface;
 use App\Line;
 use App\Log;
 use Illuminate\Support\Facades\Input;
@@ -164,7 +164,7 @@ class NodeController extends Controller
             $node = (new Node)->find($nodeId);
 
             $interfaceId = Input::get('interfaceId');
-            $interface = $node->properties()->find($interfaceId);
+            $interface = $node->interfaces()->find($interfaceId);
 
             $node1InterfaceAlias = $interface->alias;
 
@@ -199,12 +199,12 @@ class NodeController extends Controller
             $interfaceId2 = $request->input('interfaceId2');
 
             $node1 = (new Node)->find($nodeId1);
-            $node1Property = $node1->properties()->where('id', $interfaceId1)->first();
+            $node1Property = $node1->interfaces()->where('id', $interfaceId1)->first();
             $node1Property->value = $interfaceId2;
             $node1Property->save();
 
             $node2 = (new Node)->find($nodeId2);
-            $node2Property = $node2->properties()->where('id', $interfaceId2)->first();
+            $node2Property = $node2->interfaces()->where('id', $interfaceId2)->first();
             $node2Property->value = $interfaceId1;
             $node2Property->save();
 
@@ -232,7 +232,7 @@ class NodeController extends Controller
             $node = (new Node)->find($nodeId);
 
             $interfaceAlias = Input::get('interfaceAlias');
-            $interfaceName = (new NodeProperty)->where('alias', '=', $interfaceAlias)->first()->name;
+            $interfaceName = (new NodeInterface)->where('alias', '=', $interfaceAlias)->first()->name;
 
 
             return view('content.node.masslink-modal', [
@@ -312,10 +312,10 @@ class NodeController extends Controller
 
             while( $k < $count ) {
                 $subNode1 = $subNodes1[$i];
-                $subNodeProperty1 = (new NodeProperty)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
+                $subNodeProperty1 = (new NodeInterface)->where('node_id', '=', $subNode1['id'])->where('alias', $interfaceAlias1)->first();
 
                 $subNode2 = $subNodes2[$j];
-                $subNodeProperty2 = (new NodeProperty)->where('node_id', '=', $subNode2['id'])->where('alias', $interfaceAlias2)->first();
+                $subNodeProperty2 = (new NodeInterface)->where('node_id', '=', $subNode2['id'])->where('alias', $interfaceAlias2)->first();
 
                 $subNodeProperty1->value = $subNodeProperty2->id;
                 $subNodeProperty1->save();
@@ -407,9 +407,9 @@ class NodeController extends Controller
             $nodeId1 = Input::get('nodeId');
             $node1 = (new Node)->find($nodeId1);
             $interfaceId1 = Input::get('interfaceId');
-            $interface1 = $node1->properties()->find($interfaceId1);
+            $interface1 = $node1->interfaces()->find($interfaceId1);
 
-            $interface2 = (new NodeProperty)->find($interface1->value);
+            $interface2 = (new NodeInterface)->find($interface1->value);
             $interfaceId2 = $interface2->id;
             $node2 = (new Node)->whereHas('properties', function ($query) use ($interfaceId2) {
                 $query->where('id', '=', $interfaceId2);
@@ -495,37 +495,27 @@ class NodeController extends Controller
         $order = (new Node)->find($parentNodeId)->getOrder();
 
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
-        //$nodes = (new Node)->where('parent_id', '=', $parentNodeId)->get();
-
-
         foreach ($nodes as $node) {
-
             $tmpArr = array();
-
             $tmpArr["key"] = $node->id;
             $tmpArr["title"] = $node->fullName();
             $tmpArr["_icon"] = $node->getIcon();
 
             $subNodesCount = (new Node)->where('parent_id', '=', $node->id)->count();
-
             if ($subNodesCount > 0) {
-
                 $tmpArr["folder"] = "true";
                 $tmpArr["lazy"] = "true";
             }
 
             $type = $node->getType();
             if ($type <> null) {
-
                 if ($type->id == NodeType::PAIR) {
-
                     $tmpArr["about"] = "true";
                 }
             }
 
             $line = $node->getLine();
             if ($line <> null) {
-
                 $tmpArr["line"] = $line->id;
             }
 

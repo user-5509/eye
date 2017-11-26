@@ -95,8 +95,12 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        $("title").text("Кросс > тракты");
+    });
+
     $("#create-line").on("click",function () {
-        let modal     = $("#actionModal-1");
+        let modal = $("#actionModal-1");
 
         EyeRender.createLineDialog(modal);
     });
@@ -165,12 +169,4 @@
 
 
     });
-
-    $(function()
-        {
-            $("title").text("Кросс - тракты");
-            linesListReload();
-        }
-    );
-
 </script>

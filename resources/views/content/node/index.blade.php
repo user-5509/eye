@@ -19,6 +19,10 @@
     </div>
 
     <script type="text/javascript">
+        $(document).ready(function() {
+            $("title").text("Кросс > структура");
+        });
+
         function getNodePath() {
             let tree    = $("#tree");
             let parents = tree.fancytree("getActiveNode").getParentList();
@@ -505,9 +509,5 @@
                     };
                 }
             });
-
-
         });
-
-        $("title").text("Кросс - структура");
     </script>

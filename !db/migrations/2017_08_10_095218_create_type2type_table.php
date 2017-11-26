@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNodeTypesTable extends Migration
+class CreateType2typeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateNodeTypesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('node_types');
-        Schema::enableForeignKeyConstraints();
-
-        Schema::create('node_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->integer('can_create')->unsigned()->nullable();
-            $table->integer('can_cross')->unsigned()->nullable();
+        Schema::create('node_types_node_types', function(Blueprint $table)
+        {
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('node_types')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')
+                ->on('node_types')->onDelete('cascade');
+
+            $table->integer('child_id')->unsigned()->nullable();
+            $table->foreign('child_id')->references('id')
+                ->on('node_types')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

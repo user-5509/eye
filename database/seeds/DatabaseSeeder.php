@@ -12,6 +12,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(NodeTypesSeeder::class);
-        //$this->call(NodesSeeder::class);
+        //$this->call(EyeConfigSeeder::class);
     }
 }

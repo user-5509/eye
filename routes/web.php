@@ -11,15 +11,27 @@
 |
 */
 
-Route::get('', function () {
-    return view('main');
+Route::get('/', function () {
+    return redirect('/nodes');
 });
+
+Route::get('/nodes', 'MainController@nodes');
+Route::get('/lines', 'MainController@lines');
+Route::get('/admin', 'MainController@admin');
+Route::get('/admin/nodetypes', 'MainController@adminNodeTypes');
+Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes');
+
+/*
+
+
+
+
 
 Route::get('getTreeData', 'NodeController@getTreeData');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
 
-Route::get('/nodes', 'NodeController@index');
+//Route::get('/nodes', 'NodeController@index');
 
 Route::get('/content/node/index', 'NodeController@index');
 
@@ -64,7 +76,7 @@ Route::get('/node/{id?}/parent', 'NodeController@parent')->where('id', '[0-9]+')
 Route::post('/node/savePath', 'NodeController@savePath');
 
 
-Route::get('/content/line/index', 'LineController@index');
+Route::get('/lines', 'LineController@index');
 
 Route::get('/content/line/list', 'LineController@getList');
 
@@ -94,8 +106,12 @@ Route::post('/node/massUnlinkExecute', 'NodeController@massUnlinkExecute');
 
 Route::get('/content/node/select', 'NodeController@select');
 
-Route::get('/content/type/index', 'NodeTypeController@index');
+Route::get('/types', 'NodeTypeController@index');
 
 Route::get('/content/type/list', 'NodeTypeController@getList');
 
 Route::get('/node/getPath', 'NodeController@getPath');
+
+Route::get('/admin', 'AdminController@index');
+*/
+
