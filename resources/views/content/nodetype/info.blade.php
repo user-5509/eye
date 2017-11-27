@@ -1,46 +1,54 @@
 <div class="container pt-3">
-    <form>
+    <form id="nodetype-info-form">
         <div class="form-group">
             <label for="typeName">Наименование</label>
-            <input type="text" class="form-control" id="typeName" value="{{ $type->name }}" placeholder="Укажите наименование">
+            <input type="text" class="form-control" id="typeName" value="{{ $type->name }}"
+                   placeholder="Укажите наименование">
         </div>
         <div class="form-check">
             <label for="typeParents">Родительские типы</label>
-            <br />
+            <br/>
             <select id="typeParents" style="width: 500px" multiple="multiple">
                 @foreach ($allTypes as $item)
-                    <option value="{{ $item->id }}" @if(array_search($item->name, $parents) !== false) selected="true" @endif>{{ $item->name }}</option>
+                    <option value="{{ $item->id }}"
+                            @if(array_search($item->name, $parents) !== false) selected="true" @endif>{{ $item->name }}</option>
                 @endforeach
             </select>
         </div>
-        <br />
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <br/>
+        <button type="submit" class="btn btn-primary" id="nodetype-info-submit">Сохранить</button>
     </form>
 </div>
 
-<style type="text/css">
-    .multiselect-container {
-        width: 100% !important;
-    }
-</style>
-
 <script type="text/javascript">
-    (function() {
+    (function () {
         $("title").text("Кросс > Типы узлов > {{ $type->name }}");
+
         $('#typeParents').multiselect({
-            buttonWidth: '400px',
+            buttonWidth: '400px', /* multiselect width fix */
             nonSelectedText: 'Выберите типы!'
         });
+
+        function _submit() {
+            $.post("http://localhost/line/edit/execute", {
+                _token: "{{ csrf_token() }}",
+                lineId: $('#lineEdit').data('id'),
+                lineNewName: $('#lineEdit').find('#lineName').val()
+            }, function (updatedLine) {
+                updatedLine = JSON.parse(updatedLine);
+                $("#line-" + updatedLine.id).html(updatedLine.name);
+            });
+        }
     })();
 
-    $("#createTypeButton").on("click",function () {
+    $("#createTypeButton").on("click", function () {
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/create/modal",
             {_method: "get", _token: "{{ csrf_token() }}"},
-            function( response, status, xhr ) {
-                if ( status == "error" ) {
+            function (response, status, xhr) {
+                if (status == "error") {
                     var msg = "Sorry but there was an error: ";
-                    alert( msg + xhr.status + " " + xhr.statusText );
+                    alert(msg + xhr.status + " " + xhr.statusText);
                 }
             }
         );
@@ -59,37 +67,34 @@
         );
     }
 
-    function deleteLinePrepare($trigger)
-    {
+    function deleteLinePrepare($trigger) {
         var lineId = $trigger.data('id');
 
         $('#actionModal').modal('show');
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/delete/modal",
-            { _token: "{{ csrf_token() }}", _method: "get", lineId: lineId },
-            function( response, status, xhr ) {
-                if ( status == "error" ) {
+            {_token: "{{ csrf_token() }}", _method: "get", lineId: lineId},
+            function (response, status, xhr) {
+                if (status == "error") {
                     var msg = "Sorry but there was an error: ";
-                    alert( msg + xhr.status + " " + xhr.statusText );
+                    alert(msg + xhr.status + " " + xhr.statusText);
                 }
             }
         );
     }
 
-    function editLinePrepare($trigger)
-    {
+    function editLinePrepare($trigger) {
         console.log('editLinePrepare');
         var typeId = $trigger.data('id');
         var typeName = $trigger.text().trim();
         var typeParents = '';
 
-        $.get( "http://localhost/type/getParents", {
+        $.get("http://localhost/type/getParents", {
             _token: "{{ csrf_token() }}",
             typeId: typeId
-        }, function( jsonTypes )
-        {
+        }, function (jsonTypes) {
             var types = JSON.parse(jsonTypes);
-            $.each(types, function(index, value) {
+            $.each(types, function (index, value) {
                 typeParents += " " + value;
             });
             typeParents = typeParents.trim();
@@ -111,35 +116,29 @@
         $("button#editTypeCancel").on("click", editTypeCancel);
     }
 
-    function editLineExecute()
-    {
-        $.post( "http://localhost/line/edit/execute", {
+    function editLineExecute() {
+        $.post("http://localhost/line/edit/execute", {
             _token: "{{ csrf_token() }}",
             lineId: $('#lineEdit').data('id'),
             lineNewName: $('#lineEdit').find('#lineName').val()
-        }, function( updatedLine )
-        {
+        }, function (updatedLine) {
             updatedLine = JSON.parse(updatedLine);
-            $("#line-" + updatedLine.id).html( updatedLine.name );
+            $("#line-" + updatedLine.id).html(updatedLine.name);
         });
     }
 
-    function editLineCancel(lineName)
-    {
+    function editLineCancel(lineName) {
         lineId = $('#lineEdit').data('id');
         lineName = $('#lineEdit').find('#lineNameBackup').val();
-        $("#line-" + lineId).html( lineName );
+        $("#line-" + lineId).html(lineName);
     }
 
 
-
-    $(function()
-    {
+    $(function () {
         // setup context menu
         $.contextMenu({
             selector: '.list-group-item',
-            build: function ($trigger, e)
-            {
+            build: function ($trigger, e) {
                 var items = {};
 
                 items.edit = {
@@ -158,15 +157,18 @@
                 };
 
                 return {
-                    callback: function (key, options, rootMenu, originalEvent)
-                    {
+                    callback: function (key, options, rootMenu, originalEvent) {
                         //console.dir($('.context-menu-active'));
                     },
                     items: items
                 };
             }
         });
-
-
     });
 </script>
+
+<style type="text/css">
+    .multiselect-container {
+        width: 100% !important; /* multiselect width fix */
+    }
+</style>

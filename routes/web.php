@@ -22,11 +22,6 @@ Route::get('/admin/nodetypes', 'MainController@adminNodeTypes');
 Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes');
 
 /*
-
-
-
-
-
 Route::get('getTreeData', 'NodeController@getTreeData');
 
 Route::get('node/{id?}', 'NodeController@index')->where('id', '[0-9]+');
