@@ -46,7 +46,7 @@ let app = (function() {
     // Привязка событий
     function _bindHandlers() {
         ui.$body.off();
-        ui.$body.on('click', 'a[data-link="ajax"]', _navigate);
+        ui.$body.on('click', '[data-link="ajax"]', _navigate);
         window.onpopstate = _popState;
     }
 

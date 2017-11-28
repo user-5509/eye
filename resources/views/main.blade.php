@@ -89,7 +89,7 @@
                         aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="#"><span class="h3">&nesear;</span> <b>КРОСС</b><sup>
+                <a class="navbar-brand" href="/"><span class="h3">&nesear;</span> <b>КРОСС</b><sup>
                         <small>&copy;</small>
                     </sup></a>
                 <div class="collapse navbar-collapse" id="navbarMain">

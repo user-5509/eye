@@ -10,7 +10,7 @@ class NodeTypeController extends Controller
 {
     public function index(Request $request)
     {
-        $types = (new NodeType)->all();
+        $types = (new NodeType)->all()->sortBy('id');
 
         return view('content.nodetype.index', ['title' => 'Типы', 'types' => $types]);
     }
@@ -52,20 +52,22 @@ class NodeTypeController extends Controller
         if(isset($id)) { // update
             $type = (new NodeType)->find($id);
             $type->name = $name;
+            if(is_array($parents)) {
+                $type->parents()->sync($parents);
+            }
             $type->save();
         } else { // create
 
         }
 
 
-        $parents = $type->parents;
+/*        $parents = $type->parents;
         $parentsArray = array();
         foreach($parents as $parent) {
             $parentsArray[$parent->id] = $parent->name;
+
         }
-
-
-
+*/
         //return view('content.nodetype.info', ['type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
     }
 }

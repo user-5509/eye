@@ -1,12 +1,12 @@
 <div class="container pt-3">
     <div class="row">
         <div class="col-4">
-            <button type="button" id="createTypeButton" class="btn btn-outline-primary" data-toggle="modal"
-                    data-target="#actionModal">Создать</button>
+            <button type="button" id="nodetype-create" class="btn btn-outline-primary">Создать</button>
             <div class="pt-3" id="typeContainer">
                 <div class="list-group">
                     @foreach ($types as $type)
-                        <li class="list-group-item list-group-item-action p-0 m-0" id="type-{{ $type->id }}" data-id="{{ $type->id }}">
+                        <li class="list-group-item list-group-item-action p-0 m-0" id="type-{{ $type->id }}"
+                            data-id="{{ $type->id }}">
                             <a href="/admin/nodetypes/{{ $type->id }}" class="nav-link" data-link="ajax">
                                 {{ $type->name }}
                             </a>

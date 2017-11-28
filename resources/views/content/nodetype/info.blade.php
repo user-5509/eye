@@ -10,10 +10,12 @@
         <div class="form-check">
             <label for="typeParents">Родительские типы</label>
             <br/>
-            <select name="parents" id="parents" style="width: 500px" multiple="multiple">
+            <select name="parents[]" id="parents" style="width: 500px" multiple="multiple">
                 @foreach ($allTypes as $item)
                     <option value="{{ $item->id }}"
-                            @if(array_search($item->name, $parents) !== false) selected="true" @endif>{{ $item->name }}</option>
+                            @if(array_search($item->name, $parents) !== false) selected="true" @endif>
+                        {{ $item->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
