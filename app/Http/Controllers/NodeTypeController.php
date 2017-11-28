@@ -42,4 +42,30 @@ class NodeTypeController extends Controller
 
         return view('content.nodetype.info', ['type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
     }
+
+    public function save(Request $request)
+    {
+        $id = $request->input('id');
+        $name = $request->input('name');
+        $parents = $request->input('parents');
+
+        if(isset($id)) { // update
+            $type = (new NodeType)->find($id);
+            $type->name = $name;
+            $type->save();
+        } else { // create
+
+        }
+
+
+        $parents = $type->parents;
+        $parentsArray = array();
+        foreach($parents as $parent) {
+            $parentsArray[$parent->id] = $parent->name;
+        }
+
+
+
+        //return view('content.nodetype.info', ['type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
+    }
 }

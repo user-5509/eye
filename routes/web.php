@@ -20,6 +20,7 @@ Route::get('/lines', 'MainController@lines');
 Route::get('/admin', 'MainController@admin');
 Route::get('/admin/nodetypes', 'MainController@adminNodeTypes');
 Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes');
+Route::post('/admin/nodetypes/save', 'NodeTypeController@save');
 
 /*
 Route::get('getTreeData', 'NodeController@getTreeData');

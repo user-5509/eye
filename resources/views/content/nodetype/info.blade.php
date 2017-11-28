@@ -1,14 +1,16 @@
 <div class="container pt-3">
-    <form id="nodetype-info-form">
+    <form id="nodetype-info">
+        {{ csrf_field() }}
+        <input type="hidden" name="id" value="{{ $type->id }}">
         <div class="form-group">
             <label for="typeName">Наименование</label>
-            <input type="text" class="form-control" id="typeName" value="{{ $type->name }}"
+            <input type="text" class="form-control" name="name" value="{{ $type->name }}"
                    placeholder="Укажите наименование">
         </div>
         <div class="form-check">
             <label for="typeParents">Родительские типы</label>
             <br/>
-            <select id="typeParents" style="width: 500px" multiple="multiple">
+            <select name="parents" id="parents" style="width: 500px" multiple="multiple">
                 @foreach ($allTypes as $item)
                     <option value="{{ $item->id }}"
                             @if(array_search($item->name, $parents) !== false) selected="true" @endif>{{ $item->name }}</option>
@@ -24,23 +26,22 @@
     (function () {
         $("title").text("Кросс > Типы узлов > {{ $type->name }}");
 
-        $('#typeParents').multiselect({
+        $('#parents').multiselect({
             buttonWidth: '400px', /* multiselect width fix */
             nonSelectedText: 'Выберите типы!'
         });
 
-        function _submit() {
-            $.post("http://localhost/line/edit/execute", {
-                _token: "{{ csrf_token() }}",
-                lineId: $('#lineEdit').data('id'),
-                lineNewName: $('#lineEdit').find('#lineName').val()
-            }, function (updatedLine) {
-                updatedLine = JSON.parse(updatedLine);
-                $("#line-" + updatedLine.id).html(updatedLine.name);
+        function _submit(e) {
+            e.preventDefault();
+            $.post("/admin/nodetypes/save", $('form#nodetype-info').serialize(), function () {
+                history.back();
             });
         }
+
+        $('form#nodetype-info').submit(_submit);
     })();
 
+    /*
     $("#createTypeButton").on("click", function () {
         $('#actionModal').find('.modal-content').load(
             "http://localhost/content/line/create/modal",
@@ -165,6 +166,7 @@
             }
         });
     });
+    */
 </script>
 
 <style type="text/css">
