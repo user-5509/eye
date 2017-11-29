@@ -114,8 +114,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         </div>
@@ -132,9 +131,11 @@
 <script src="/js/main.js"></script>
 
 <script type="text/javascript">
+    let actionModal = makeModal({$modal: $('#actionModal')});
+
     $(document).ready(function() {
-        let params = { section: '{{ $section }}', token: '{{ csrf_token() }}' };
-        app.init(params);
+        let props = { section: '{{ $section }}', token: '{{ csrf_token() }}' };
+        app.init(props);
     });
 
 /*

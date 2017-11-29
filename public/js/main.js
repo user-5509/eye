@@ -7,7 +7,8 @@ let app = (function() {
         $body: $('body'),
         $menu: $('#navbar'),
         //$pageTitle: $('#page-title'),
-        $content: $('#content')
+        $content: $('#content'),
+        $modal: $('#actionModal')
     };
 
     let section = '',
@@ -57,18 +58,32 @@ let app = (function() {
     }
 
     // Инициализация приложения: загрузка конфига и старт
-    function init(params) {
-        section = params.section;
-        token = params.token;
+    function init(props) {
+        section = props.section;
+        token = props.token;
 
         _start();
     }
 
     // Возвращаем наружу
     return {
-        init: init
+        init: init,
+        $modal: () => ui.$modal
     }
 })();
+
+let makeModal = function(props) {
+    let $modal= props.$modal;
+
+    return {
+        $modal: () => $modal,
+        set: (content) => $modal.find('.modal-content').html(content),
+        reset: (content) => $modal.find('.modal-content').html(''),
+        show: () => $modal.modal('show'),
+        hide: () => $modal.modal('hide')
+    }
+};
+
 
 // Запуск приложения
 //$(document).ready(app.init);

@@ -19,8 +19,11 @@ Route::get('/nodes', 'MainController@nodes');
 Route::get('/lines', 'MainController@lines');
 Route::get('/admin', 'MainController@admin');
 Route::get('/admin/nodetypes', 'MainController@adminNodeTypes');
-Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes');
+Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes')->where('id', '[0-9]+');
+Route::get('/admin/nodetypes/create', 'NodeTypeController@createForm');
 Route::post('/admin/nodetypes/save', 'NodeTypeController@save');
+Route::get('/admin/nodetypes/delete-modal', 'NodeTypeController@deleteModal');
+Route::post('/admin/nodetypes/delete/{id}', 'NodeTypeController@delete')->where('id', '[0-9]+');
 
 /*
 Route::get('getTreeData', 'NodeController@getTreeData');

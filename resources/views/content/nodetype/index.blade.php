@@ -1,7 +1,8 @@
 <div class="container pt-3">
     <div class="row">
         <div class="col-4">
-            <button type="button" id="nodetype-create" class="btn btn-outline-primary">Создать</button>
+            <button type="button" id="nodetype-create" class="btn btn-outline-primary" data-link="ajax"
+                    href="/admin/nodetypes/create">Создать</button>
             <div class="pt-3" id="typeContainer">
                 <div class="list-group">
                     @foreach ($types as $type)
@@ -20,44 +21,14 @@
     </div>
 </div>
 
-<!-- Modal: line action -->
-<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     (function() {
         $("title").text("Кросс > типы узлов");
     })();
 
-    $("#createTypeButton").on("click",function () {
-        let modalContent = $('#actionModal').find('.modal-content');
-        modalContent.load("http://localhost/content/line/create/modal",
-            {_method: "get", _token: "{{ csrf_token() }}"},
-            function( response, status, xhr ) {
-                if ( status === "error" ) {
-                    let msg = "Sorry but there was an error: ";
-                    alert( msg + xhr.status + " " + xhr.statusText );
-                }
-            }
-        );
-    });
 
-    function typesListReload() {
-        $('#typeContainer').load(
-            "http://localhost/content/type/list",
-            {_method: "get", _token: "{{ csrf_token() }}"},
-            function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "Sorry but there was an error: ";
-                    alert(msg + xhr.status + " " + xhr.statusText);
-                }
-            }
-        );
-    }
+
+
 
     function deleteLinePrepare($trigger)
     {
@@ -142,18 +113,23 @@
             {
                 var items = {};
 
-                items.edit = {
-                    name: "Редактировать",
-                    icon: "edit",
-                    callback: function () {
-                        editLinePrepare($trigger);
-                    }
-                };
                 items.delete = {
                     name: "Удалить",
                     icon: "delete",
                     callback: function () {
-                        deleteLinePrepare($trigger);
+                        let id = $trigger.data('id'),
+                            $modal = $('#actionModal'),
+                            url = "/admin/nodetypes/delete-modal",
+                            props = {
+                                _token: "{{ csrf_token() }}",
+                                id: id
+                            };
+                        $.get(url, props, function (data) {
+                            console.log('data='+data);
+                            $modal.find('.modal-content').html(data);
+                            $modal.modal('show');
+                            //$trigger.remove();
+                        });
                     }
                 };
 

@@ -1,10 +1,10 @@
 <div class="container pt-3">
     <form id="nodetype-info">
         {{ csrf_field() }}
-        <input type="hidden" name="id" value="{{ $type->id }}">
+        <input type="hidden" name="id" value="{{ isset($type)?$type->id:'' }}">
         <div class="form-group">
             <label for="typeName">Наименование</label>
-            <input type="text" class="form-control" name="name" value="{{ $type->name }}"
+            <input type="text" class="form-control" name="name" value="{{ isset($type)?$type->name:'' }}"
                    placeholder="Укажите наименование">
         </div>
         <div class="form-check">
@@ -26,7 +26,7 @@
 
 <script type="text/javascript">
     (function () {
-        $("title").text("Кросс > Типы узлов > {{ $type->name }}");
+        $("title").text("Кросс > Типы узлов > {{ isset($type)?$type->name:'Создать' }}");
 
         $('#parents').multiselect({
             buttonWidth: '400px', /* multiselect width fix */
