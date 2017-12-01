@@ -131,7 +131,8 @@
 <script src="/js/main.js"></script>
 
 <script type="text/javascript">
-    let actionModal = makeModal({$modal: $('#actionModal')});
+    // init modals
+    let actionModal = makeModal({$tmpl: $('#actionModal')});
 
     $(document).ready(function() {
         let props = { section: '{{ $section }}', token: '{{ csrf_token() }}' };

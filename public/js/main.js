@@ -8,7 +8,6 @@ let app = (function() {
         $menu: $('#navbar'),
         //$pageTitle: $('#page-title'),
         $content: $('#content'),
-        $modal: $('#actionModal')
     };
 
     let section = '',
@@ -68,19 +67,20 @@ let app = (function() {
     // Возвращаем наружу
     return {
         init: init,
-        $modal: () => ui.$modal
+        loadSection: (url) => _loadSection(url)
     }
 })();
 
 let makeModal = function(props) {
-    let $modal= props.$modal;
+    let $tmpl= props.$tmpl;
 
     return {
-        $modal: () => $modal,
-        set: (content) => $modal.find('.modal-content').html(content),
-        reset: (content) => $modal.find('.modal-content').html(''),
-        show: () => $modal.modal('show'),
-        hide: () => $modal.modal('hide')
+        $this: $tmpl,
+        find: (id) => $tmpl.find('#' + id),
+        set: (content) => $tmpl.find('.modal-content').html(content),
+        reset: () => $tmpl.find('.modal-content').html(''),
+        show: () => $tmpl.modal('show'),
+        hide: () => $tmpl.modal('hide')
     }
 };
 

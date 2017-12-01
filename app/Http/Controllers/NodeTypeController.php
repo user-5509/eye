@@ -43,33 +43,88 @@ class NodeTypeController extends Controller
         return view('content.nodetype.info', ['type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
     }
 
-    public function createForm()
+    public function createModal(Request $request)
     {
-        $parentsArray = array();
-        $allTypes = (new NodeType)->all();
+        if ($request->ajax()) {
+            $parentsArray = array();
+            $allTypes = (new NodeType)->all();
 
-        return view('content.nodetype.info', ['parents' => $parentsArray, 'allTypes' => $allTypes]);
+            return view('content.nodetype.create-edit-modal',
+                ['action' => 'create', 'parents' => $parentsArray, 'allTypes' => $allTypes]);
+        }
     }
 
-    public function save(Request $request)
+    public function create(Request $request)
     {
-        $id = $request->input('id');
-        $name = $request->input('name');
-        $parents = $request->input('parents');
+        if ($request->ajax()) {
+            $name = $request->input('name');
+            $icon = $request->input('icon');
+            $parents = $request->input('parents');
 
-        if(isset($id)) {
-            // update
+            $type = (new NodeType);
+            $type->name = $name;
+            $type->icon = $icon;
+            $type->save();
+
+            if (is_array($parents)) {
+                // convert [string] to [int]
+                $intArray = array_map(
+                    function ($value) {
+                        return (int)$value;
+                    },
+                    $parents
+                );
+                $type->parents()->sync($intArray);
+                $type->save();
+            }
+        }
+    }
+
+    public function editModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request->input('id');
             $type = (new NodeType)->find($id);
 
-        } else {
-            // create
-            $type = (new NodeType);
+            $parents = $type->parents;
+            $parentsArray = array();
+            foreach($parents as $parent) {
+                $parentsArray[$parent->id] = $parent->name;
+            }
+
+            $allTypes = (new NodeType)->all();
+
+            return view('content.nodetype.create-edit-modal',
+                ['action' => 'edit', 'type' => $type, 'parents' => $parentsArray, 'allTypes' => $allTypes]);
         }
-        $type->name = $name;
-        if(is_array($parents)) {
-            $type->parents()->sync($parents);
+    }
+
+    public function edit(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request->input('id');
+            $name = $request->input('name');
+            $icon = $request->input('icon');
+            $parents = $request->input('parents');
+
+            if (isset($id)) { // todo: add other props validation
+                $type = (new NodeType)->find($id);
+                $type->name = $name;
+                $type->icon = $icon;
+
+                if (is_array($parents)) {
+                    // convert [string] to [int]
+                    $intArray = array_map(
+                        function ($value) {
+                            return (int)$value;
+                        },
+                        $parents
+                    );
+                    $type->parents()->sync($intArray);
+                }
+                $type->save();
+            }
         }
-        $type->save();
     }
 
     public function deleteModal(Request $request)
@@ -81,11 +136,14 @@ class NodeTypeController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete(Request $request)
     {
-        if(isset($id)) {
-            $type = (new NodeType)->find($id);
-            $type->delete();
+        if ($request->ajax()) {
+            $id = $request->input('id');
+            if (isset($id)) {
+                $type = (new NodeType)->find($id);
+                $type->delete();
+            }
         }
     }
 }
