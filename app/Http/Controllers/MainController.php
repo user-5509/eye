@@ -56,4 +56,21 @@ class MainController extends Controller
             }
         }
     }
+
+    public function adminLineTypes(Request $request, $id = '')
+    {
+        if ($request->ajax()) {
+            if(isset($id) && !empty($id)) {
+                return (new LineTypeController)->getById($id);
+            } else {
+                return (new LineTypeController)->index($request);
+            }
+        } else {
+            if(isset($id) && !empty($id)) {
+                return view('main', ['section' => '/admin/linetypes/'.$id]);
+            } else {
+                return view('main', ['section' => '/admin/linetypes']);
+            }
+        }
+    }
 }

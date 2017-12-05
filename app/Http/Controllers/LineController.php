@@ -13,10 +13,11 @@ class LineController extends Controller
 
     public function index(Request $request)
     {
-        //$lines = (new Line)->orderBy('name')->get();
-        //return view('content.line.index', ['title' => 'Тракты', 'lines' => $lines]);
-        return view('content.line.index');
+        $lines = (new Line)->orderBy('name')->get();
+        return view('content.line.index', ['lines' => $lines]);
     }
+
+
 
     public function getList(Request $request)
     {
@@ -52,22 +53,53 @@ class LineController extends Controller
             return null;
     }
 
-    public function createLineModal(Request $request)
+    public function createModal(Request $request)
     {
         if ($request->ajax()) {
-            return view('content.line.create-modal');
+            $parentsArray = array();
+
+            return view('content.line.create-edit-modal', ['action' => 'create']);
         }
-        else
-            return null;
     }
 
-    public function createLineExecute(Request $request)
+    public function create(Request $request)
     {
         if ($request->ajax()) {
-            $line = new Line();
-            $line->name = $request->input('lineName');
-            $line->type = $request->input('lineType');
+            $name = $request->input('name');
+            $type = $request->input('type');
+
+            $line = (new Line);
+            $line->name = $name;
+            $line->type = $type;
             $line->save();
+        }
+    }
+
+    public function editModal(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request->input('id');
+            $line = (new Line)->find($id);
+
+            return view('content.line.create-edit-modal', ['action' => 'edit', 'line' => $line]);
+        }
+    }
+
+    public function edit(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request->input('id');
+            $name = $request->input('name');
+            $icon = $request->input('icon');
+            $wires = $request->input('wires');
+
+            if (isset($id)) { // todo: add other props validation
+                $type = (new LineType)->find($id);
+                $type->name = $name;
+                $type->icon = $icon;
+                $type->wires = $wires;
+                $type->save();
+            }
         }
     }
 

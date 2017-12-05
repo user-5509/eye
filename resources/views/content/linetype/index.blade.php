@@ -1,31 +1,32 @@
 <div class="container pt-3">
     <div class="row">
-        <div class="col-6">
-            <button type="button" id="lineCreate" class="btn btn-primary">
-                <i class="fa fa-file-o"></i> Создать
-            </button>
-            <div class="pt-3" id="lineContainer">
+        <div class="col-4">
+            <button type="button" id="typeCreate" class="btn btn-outline-primary">Создать</button>
+            <div class="pt-3" id="typeContainer">
                 <div class="list-group">
-                    @foreach ($lines as $line)
-                        <li class="list-group-item list-group-item-action p-1 m-0" id="line-{{ $line->id }}"
-                            data-id="{{ $line->id }}">
-                            {{ $line->name }}
+                    @foreach ($types as $type)
+                        <li class="list-group-item list-group-item-action p-1 m-0" id="type-{{ $type->id }}"
+                            data-id="{{ $type->id }}">
+                            {{--<a href="/admin/nodetypes/{{ $type->id }}" class="nav-link" data-link="ajax">--}}
+                            <i class="fa fa-{{ $type->icon }}"></i>
+                            {{ $type->name }}
+                            {{--</a>--}}
                         </li>
                     @endforeach
                 </div>
             </div>
         </div>
-        <div class="col-6" id="lineAbout">
+        <div class="col-6" id="typeAbout">
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     (function() {
-        $("title").text("Кросс > тракты");
+        $("title").text("Кросс > типы трактов");
 
         function _createModal() {
-            let url = "/lines/create-modal",
+            let url = "/admin/linetypes/create-modal",
                 props = {
                     _token: "{{ csrf_token() }}"
                 };
@@ -38,7 +39,7 @@
             });;
         }
 
-        $("button#lineCreate").on("click", _createModal);
+        $("button#typeCreate").on("click", _createModal);
 
         // setup context menu
         $.contextMenu({
@@ -52,7 +53,7 @@
                     icon: "edit",
                     callback: function () {
                         let id = $trigger.data('id'),
-                            url = "/lines/edit-modal",
+                            url = "/admin/linetypes/edit-modal",
                             props = {
                                 _token: "{{ csrf_token() }}",
                                 id: id
@@ -69,7 +70,7 @@
                     icon: "delete",
                     callback: function () {
                         let id = $trigger.data('id'),
-                            url = "/lines/delete-modal",
+                            url = "/admin/linetypes/delete-modal",
                             props = {
                                 _token: "{{ csrf_token() }}",
                                 id: id

@@ -8,6 +8,9 @@
                 <li class="list-group-item list-group-item-action">
                     <a href="/admin/linetypes" class="nav-link" data-link="ajax" data-section="line-types">Типы трактов</a>
                 </li>
+                <li class="list-group-item list-group-item-action">
+                    <a href="#" class="nav-link" id="checkRootNode">Check root node</a>
+                </li>
             </ul>
         </div>
         <div class="col-10" id="adminContent">
@@ -18,20 +21,21 @@
 <script type="text/javascript">
     (function() {
         $("title").text("Кросс > параметры");
-    })();
 
-    /*
-        $("#menuAdminTypes").on("click", function () {
-            $('#adminContent').load("/types", {
-                    _method: "get",
+        function _checkRootNode(e) {
+            e.preventDefault();
+            let url = "/admin/checkRootNode",
+                props = {
                     _token: "{{ csrf_token() }}"
-            },
-            function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "[loadAdmin] Sorry but there was an error: ";
-                    alert(msg + xhr.status + " " + xhr.statusText);
-                }
-            }
-        );
-    });*/
+                };
+            $.get(url, props, function (data) {
+
+            }).fail(function(data) {
+                actionModal.set(data.responseText);
+                actionModal.show();
+            });
+        }
+
+        $("#checkRootNode").on("click", _checkRootNode);
+    })();
 </script>

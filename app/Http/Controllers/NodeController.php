@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\EyeConfig;
 use App\Node;
 use App\NodeType;
 use App\NodeInterface;
@@ -489,10 +490,14 @@ class NodeController extends Controller
     public function getTreeData(Request $request)
     {
         $parentNodeId = Input::get('parentNodeId');
+        if(!isset($parentNodeId)) {
+            $parentNodeId = null;
+            $order = 'name';
+        } else {
+            $order = (new Node)->find($parentNodeId)->getOrder();
+        }
 
         $arr = array();
-
-        $order = (new Node)->find($parentNodeId)->getOrder();
 
         $nodes = (new Node)->where('parent_id', '=', $parentNodeId)->orderBy($order)->get();
         foreach ($nodes as $node) {

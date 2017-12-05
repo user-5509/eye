@@ -16,7 +16,13 @@ Route::get('/', function () {
 });
 
 Route::get('/nodes', 'MainController@nodes');
+
 Route::get('/lines', 'MainController@lines');
+Route::get('/lines/create-modal', 'LineController@createModal');
+Route::post('/lines/create', 'LineController@create');
+Route::get('/lines/edit-modal', 'LineController@editModal');
+Route::post('/lines/edit', 'LineController@edit');
+
 Route::get('/admin', 'MainController@admin');
 Route::get('/admin/nodetypes', 'MainController@adminNodeTypes');
 Route::get('/admin/nodetypes/{id}', 'MainController@adminNodeTypes')->where('id', '[0-9]+');
@@ -26,6 +32,12 @@ Route::get('/admin/nodetypes/edit-modal', 'NodeTypeController@editModal');
 Route::post('/admin/nodetypes/edit', 'NodeTypeController@edit');
 Route::get('/admin/nodetypes/delete-modal', 'NodeTypeController@deleteModal');
 Route::post('/admin/nodetypes/delete', 'NodeTypeController@delete');
+Route::get('/admin/linetypes', 'MainController@adminLineTypes');
+Route::get('/admin/linetypes/create-modal', 'LineTypeController@createModal');
+Route::get('/admin/checkRootNode', 'AdminController@checkRootNode');
+
+Route::get('getTreeData', 'NodeController@getTreeData');
+
 
 /*
 Route::get('getTreeData', 'NodeController@getTreeData');

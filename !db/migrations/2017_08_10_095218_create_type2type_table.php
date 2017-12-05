@@ -13,7 +13,7 @@ class CreateType2typeTable extends Migration
      */
     public function up()
     {
-        Schema::create('node_types_node_types', function(Blueprint $table)
+        Schema::create('type2type', function(Blueprint $table)
         {
             $table->integer('parent_id')->unsigned()->nullable();
             $table->foreign('parent_id')->references('id')
@@ -35,7 +35,7 @@ class CreateType2typeTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('node_types');
+        Schema::dropIfExists('type2type');
         Schema::enableForeignKeyConstraints();
     }
 }

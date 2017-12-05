@@ -310,7 +310,7 @@
 
                 source: {
                     url: "/getTreeData",
-                    data: { mode: "children", parentNodeId: 1 }
+                    data: { mode: "children" }
                 },
 
                 lazyLoad: function(event, data) {
@@ -318,7 +318,7 @@
 
                     data.result = {
                         url: "/getTreeData",
-                        data: {mode: "children", parentNodeId: node.key},
+                        data: { mode: "children", parentNodeId: node.key },
                         cache: false
                     };
 

@@ -15,11 +15,16 @@ class EyeConfig extends Model
             return null;
         }
 
-        $this->where('name', '=', $name);
-
-        $this->name = $name;
-        $this->value = $value;
-        $this->save();
+        $result = (new EyeConfig)->where('name', '=', $name)->first();
+        if($result !== null) {
+            $result->name = $name;
+            $result->value = $value;
+            $result->save();
+        } else {
+            $this->name = $name;
+            $this->value = $value;
+            $this->save();
+        }
 
         return $this;
     }
@@ -31,9 +36,9 @@ class EyeConfig extends Model
             return null;
         }
 
-        $record =  $this->where('name', '=', $name);
-        if($record !== null) {
-            return $this->value;
+        $result = $this->where('name', '=', $name)->first();
+        if($result !== null) {
+            return $result->value;
         }
         else {
             return null;
