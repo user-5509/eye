@@ -41,8 +41,12 @@
             var node = $("#tree").fancytree("getActiveNode");
 
             if(node.data.about) {
+                let url = "http://localhost/content/node/about",
+                    props = { nodeId: node.key };
 
-                $("#nodeAbout").load(  "http://localhost/content/node/about",
+                app.get(url, props, (r) => $("#nodeAbout").html(r));
+
+                /*$("#nodeAbout").load(  "http://localhost/content/node/about",
                     {
                         _method: "get",
                         _token: "{{ csrf_token() }}",
@@ -55,7 +59,7 @@
                             alert( msg + xhr.status + " " + xhr.statusText );
                         }
                     }
-                );
+                );*/
             }
             else {
                 $("#nodeAbout").html('');
@@ -254,14 +258,12 @@
             $("#tree").fancytree( {
                 autoScroll: true,
                 activate:   function(event, data) {
-                    $.post( "http://localhost/node/savePath", {
-                            _token:     "{{ csrf_token() }}",
-                            nodePath:   getNodePath()
-                        }
-                    );
+                    let url = "http://localhost/node/savePath",
+                        props = { nodePath:   getNodePath() };
+
+                    app.post(url, props);
 
                     updateAboutNode();
-
                     updateAboutLine();
 
                     var node = data.node;
@@ -297,8 +299,7 @@
                             {
                                 let tree = $("#tree").fancytree("getTree");
 
-                                tree.loadKeyPath(data, function (node, status)
-                                {
+                                tree.loadKeyPath(data, function(node, status) {
                                     if (status === "ok") {
                                         tree.activateKey(node.key);
                                     }

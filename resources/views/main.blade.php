@@ -114,9 +114,30 @@
     </div>
 </div>
 
-<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
+<div id="modalWrapper"></div>
+
+{{--<div class="modal fade" id="actionModal" tabindex="-1" role="dialog" aria-labelledby="actionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+        </div>
+    </div>
+</div>--}}
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i> Отмена</button>
+            </div>
         </div>
     </div>
 </div>
@@ -131,109 +152,18 @@
 <script src="/js/main.js"></script>
 
 <script type="text/javascript">
-    // init modals
-    let actionModal = makeModal({$tmpl: $('#actionModal')});
-
     $(document).ready(function() {
-        let props = { section: '{{ $section }}', token: '{{ csrf_token() }}' };
+        let props = {
+            section: '{{ $section }}',
+            token: '{{ csrf_token() }}'
+        };
+
         app.init(props);
     });
 
-/*
-    $(function () {
-        var _load = function (url) {
-            $.get(url).done(function (data) {
-                $("#content").html(data);
-            })
-        };
-
-        var _navigate = function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-
-            var $this = $(this),
-                url = $this.attr("href"),
-                title = $this.text();
-
-            history.pushState({
-                url: url,
-                title: title
-            }, title, url);
-
-            document.title = title;
-
-            _load(url);
-        }
-
-        $(document).off();
-        $(document).on('click', 'a[data-link="ajax"]', _navigate);
-
-        $(window).on('popstate', function (e) {
-            var state = e.originalEvent.state;
-            if (state !== null) {
-                document.title = state.title;
-                _load(state.url);
-            } else {
-                document.title = 'Кросс';
-                $("#content").empty();
-            }
-        });
-
-        //$("title").text("Кросс");
-        //$('[data-toggle="tooltip"]').tooltip();
-
-        //_bindHandlers();
-
-        window.onpopstate = _popState;
-        // default view
-        loadContent('nodes');
-        toggleNavbar('#menuNodes');
+    $( document ).ajaxError(function( event, request, settings, thrownError ) {
+        app.error(request.responseText);
     });
-
-    function loadContent(path, container = '#content') {
-        $(container).load('/getSection/' + path,
-            {_method: "get", _token: "{{ csrf_token() }}"},
-            function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "[" + path + "] Sorry but there was an error: ";
-                    alert(msg + xhr.status + " " + xhr.statusText);
-                }
-            }
-        );
-    }
-
-    function toggleNavbar(name) {
-        $("ul.navbar-nav").find(".active").removeClass("active");
-        $("ul.navbar-nav").find("#menu-" + name).addClass("active");
-    }
-
-    $("#menuNodes").on("click", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var href = $(e.target).attr('href');
-        history.pushState({page: href}, '', href);
-        loadContent('nodes');
-        toggleNavbar('#menuNodes');
-    });
-
-    $("#menuLines").on("click", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var href = $(e.target).attr('href');
-        history.pushState({page: href}, '', href);
-        loadContent('lines');
-        toggleNavbar('#menuLines');
-    });
-
-    $("#menuAdmin").on("click", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var href = $(e.target).attr('href');
-        history.pushState({page: href}, '', href);
-        loadContent('admin');
-        toggleNavbar('#menuAdmin');
-    });
-*/
 </script>
 </body>
 </html>

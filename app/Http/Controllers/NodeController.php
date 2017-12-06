@@ -491,7 +491,6 @@ class NodeController extends Controller
     {
         $parentNodeId = Input::get('parentNodeId');
         if(!isset($parentNodeId)) {
-            $parentNodeId = null;
             $order = 'name';
         } else {
             $order = (new Node)->find($parentNodeId)->getOrder();

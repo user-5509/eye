@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
+    public function errorModal(Request $request)
+    {
+        if ($request->ajax()) {
+
+            return view('error-modal');
+        }
+    }
+
     public function index(Request $request)
     {
         $section = $request->route()->getName();

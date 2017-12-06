@@ -25,19 +25,7 @@
     (function() {
         $("title").text("Кросс > типы узлов");
 
-        function createModal() {
-            let url = "/admin/nodetypes/create-modal",
-                props = {
-                    _token: "{{ csrf_token() }}"
-                };
-            $.get(url, props, function (data) {
-                actionModal.set(data);
-                actionModal.show();
-                //$trigger.remove();
-            });
-        }
-
-        $("button#nodeTypeCreate").on("click", createModal);
+        $("button#nodeTypeCreate").on("click", () => app.modal("/admin/nodetypes/create-modal"));
 
         // setup context menu
         $.contextMenu({
@@ -51,16 +39,11 @@
                     icon: "edit",
                     callback: function () {
                         let id = $trigger.data('id'),
-                            url = "/admin/nodetypes/edit-modal",
-                            props = {
-                                _token: "{{ csrf_token() }}",
-                                id: id
-                            };
-                        $.get(url, props, function (data) {
-                            actionModal.set(data);
-                            actionModal.show();
-                            //$trigger.remove();
-                        });
+                            url = '/admin/nodetypes/edit-modal',
+                            props = { id: id };
+
+                        app.modal(url, props);
+
                     }
                 };
 
@@ -69,16 +52,10 @@
                     icon: "delete",
                     callback: function () {
                         let id = $trigger.data('id'),
-                            url = "/admin/nodetypes/delete-modal",
-                            props = {
-                                _token: "{{ csrf_token() }}",
-                                id: id
-                            };
-                        $.get(url, props, function (data) {
-                            actionModal.set(data);
-                            actionModal.show();
-                            //$trigger.remove();
-                        });
+                            url = '/admin/nodetypes/delete-modal',
+                            props = { id: id };
+
+                        app.modal(url, props);
                     }
                 };
 

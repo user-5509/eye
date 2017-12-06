@@ -8,13 +8,15 @@ let app = (function() {
         $menu: $('#navbar'),
         //$pageTitle: $('#page-title'),
         $content: $('#content'),
+        $modalWrapper: $('#modalWrapper'),
+        $errorModal: $('#errorModal')
     };
 
     let section = '',
         token = '';
 
     // Загрузка контента по странице
-    function _loadSection(url) {
+    function loadSection(url) {
         console.log('ajax url: ' + url);
         $.get(url, {_token: token}, function(html) {
             ui.$menu.find('li').removeClass('active');
@@ -33,14 +35,14 @@ let app = (function() {
 
         let href = $(e.target).attr('href');
 
-        _loadSection(href);
+        loadSection(href);
         history.pushState({page: href}, '', href);
     }
 
     // Кнопки Назад/Вперед
     function _popState(e) {
         var page = (e.state && e.state.page) || config.mainPage;
-        _loadSection(page);
+        loadSection(page);
     }
 
     // Привязка событий
@@ -52,7 +54,7 @@ let app = (function() {
 
     // Старт приложения: привязка событий
     function _start() {
-        _loadSection(section);
+        loadSection(section);
         _bindHandlers();
     }
 
@@ -64,10 +66,44 @@ let app = (function() {
         _start();
     }
 
+    function error(msg = 'Здесь должно было быть сообщение об ошибке... :\\') {
+        $('.modal').modal('hide');
+        ui.$errorModal.find('.modal-body').html(msg);
+        ui.$errorModal.modal('show');
+    }
+
+    function modal(url, props = {}) {
+        props._token = token;
+        $.get(url, props, function (r) {
+            ui.$modalWrapper.html(r);
+            ui.$modalWrapper.find('.modal').modal('show');
+        }).fail(function(r) {
+            error(r.responseText);
+        });
+    }
+
+    function get(url, props, callback) {
+        props._token = token;
+        $.get(url, props, (r) => callback(r)).fail(function(r) {
+            error(r.responseText);
+        });
+    }
+
+    function post(url, props, callback) {
+        props._token = token;
+        $.post(url, props, callback).fail(function(r) {
+            error(r.responseText);
+        });
+    }
+
     // Возвращаем наружу
     return {
         init: init,
-        loadSection: (url) => _loadSection(url)
+        modal: (url, props) => modal(url, props),
+        get: (url, props, callback) => get(url, props, callback),
+        post: (url, props, callback) => post(url, props, callback),
+        loadSection: (url) => loadSection(url),
+        error: (msg) => error(msg)
     }
 })();
 

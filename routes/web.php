@@ -14,8 +14,14 @@
 Route::get('/', function () {
     return redirect('/nodes');
 });
+Route::get('/error', 'MainController@errorModal');
 
 Route::get('/nodes', 'MainController@nodes');
+Route::post('/node/savePath', 'NodeController@savePath');
+Route::get('/getTreeData', 'NodeController@getTreeData');
+Route::get('/node/contextSubMenuCreate', 'NodeController@contextSubMenuCreate');
+Route::get('/content/node/create/modal', 'NodeController@createNodeModal');
+Route::post('/node/create/execute', 'NodeController@createNodeExecute');
 
 Route::get('/lines', 'MainController@lines');
 Route::get('/lines/create-modal', 'LineController@createModal');
@@ -36,7 +42,6 @@ Route::get('/admin/linetypes', 'MainController@adminLineTypes');
 Route::get('/admin/linetypes/create-modal', 'LineTypeController@createModal');
 Route::get('/admin/checkRootNode', 'AdminController@checkRootNode');
 
-Route::get('getTreeData', 'NodeController@getTreeData');
 
 
 /*
