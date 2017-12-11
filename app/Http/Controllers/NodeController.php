@@ -20,13 +20,15 @@ class NodeController extends Controller
     {
         $nodeId = Input::get('nodeId');
 
-        if($nodeId)
+        // todo: implement node path get/set as separate functions
+        if($nodeId) {
             $nodePath = (new Node)->find($nodeId)->getKeyPath();
-        else
+        }
+        else {
             $nodePath = session("nodePath", "/2");
+        }
 
-        return view('content.node.index', [
-            'nodePath' => $nodePath]);
+        return view('content.node.index', ['nodePath' => $nodePath]);
     }
 
     /**
@@ -49,33 +51,35 @@ class NodeController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function createNodeModal(Request $request)
+    public function createModal(Request $request)
     {
         if ($request->ajax()) {
-            $nodeTypeId = Input::get('nodeTypeId');
-            $nodeTypeName = (new NodeType)->find($nodeTypeId)->name;
-            $parentNodeId = Input::get('parentNodeId');
+            $parentId = Input::get('parentId');
+            $typeId = Input::get('typeId');
 
-            return view('content.node.create-modal', ['nodeTypeId' => $nodeTypeId, 'nodeTypeName' => $nodeTypeName, 'parentNodeId' => $parentNodeId]);
-        } else
-            return null;
+            $props = [
+                'type' => (new NodeType)->find($typeId),
+                'parentId' => $parentId
+            ];
+
+            return view('content.node.create-modal', $props);
+        }
     }
 
     /**
      * @param Request $request
      * @return Response
      */
-    public function     createNodeExecute(Request $request)
+    public function create(Request $request)
     {
         if ($request->ajax()) {
-            $node = new Node();
-            $node->init($request->input('nodeName'),
-                $request->input('nodeTypeId'),
-                $request->input('parentNodeId'));
+            $name = $request->input('name');
+            $typeId = $request->input('typeId');
+            $parentId = $request->input('parentId');
 
-            return 1;
-        } else
-            return "1212121221";
+            $node = new Node();
+            $node->init($name, $typeId, $parentId);
+        }
     }
 
     /**

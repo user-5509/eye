@@ -58,11 +58,13 @@ class NodeTypeController extends Controller
     {
         if ($request->ajax()) {
             $name = $request->input('name');
+            $alias = $request->input('alias');
             $icon = $request->input('icon');
             $parents = $request->input('parents');
 
-            $type = (new NodeType);
+            $type = new NodeType;
             $type->name = $name;
+            $type->alias = $alias;
             $type->icon = $icon;
             $type->save();
 
@@ -104,12 +106,14 @@ class NodeTypeController extends Controller
         if ($request->ajax()) {
             $id = $request->input('id');
             $name = $request->input('name');
+            $alias = $request->input('alias');
             $icon = $request->input('icon');
             $parents = $request->input('parents');
 
             if (isset($id)) { // todo: add other props validation
                 $type = (new NodeType)->find($id);
                 $type->name = $name;
+                $type->alias = $alias;
                 $type->icon = $icon;
 
                 if (is_array($parents)) {

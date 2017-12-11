@@ -16,6 +16,7 @@ class CreateLinesTable extends Migration
         Schema::create('lines', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->smallInteger('type');
             $table->timestamps();
         });
     }
@@ -27,6 +28,8 @@ class CreateLinesTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('lines');
+        Schema::enableForeignKeyConstraints();
     }
 }

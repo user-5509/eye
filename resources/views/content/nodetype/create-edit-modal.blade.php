@@ -16,6 +16,11 @@
                                placeholder="Укажите наименование">
                     </div>
                     <div class="form-group">
+                        <label for="alias">Алиас</label>
+                        <input type="text" class="form-control" id="alias" value="{{ isset($type)?$type->alias:'' }}"
+                               placeholder="Укажите алиас">
+                    </div>
+                    <div class="form-group">
                         <label for="icon">Иконка</label>
                         <input type="text" class="form-control" id="name" value="{{ isset($type)?$type->icon:'' }}"
                                placeholder="Укажите наименование">
@@ -56,16 +61,21 @@
         if(action === 'create') {
             $dialog.find('#modal-title').text('Создать');
             $dialog.find('#btn-title').text('Создать');
-        } else {
+            $("#execute").on("click", create);
+        } else if(action === 'edit') {
             $dialog.find('#modal-title').text('Редактировать');
             $dialog.find('#btn-title').text('Редактировать');
+            $("#execute").on("click", edit);
+        } else {
+            app.error('Неопознанное действие!');
+            return;
         }
 
-        function _create() {
+        function create() {
             let url = '/admin/nodetypes/create',
                 props = {
-                    _token: '{{ csrf_token() }}',
                     name: $dialog.find('#name').val(),
+                    alias: $dialog.find('#alias').val(),
                     icon: $dialog.find('#icon').val(),
                     parents: $dialog.find('#parents').val()
                 };
@@ -76,12 +86,12 @@
             });
         }
 
-        function _edit() {
+        function edit() {
             let url = '/admin/nodetypes/edit',
                 props = {
-                    _token: '{{ csrf_token() }}',
                     id: $dialog.find('#id').val(),
                     name: $dialog.find('#name').val(),
+                    alias: $dialog.find('#alias').val(),
                     icon: $dialog.find('#icon').val(),
                     parents: $dialog.find('#parents').val()
                 };
@@ -91,8 +101,6 @@
                 app.loadSection('/admin/nodetypes');
             });
         }
-
-        $("#execute").on("click", (action === 'create')?_create:_edit);
     })('{{ $action }}');
 </script>
 

@@ -92,27 +92,16 @@
             }
         }
 
-        function createNodePrepare(nodeTypeId)
+        function createNodePrepare(typeId)
         {
-            var parentNodeId = $("#tree").fancytree("getActiveNode").key;
+            let parentId = $("#tree").fancytree("getActiveNode").key,
+                url = "/nodes/create-modal",
+                props = {
+                    parentId: parentId,
+                    typeId: typeId
+                };
 
-            $('#actionModal').find('.modal-content').load(
-                "http://localhost/content/node/create/modal", {
-                    _token: "{{ csrf_token() }}",
-                    _method: "get",
-                    nodeTypeId: nodeTypeId,
-                    parentNodeId: parentNodeId
-                },
-                function( response, status, xhr )
-                {
-                    if ( status == "error" ) {
-                        var msg = "Sorry but there was an error: ";
-                        alert( msg + xhr.status + " " + xhr.statusText );
-                    } else {
-                        $('#actionModal').modal('show');
-                    }
-                }
-            );
+            app.modal(url, props);
         }
 
         function editNodePrepare()

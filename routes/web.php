@@ -20,8 +20,8 @@ Route::get('/nodes', 'MainController@nodes');
 Route::post('/node/savePath', 'NodeController@savePath');
 Route::get('/getTreeData', 'NodeController@getTreeData');
 Route::get('/node/contextSubMenuCreate', 'NodeController@contextSubMenuCreate');
-Route::get('/content/node/create/modal', 'NodeController@createNodeModal');
-Route::post('/node/create/execute', 'NodeController@createNodeExecute');
+Route::get('/nodes/create-modal', 'NodeController@createModal');
+Route::post('/nodes/create', 'NodeController@create');
 
 Route::get('/lines', 'MainController@lines');
 Route::get('/lines/create-modal', 'LineController@createModal');

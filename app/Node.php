@@ -15,11 +15,13 @@ class Node extends Model
 
     public function init($name, $typeId, $parentId)
     {
-        $this->name = $name;
-        $this->type_id = $typeId;
+        // common
+        $this->name      = $name;
+        $this->type_id   = $typeId;
         $this->parent_id = $parentId;
         $this->save();
 
+        // type specific
         if ( $this->type->id == NodeType::COMMON_BOX_60 ) {
             $property = new NodeInterface(array('name' => "massLinkedInterface", 'value' => null));
             $this->interfaces()->save($property);

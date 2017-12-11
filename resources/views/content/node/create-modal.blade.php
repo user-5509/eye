@@ -1,41 +1,52 @@
-<div class="modal-header">
-    <h5 class="modal-title">Создать {{$nodeTypeName}}</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<div class="modal-body">
-    <form id="createNodeForm" class="node-form">
-        <div class="form-group">
-            <label for="nodeName">Наименование</label>
-            <input type="text" class="form-control" name="nodeName" placeholder="Введите наименование">
-            <input type="hidden" name="nodeTypeId" value="{{$nodeTypeId}}">
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Создать {{ $type->name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="name">Наименование</label>
+                        <input type="text" class="form-control" id="name" placeholder="Введите наименование">
+                    </div>
+                    <input type="hidden" id="typeId" value="{{$type->id}}">
+                    <input type="hidden" id="parentId" value="{{ $parentId }}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="execute">Создать</button>
+            </div>
         </div>
-        <input type="hidden" name="parentNodeId" value="{{$parentNodeId}}">
-        {{ csrf_field() }}
-    </form>
+    </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-    <button type="button" class="btn btn-primary" id="createNodeExecute">Создать</button>
-</div>
+
 
 <script type="text/javascript">
-    $("#createNodeExecute").on("click",function () {
-        $.post( "http://localhost/node/create/execute",
-            $("#createNodeForm").serialize(),
-            function( data )
-            {
-                var activeNode = $("#tree").fancytree("getActiveNode");
+    (function () {
+        let $dialog = $('#createModal');
 
+        $("#execute").on("click",function () {
+            let url = '/nodes/create',
+                props = {
+                    name: $dialog.find('#name').val(),
+                    typeId: $dialog.find('#typeId').val(),
+                    parentId: $dialog.find('#parentId').val()
+                };
+
+            app.post(url, props, () => {
+                let activeNode = $("#tree").fancytree("getActiveNode");
                 activeNode.folder = true;
                 activeNode.lazy = true;
                 activeNode.load(true);
                 activeNode.setExpanded(true);
 
-                $('#actionModal').modal('hide');
-                $('#actionModal').find('.modal-content').html('');
-            }
-        );
-    });
+                $dialog.modal('hide');
+            });
+        });
+    })();
 </script>
